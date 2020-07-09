@@ -1,0 +1,59 @@
+{
+  "name": "@balena/jellyfish-sync",
+  "version": "0.0.1",
+  "description": "Sync library for Jellyfish",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "lint": "eslint lib",
+    "unit": "ava -v",
+    "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && npm run lint && npm run unit",
+    "doc": "jsdoc2md --template doc/README.hbs lib/index.js > README.md"
+  },
+  "author": "Balena.io. <hello@balena.io>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@balena/jellyfish-assert": "0.0.9",
+    "@balena/jellyfish-environment": "^0.1.0",
+    "@balena/jellyfish-metrics": "0.0.6",
+    "@balena/jellyfish-uuid": "0.0.9",
+    "@octokit/auth-app": "^2.4.7",
+    "@octokit/plugin-retry": "^3.0.3",
+    "@octokit/plugin-throttling": "^3.3.0",
+    "@octokit/rest": "^18.0.0",
+    "bluebird": "^3.7.2",
+    "crypto": "^1.0.1",
+    "front-sdk": "^0.7.2",
+    "geoip-lite": "^1.4.2",
+    "intercom-client": "^2.11.0",
+    "json-e": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
+    "lru-cache": "^5.1.1",
+    "marked": "^1.1.0",
+    "native-url": "^0.3.4",
+    "node-jose": "^1.1.4",
+    "randomstring": "^1.1.5",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "typed-errors": "^1.1.0"
+  },
+  "devDependencies": {
+    "ava": "^3.10.1",
+    "catch-uncommitted": "^1.6.2",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.4.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^29.1.0",
+    "eslint-plugin-lodash": "^7.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "is-uuid": "^1.0.2",
+    "jsdoc-to-markdown": "^6.0.1",
+    "nock": "^13.0.2"
+  }
+}
