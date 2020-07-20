@@ -22,7 +22,7 @@
     "@octokit/auth-app": "^2.4.8",
     "@octokit/plugin-retry": "^3.0.3",
     "@octokit/plugin-throttling": "^3.3.0",
-    "@octokit/rest": "^18.0.0",
+    "@octokit/rest": "^18.0.1",
     "bluebird": "^3.7.2",
     "crypto": "^1.0.1",
     "front-sdk": "^0.7.2",
