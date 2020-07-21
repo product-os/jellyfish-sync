@@ -15,7 +15,7 @@
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@balena/jellyfish-assert": "0.0.17",
+    "@balena/jellyfish-assert": "0.0.18",
     "@balena/jellyfish-environment": "^2.0.5",
     "@balena/jellyfish-metrics": "0.0.19",
     "@balena/jellyfish-uuid": "0.0.18",
