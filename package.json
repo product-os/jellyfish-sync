@@ -15,10 +15,10 @@
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@balena/jellyfish-assert": "0.0.18",
-    "@balena/jellyfish-environment": "^2.0.5",
-    "@balena/jellyfish-metrics": "0.0.19",
-    "@balena/jellyfish-uuid": "0.0.18",
+    "@balena/jellyfish-assert": "0.0.19",
+    "@balena/jellyfish-environment": "^2.0.6",
+    "@balena/jellyfish-metrics": "0.0.20",
+    "@balena/jellyfish-uuid": "0.0.19",
     "@octokit/auth-app": "^2.4.10",
     "@octokit/plugin-retry": "^3.0.3",
     "@octokit/plugin-throttling": "^3.3.0",
@@ -37,7 +37,7 @@
     "node-jose": "^1.1.4",
     "randomstring": "^1.1.5",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5",
+    "request-promise": "^4.2.6",
     "typed-errors": "^1.1.0"
   },
   "devDependencies": {
