@@ -28,6 +28,7 @@
     "front-sdk": "^0.7.2",
     "geoip-lite": "^1.4.2",
     "intercom-client": "^2.11.0",
+    "is-uuid": "^1.0.2",
     "json-e": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.19",
@@ -52,7 +53,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "is-uuid": "^1.0.2",
     "jsdoc-to-markdown": "^6.0.1",
     "nock": "^13.0.3"
   }
