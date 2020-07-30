@@ -19,10 +19,10 @@
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@balena/jellyfish-assert": "0.0.19",
+    "@balena/jellyfish-assert": "^0.0.19",
     "@balena/jellyfish-environment": "^2.0.8",
-    "@balena/jellyfish-metrics": "0.0.20",
-    "@balena/jellyfish-uuid": "0.0.19",
+    "@balena/jellyfish-metrics": "^0.0.20",
+    "@balena/jellyfish-uuid": "^0.0.19",
     "@octokit/auth-app": "^2.4.10",
     "@octokit/plugin-retry": "^3.0.3",
     "@octokit/plugin-throttling": "^3.3.0",
