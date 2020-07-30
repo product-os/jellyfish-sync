@@ -6,7 +6,8 @@
     "url": "https://github.com/product-os/jellyfish-sync.git"
   },
   "description": "Sync library for Jellyfish",
-  "main": "lib/index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "directories": {
     "lib": "lib"
   },
@@ -18,9 +19,18 @@
       "lib"
     ]
   },
+  "files": [
+    "build/"
+  ],
   "scripts": {
-    "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && make lint && make test",
-    "doc": "jsdoc2md --template doc/README.hbs lib/index.js > README.md"
+    "clean": "rimraf build",
+    "build": "npm run clean && tsc",
+    "lint": "balena-lint --typescript lib test",
+    "lint-fix": "balena-lint --typescript --fix lib test",
+    "unit": "jest",
+    "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && npm run lint && npm run unit",
+    "doc": "typedoc --gitRevision master --out docs lib/",
+    "prepack": "npm run build"
   },
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
@@ -33,6 +43,17 @@
     "@octokit/plugin-retry": "^3.0.3",
     "@octokit/plugin-throttling": "^3.3.0",
     "@octokit/rest": "^18.0.4",
+    "@types/bluebird": "^3.5.32",
+    "@types/geoip-lite": "^1.1.31",
+    "@types/intercom-client": "^2.11.8",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/lru-cache": "^5.1.0",
+    "@types/marked": "^1.1.0",
+    "@types/node-jose": "^1.1.4",
+    "@types/randomstring": "^1.1.6",
+    "@types/request": "^2.48.5",
+    "@types/request-promise": "^4.1.46",
+    "balena-sdk": "^15.1.1",
     "bluebird": "^3.7.2",
     "front-sdk": "^0.8.1",
     "geoip-lite": "^1.4.2",
@@ -52,7 +73,11 @@
   },
   "devDependencies": {
     "@balena/jellycheck": "^0.0.7",
+    "@balena/lint": "^5.1.0",
+    "@types/jest": "^26.0.7",
+    "@types/nock": "^11.1.0",
     "ava": "^3.12.1",
+    "ava-ts": "^0.25.2",
     "catch-uncommitted": "^1.6.2",
     "depcheck": "^1.2.0",
     "deplint": "^1.1.2",
@@ -66,9 +91,15 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.2.5",
+    "jest": "^26.2.1",
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.3.0",
-    "nock": "^13.0.4"
+    "nock": "^13.0.4",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.1.4",
+    "ts-node": "^8.10.2",
+    "typedoc": "^0.17.8",
+    "typescript": "^3.9.7"
   },
   "husky": {
     "hooks": {
