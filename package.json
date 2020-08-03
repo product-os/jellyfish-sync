@@ -46,7 +46,7 @@
     "typed-errors": "^1.1.0"
   },
   "devDependencies": {
-    "ava": "^3.11.0",
+    "ava": "^3.11.1",
     "catch-uncommitted": "^1.6.2",
     "dotenv": "^8.2.0",
     "eslint": "^7.6.0",
