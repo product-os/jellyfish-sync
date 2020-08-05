@@ -10,10 +10,16 @@
   "directories": {
     "lib": "lib"
   },
+  "deplint": {
+    "files": [
+      "lib/**/*.{js}"
+    ],
+    "modules": [
+      "lib"
+    ]
+  },
   "scripts": {
-    "lint": "eslint lib",
-    "unit": "ava -v",
-    "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && npm run lint && npm run unit",
+    "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && make lint && make test",
     "doc": "jsdoc2md --template doc/README.hbs lib/index.js > README.md"
   },
   "author": "Balena.io. <hello@balena.io>",
@@ -28,7 +34,6 @@
     "@octokit/plugin-throttling": "^3.3.0",
     "@octokit/rest": "^18.0.3",
     "bluebird": "^3.7.2",
-    "crypto": "^1.0.1",
     "front-sdk": "^0.7.2",
     "geoip-lite": "^1.4.2",
     "intercom-client": "^2.11.0",
@@ -48,6 +53,8 @@
   "devDependencies": {
     "ava": "^3.11.1",
     "catch-uncommitted": "^1.6.2",
+    "depcheck": "^1.0.0",
+    "deplint": "^1.1.2",
     "dotenv": "^8.2.0",
     "eslint": "^7.6.0",
     "eslint-config-standard": "^14.1.1",
@@ -58,6 +65,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "jsdoc-to-markdown": "^6.0.1",
-    "nock": "^13.0.3"
+    "nock": "^13.0.3",
+    "shellcheck": "^0.4.4"
   }
 }
