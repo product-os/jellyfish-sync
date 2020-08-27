@@ -83,3 +83,5 @@ dist/
 
 # tmp directory
 tmp/
+
+.DS_Store
