@@ -51,7 +51,7 @@
     "typed-errors": "^1.1.0"
   },
   "devDependencies": {
-    "@balena/jellycheck": "^0.0.5",
+    "@balena/jellycheck": "^0.0.7",
     "ava": "^3.12.1",
     "catch-uncommitted": "^1.6.2",
     "depcheck": "^1.2.0",
