@@ -51,6 +51,7 @@
     "typed-errors": "^1.1.0"
   },
   "devDependencies": {
+    "@balena/jellycheck": "^0.0.5",
     "ava": "^3.12.1",
     "catch-uncommitted": "^1.6.2",
     "depcheck": "^1.2.0",
@@ -67,8 +68,7 @@
     "husky": "^4.2.5",
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.2.13",
-    "nock": "^13.0.4",
-    "shellcheck": "^0.4.4"
+    "nock": "^13.0.4"
   },
   "husky": {
     "hooks": {
