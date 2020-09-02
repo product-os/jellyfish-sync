@@ -27,7 +27,7 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.6",
     "@balena/jellyfish-environment": "^2.2.16",
-    "@balena/jellyfish-metrics": "^0.0.67",
+    "@balena/jellyfish-metrics": "^0.0.68",
     "@balena/jellyfish-uuid": "^1.0.7",
     "@octokit/auth-app": "^2.4.15",
     "@octokit/plugin-retry": "^3.0.3",
@@ -60,7 +60,7 @@
     "eslint": "^7.8.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jsdoc": "^30.3.0",
+    "eslint-plugin-jsdoc": "^30.3.1",
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
