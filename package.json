@@ -34,7 +34,7 @@
     "@octokit/plugin-throttling": "^3.3.0",
     "@octokit/rest": "^18.0.4",
     "bluebird": "^3.7.2",
-    "front-sdk": "^0.7.2",
+    "front-sdk": "^0.8.0",
     "geoip-lite": "^1.4.2",
     "intercom-client": "^2.11.0",
     "is-uuid": "^1.0.2",
