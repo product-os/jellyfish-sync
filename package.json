@@ -34,7 +34,7 @@
     "@octokit/plugin-throttling": "^3.3.0",
     "@octokit/rest": "^18.0.4",
     "bluebird": "^3.7.2",
-    "front-sdk": "^0.8.0",
+    "front-sdk": "^0.8.1",
     "geoip-lite": "^1.4.2",
     "intercom-client": "^2.11.0",
     "is-uuid": "^1.0.2",
@@ -67,7 +67,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.2.5",
     "jsdoc-to-markdown": "^6.0.1",
-    "lint-staged": "^10.2.13",
+    "lint-staged": "^10.3.0",
     "nock": "^13.0.4"
   },
   "husky": {
