@@ -27,7 +27,7 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.10",
     "@balena/jellyfish-environment": "^2.2.21",
-    "@balena/jellyfish-metrics": "^0.0.79",
+    "@balena/jellyfish-metrics": "^0.0.80",
     "@balena/jellyfish-uuid": "^1.0.11",
     "@octokit/auth-app": "^2.4.15",
     "@octokit/plugin-retry": "^3.0.3",
