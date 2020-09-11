@@ -4,40 +4,40 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as typedErrors from "typed-errors";
+import * as _ from 'lodash';
+import * as typedErrors from 'typed-errors';
 
 export const SyncExternalRequestError = typedErrors.makeTypedError(
-	"SyncExternalRequestError"
+	'SyncExternalRequestError',
 );
-export const SyncInvalidArg = typedErrors.makeTypedError("SyncInvalidArg");
-export const SyncInvalidEvent = typedErrors.makeTypedError("SyncInvalidEvent");
+export const SyncInvalidArg = typedErrors.makeTypedError('SyncInvalidArg');
+export const SyncInvalidEvent = typedErrors.makeTypedError('SyncInvalidEvent');
 export const SyncInvalidRequest = typedErrors.makeTypedError(
-	"SyncInvalidRequest"
+	'SyncInvalidRequest',
 );
 export const SyncInvalidTemplate = typedErrors.makeTypedError(
-	"SyncInvalidTemplate"
+	'SyncInvalidTemplate',
 );
-export const SyncInvalidType = typedErrors.makeTypedError("SyncInvalidType");
-export const SyncNoActor = typedErrors.makeTypedError("SyncNoActor");
+export const SyncInvalidType = typedErrors.makeTypedError('SyncInvalidType');
+export const SyncNoActor = typedErrors.makeTypedError('SyncNoActor');
 export const SyncNoCompatibleIntegration = typedErrors.makeTypedError(
-	"SyncNoCompatibleIntegration"
+	'SyncNoCompatibleIntegration',
 );
-export const SyncNoElement = typedErrors.makeTypedError("SyncNoElement");
+export const SyncNoElement = typedErrors.makeTypedError('SyncNoElement');
 export const SyncNoExternalResource = typedErrors.makeTypedError(
-	"SyncNoExternalResource"
+	'SyncNoExternalResource',
 );
 export const SyncNoIntegrationAppCredentials = typedErrors.makeTypedError(
-	"SyncNoIntegrationAppCredentials"
+	'SyncNoIntegrationAppCredentials',
 );
 export const SyncNoMatchingUser = typedErrors.makeTypedError(
-	"SyncNoMatchingUser"
+	'SyncNoMatchingUser',
 );
-export const SyncOAuthError = typedErrors.makeTypedError("SyncOAuthError");
+export const SyncOAuthError = typedErrors.makeTypedError('SyncOAuthError');
 export const SyncOAuthNoUserError = typedErrors.makeTypedError(
-	"SyncOAuthNoUserError"
+	'SyncOAuthNoUserError',
 );
 export const SyncPermissionsError = typedErrors.makeTypedError(
-	"SyncPermissionsError"
+	'SyncPermissionsError',
 );
-export const SyncRateLimit = typedErrors.makeTypedError("SyncRateLimit");
+export const SyncRateLimit = typedErrors.makeTypedError('SyncRateLimit');

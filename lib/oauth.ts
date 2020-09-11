@@ -4,22 +4,22 @@
  * Proprietary and confidential.
  */
 
-import * as Bluebird from "bluebird";
-import * as assert from "@balena/jellyfish-assert";
-import * as _ from "lodash";
-import * as httpRequest from "request";
-import * as url from "url";
-import * as errors from "./errors";
-import * as typedErrors from "typed-errors";
+import * as Bluebird from 'bluebird';
+import * as assert from '@balena/jellyfish-assert';
+import * as _ from 'lodash';
+import * as httpRequest from 'request';
+import * as url from 'url';
+import * as errors from './errors';
+import * as typedErrors from 'typed-errors';
 
 export const OAuthRequestError = typedErrors.makeTypedError(
-	"OAuthRequestError"
+	'OAuthRequestError',
 );
 export const OAuthInvalidOption = typedErrors.makeTypedError(
-	"OAuthInvalidOption"
+	'OAuthInvalidOption',
 );
 export const OAuthUnsuccessfulResponse = typedErrors.makeTypedError(
-	"OAuthUnsuccessfulResponse"
+	'OAuthUnsuccessfulResponse',
 );
 
 /**
@@ -40,7 +40,7 @@ export const OAuthUnsuccessfulResponse = typedErrors.makeTypedError(
 export const request = async (
 	accessToken: { access_token: any },
 	options: any,
-	retries = 10
+	retries = 10,
 ) => {
 	const result = await new Bluebird<{ code: Number; body: any }>(
 		(resolve, reject) => {
@@ -48,8 +48,8 @@ export const request = async (
 			if (accessToken) {
 				_.set(
 					options,
-					["headers", "Authorization"],
-					`Bearer ${accessToken.access_token}`
+					['headers', 'Authorization'],
+					`Bearer ${accessToken.access_token}`,
 				);
 			}
 
@@ -64,9 +64,9 @@ export const request = async (
 						code: response.statusCode,
 						body,
 					});
-				}
+				},
 			);
-		}
+		},
 	);
 
 	// Automatically retry on server failures
@@ -75,7 +75,7 @@ export const request = async (
 			null,
 			retries > 0,
 			errors.SyncExternalRequestError,
-			`External service responded with ${result.code} to OAuth request`
+			`External service responded with ${result.code} to OAuth request`,
 		);
 
 		await Bluebird.delay(2000);
@@ -109,36 +109,36 @@ export const getAuthorizeUrl = (
 	baseUrl: string | url.URL,
 	scopes: any[],
 	state: any,
-	options: { appId: string; redirectUri: string }
+	options: { appId: string; redirectUri: string },
 ) => {
 	assert.INTERNAL(
 		null,
 		Boolean(options.appId),
 		exports.OAuthInvalidOption,
-		"Missing appId"
+		'Missing appId',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(options.redirectUri),
 		exports.OAuthInvalidOption,
-		"Missing redirectUri"
+		'Missing redirectUri',
 	);
 	assert.INTERNAL(
 		null,
 		scopes && (scopes.length as any),
 		exports.OAuthInvalidOption,
-		"Missing or invalid scopes"
+		'Missing or invalid scopes',
 	);
 
-	const authorizeUrl = new url.URL("/oauth/authorize", baseUrl);
-	authorizeUrl.searchParams.append("response_type", "code");
-	authorizeUrl.searchParams.append("client_id", options.appId);
-	authorizeUrl.searchParams.append("redirect_uri", options.redirectUri);
-	authorizeUrl.searchParams.append("scope", scopes.join(" "));
+	const authorizeUrl = new url.URL('/oauth/authorize', baseUrl);
+	authorizeUrl.searchParams.append('response_type', 'code');
+	authorizeUrl.searchParams.append('client_id', options.appId);
+	authorizeUrl.searchParams.append('redirect_uri', options.redirectUri);
+	authorizeUrl.searchParams.append('scope', scopes.join(' '));
 
 	if (state) {
 		const string = _.isString(state) ? state : JSON.stringify(state);
-		authorizeUrl.searchParams.append("state", string);
+		authorizeUrl.searchParams.append('state', string);
 	}
 
 	return authorizeUrl.href;
@@ -154,13 +154,13 @@ const oauthPost = async (
 		redirect_uri: any;
 		code?: any;
 		refresh_token?: any;
-	}
+	},
 ) => {
 	const { code, body } = await exports.request(null, {
 		baseUrl,
 		uri: path,
 		json: true,
-		method: "POST",
+		method: 'POST',
 		form: data,
 	});
 
@@ -168,7 +168,7 @@ const oauthPost = async (
 		return `POST ${baseUrl}${path} responded with ${code}: ${JSON.stringify(
 			body,
 			null,
-			2
+			2,
 		)}`;
 	});
 
@@ -177,14 +177,14 @@ const oauthPost = async (
 			`POST ${baseUrl}${path} responded with ${code}:`,
 			JSON.stringify(body, null, 2),
 			`to payload: ${JSON.stringify(data, null, 2)}`,
-		].join(" ");
+		].join(' ');
 	});
 
 	assert.INTERNAL(null, code === 200, exports.OAuthRequestError, () => {
 		return `POST ${baseUrl}${path} responded with ${code}: ${JSON.stringify(
 			body,
 			null,
-			2
+			2,
 		)}`;
 	});
 
@@ -219,35 +219,35 @@ const oauthPost = async (
 export const getAccessToken = async (
 	baseUrl: string,
 	code: string,
-	options: { appId: string; appSecret: string; redirectUri: string }
+	options: { appId: string; appSecret: string; redirectUri: string },
 ): Promise<string> => {
 	assert.INTERNAL(
 		null,
 		Boolean(options.appId),
 		exports.OAuthInvalidOption,
-		"Missing appId"
+		'Missing appId',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(options.appSecret),
 		exports.OAuthInvalidOption,
-		"Missing appSecret"
+		'Missing appSecret',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(options.redirectUri),
 		exports.OAuthInvalidOption,
-		"Missing redirectUri"
+		'Missing redirectUri',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(code),
 		exports.OAuthInvalidOption,
-		"Missing code"
+		'Missing code',
 	);
 
-	return oauthPost(baseUrl, "/oauth/token", {
-		grant_type: "authorization_code",
+	return oauthPost(baseUrl, '/oauth/token', {
+		grant_type: 'authorization_code',
 		client_id: options.appId,
 		client_secret: options.appSecret,
 		redirect_uri: options.redirectUri,
@@ -275,35 +275,35 @@ export const getAccessToken = async (
 export const refreshAccessToken = async (
 	baseUrl: any,
 	accessToken: { refresh_token: any },
-	options: { appId: any; appSecret: any; redirectUri: any }
+	options: { appId: any; appSecret: any; redirectUri: any },
 ) => {
 	assert.INTERNAL(
 		null,
 		Boolean(options.appId),
 		exports.OAuthInvalidOption,
-		"Missing appId"
+		'Missing appId',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(options.appSecret),
 		exports.OAuthInvalidOption,
-		"Missing appSecret"
+		'Missing appSecret',
 	);
 	assert.INTERNAL(
 		null,
 		Boolean(options.redirectUri),
 		exports.OAuthInvalidOption,
-		"Missing redirectUri"
+		'Missing redirectUri',
 	);
 	assert.INTERNAL(
 		null,
 		accessToken && accessToken.refresh_token,
 		exports.OAuthInvalidOption,
-		"Missing refresh token"
+		'Missing refresh token',
 	);
 
-	return oauthPost(baseUrl, "/oauth/token", {
-		grant_type: "refresh_token",
+	return oauthPost(baseUrl, '/oauth/token', {
+		grant_type: 'refresh_token',
 		client_id: options.appId,
 		client_secret: options.appSecret,
 		redirect_uri: options.redirectUri,

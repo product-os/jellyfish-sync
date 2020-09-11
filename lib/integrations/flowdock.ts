@@ -4,21 +4,21 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as LRU from "lru-cache";
-import * as crypto from "crypto";
-import * as Bluebird from "bluebird";
+import * as _ from 'lodash';
+import * as LRU from 'lru-cache';
+import * as crypto from 'crypto';
+import * as Bluebird from 'bluebird';
 import {
 	Card,
 	SyncIntegrationInstance,
 	SyncIntegrationOptions,
-} from "../sync-types";
+} from '../sync-types';
 
 const FLOWDOCK_USER_CACHE = new LRU(200);
 
 class FlowdockIntegration implements SyncIntegrationInstance {
 	options: SyncIntegrationOptions;
-	context: SyncIntegrationOptions["context"];
+	context: SyncIntegrationOptions['context'];
 
 	constructor(options: SyncIntegrationOptions) {
 		this.options = options;
@@ -52,7 +52,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 		const sequence = [];
 		const headers = {
 			Authorization: `Basic ${Buffer.from(this.options.token.api).toString(
-				"base64"
+				'base64',
 			)}`,
 		};
 		const adminActorId = await this.context.getActorId({
@@ -61,14 +61,14 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 
 		// Get flowdock user
 		const flowdockUser = await this.context.request(adminActorId, {
-			method: "GET",
+			method: 'GET',
 			json: true,
 			uri: `https://api.flowdock.com/users/${event.data.payload.user}`,
 			headers,
 		});
 
 		const eventActorId = await this.context.getActorId({
-			handle: flowdockUser.body.nick.toLowerCase().replace(/_/g, "-"),
+			handle: flowdockUser.body.nick.toLowerCase().replace(/_/g, '-'),
 			name: flowdockUser.body.name,
 			email: flowdockUser.body.email,
 		});
@@ -76,7 +76,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 		// TODO we can cache these requests
 		// Request flow data from flowdock API in order to construct the mirrorId.
 		const flowData = await this.context.request(adminActorId, {
-			method: "GET",
+			method: 'GET',
 			json: true,
 			uri: `https://api.flowdock.com/flows/find?id=${event.data.payload.flow}`,
 			headers,
@@ -84,9 +84,9 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 
 		// Use this to construct the mirrorId if the event is type of tag-change
 		// Just the event doesn't contain enough information
-		if (["message-edit", "tag-change"].includes(event.data.payload.event)) {
+		if (['message-edit', 'tag-change'].includes(event.data.payload.event)) {
 			const messageData = await this.context.request(adminActorId, {
-				method: "GET",
+				method: 'GET',
 				json: true,
 				uri: `${flowData.body.url}/messages/${event.data.payload.content.message}`,
 				headers,
@@ -102,8 +102,8 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 
 		// Check if there is an element of type thread in JF.
 		const threadCard = await this.context.getElementByMirrorId(
-			"thread@1.0.0",
-			flowThreadMirrorId
+			'thread@1.0.0',
+			flowThreadMirrorId,
 		);
 
 		if (
@@ -114,9 +114,9 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 				time: new Date(event.data.payload.created_at),
 				actor: eventActorId,
 				card: {
-					name: "",
-					type: "thread@1.0.0",
-					slug: slugify(event, "thread"),
+					name: '',
+					type: 'thread@1.0.0',
+					slug: slugify(event, 'thread'),
 					active: true,
 					tags: [],
 					requires: [],
@@ -126,7 +126,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 						flow: flowData.body.parameterized_name,
 						mentionsUser: [],
 						alertsUser: [],
-						description: "",
+						description: '',
 					},
 				},
 			};
@@ -134,8 +134,8 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 		}
 
 		if (
-			["message", "message-edit", "tag-change"].includes(
-				event.data.payload.event
+			['message', 'message-edit', 'tag-change'].includes(
+				event.data.payload.event,
 			)
 		) {
 			const messageMirrorId = `${flowThreadMirrorId}/messages/${event.data.payload.id}`;
@@ -145,7 +145,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 			> | null = await this.context.getElementByMirrorId(type, messageMirrorId);
 			const target = threadCard || {
 				id: {
-					$eval: "cards[0].id",
+					$eval: 'cards[0].id',
 				},
 			};
 			if (messageCard) {
@@ -155,7 +155,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 					this.context,
 					adminActorId!,
 					headers,
-					event.data.payload.messageData.body.tags
+					event.data.payload.messageData.body.tags,
 				);
 				messageCard.tags = getTags(event);
 				messageCard.data!.timestamp = event.data.payload.created_at;
@@ -163,14 +163,14 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 					event,
 					this.context,
 					adminActorId!,
-					headers
+					headers,
 				);
 				if (!_.isEmpty(readBy)) {
 					messageCard.data!.payload.readBy = readBy;
 				}
 			} else {
 				messageCard = {
-					name: "",
+					name: '',
 					type,
 					slug: slugify(event, type),
 					active: true,
@@ -185,7 +185,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 								event,
 								this.context,
 								adminActorId!,
-								headers
+								headers,
 							),
 							alertsUser: [],
 							mentionsGroup: [],
@@ -201,7 +201,7 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 				event,
 				this.context,
 				adminActorId!,
-				headers
+				headers,
 			);
 			if (!_.isEmpty(readBy)) {
 				messageCard.data!.payload.readBy = readBy;
@@ -213,24 +213,24 @@ class FlowdockIntegration implements SyncIntegrationInstance {
 			});
 		}
 
-		if (event.data.payload.event === "file") {
+		if (event.data.payload.event === 'file') {
 			const messageMirrorId = `${flowThreadMirrorId}/messages/${event.data.payload.id}`;
-			const type = "whisper@1.0.0";
+			const type = 'whisper@1.0.0';
 			let messageCard: Partial<
 				Card
 			> | null = await this.context.getElementByMirrorId(type, messageMirrorId);
 			const target = threadCard || {
 				id: {
-					$eval: "cards[0].id",
+					$eval: 'cards[0].id',
 				},
 			};
 			if (!messageCard) {
 				let message = `[${event.data.payload.content.file_name}](https://www.flowdock.com/rest${event.data.payload.content.path})`;
-				if ("image" in event.data.payload.content) {
+				if ('image' in event.data.payload.content) {
 					message = `!${message}`;
 				}
 				messageCard = {
-					name: "",
+					name: '',
 					type,
 					slug: slugify(event, type),
 					active: true,
@@ -268,85 +268,85 @@ export const create = (options: SyncIntegrationOptions) => {
 };
 
 const slugify = (event: Card, type: string): string => {
-	const typeBase = type.split("@")[0];
+	const typeBase = type.split('@')[0];
 	const baseSlug = `${typeBase}-flowdock-${event.data.payload.thread_id
 		.toLowerCase()
-		.replace(/_/g, "-")}`;
-	return typeBase === "thread"
+		.replace(/_/g, '-')}`;
+	return typeBase === 'thread'
 		? baseSlug
 		: `${baseSlug}-${event.data.payload.id}`;
 };
 
 const getRawContent = (event: Card): Record<string, any> => {
-	return "messageData" in event.data.payload
+	return 'messageData' in event.data.payload
 		? event.data.payload.messageData.body.content
 		: event.data.payload.content;
 };
 
 const getMessageType = (event: Card): string => {
-	return getRawContent(event).trimStart().startsWith("%")
-		? "message@1.0.0"
-		: "whisper@1.0.0";
+	return getRawContent(event).trimStart().startsWith('%')
+		? 'message@1.0.0'
+		: 'whisper@1.0.0';
 };
 
 const getMessageContent = (event: Card): string => {
 	return getRawContent(event)
 		.trimStart()
-		.replace(new RegExp("^[%]+"), "")
+		.replace(new RegExp('^[%]+'), '')
 		.trimStart();
 };
 
 const getReadIds = (event: Card): string[] => {
 	const flowdockTags = getFlowdockTags(event);
 	const userIds = getUserIds(flowdockTags);
-	const unreadIds = getUserIds(flowdockTags, "unread");
+	const unreadIds = getUserIds(flowdockTags, 'unread');
 	return _.difference(userIds, unreadIds);
 };
 
 const getReadByArray = async (
 	event: Card,
-	context: SyncIntegrationOptions["context"],
+	context: SyncIntegrationOptions['context'],
 	actorId: string,
-	headers: Record<string, any>
+	headers: Record<string, any>,
 ): Promise<string[]> => {
 	const readIds = getReadIds(event);
 	const users = await Promise.all(
 		_.map(readIds, (id) => {
 			return getFlowdockUsernameById(context, actorId, headers, id);
-		})
+		}),
 	);
 	return users;
 };
 
 const getFlowdockTags = (event: Card): string[] => {
-	return "messageData" in event.data.payload
+	return 'messageData' in event.data.payload
 		? event.data.payload.messageData.body.tags
 		: event.data.payload.tags;
 };
 
 const getTags = (event: Card): string[] => {
 	const tags = _.filter(getFlowdockTags(event), (tag) => {
-		return !tag.startsWith(":");
+		return !tag.startsWith(':');
 	});
 	return tags;
 };
 
-const getUserIds = (flowdockTags: string[], tagName = "user"): string[] => {
+const getUserIds = (flowdockTags: string[], tagName = 'user'): string[] => {
 	const prefix = `:${tagName}:`;
 	return _.chain(flowdockTags)
 		.filter((tag) => {
 			return !!tag.match(new RegExp(prefix));
 		})
-		.invokeMap(String.prototype.replace, prefix, "")
+		.invokeMap(String.prototype.replace, prefix, '')
 		.value();
 };
 
 const getMentions = async (
 	event: Card,
-	context: SyncIntegrationOptions["context"],
+	context: SyncIntegrationOptions['context'],
 	actorId: string,
 	headers: Record<string, any>,
-	flowdockTags = event.data.payload.tags
+	flowdockTags = event.data.payload.tags,
 ): Promise<string[]> => {
 	if (_.isEmpty(flowdockTags)) {
 		return [];
@@ -354,22 +354,22 @@ const getMentions = async (
 	return Promise.all(
 		_.map(getUserIds(flowdockTags), (id) => {
 			return getFlowdockUsernameById(context, actorId, headers, id);
-		})
+		}),
 	);
 };
 
 const getFlowdockUsernameById = async (
-	context: SyncIntegrationOptions["context"],
+	context: SyncIntegrationOptions['context'],
 	actorId: string,
 	headers: Record<string, any>,
-	id: string
+	id: string,
 ): Promise<string> => {
 	const cachedUser: any = FLOWDOCK_USER_CACHE.get(id);
 	if (cachedUser) {
 		return cachedUser.nick;
 	}
 	const user = await context.request(actorId, {
-		method: "GET",
+		method: 'GET',
 		json: true,
 		uri: `https://api.flowdock.com/users/${id}`,
 		headers,
@@ -379,7 +379,7 @@ const getFlowdockUsernameById = async (
 };
 
 const isEventActionable = (event: Card): boolean => {
-	const actionableEvents = ["message", "message-edit", "file", "tag-change"];
+	const actionableEvents = ['message', 'message-edit', 'file', 'tag-change'];
 
 	// Removed emoji-reaction since JF doesn't currently support emoji-reactions
 	return actionableEvents.includes(event.data.payload.event);
@@ -388,16 +388,16 @@ const isEventActionable = (event: Card): boolean => {
 export const isEventValid = async (
 	token: { signature: string },
 	rawEvent: string,
-	headers: Record<string, any>
+	headers: Record<string, any>,
 ): Promise<boolean> => {
-	const signature = headers["x-flowdock-signature"];
+	const signature = headers['x-flowdock-signature'];
 	if (!signature || !token || !token.signature) {
 		return false;
 	}
 
 	const hash = crypto
-		.createHmac("sha1", token.signature)
+		.createHmac('sha1', token.signature)
 		.update(rawEvent)
-		.digest("hex");
+		.digest('hex');
 	return signature === `sha1=${hash}`;
 };

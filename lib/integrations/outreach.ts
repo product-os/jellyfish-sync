@@ -4,20 +4,20 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as crypto from "crypto";
-import * as Bluebird from "bluebird";
+import * as _ from 'lodash';
+import * as crypto from 'crypto';
+import * as Bluebird from 'bluebird';
 import {
 	Card,
 	SyncIntegrationOptions,
 	SyncIntegrationInstance,
 	SyncResult,
 	SyncContext,
-} from "../sync-types";
-const assert = require("@balena/jellyfish-assert");
-const isUUID = require("is-uuid").v4;
+} from '../sync-types';
+const assert = require('@balena/jellyfish-assert');
+const isUUID = require('is-uuid').v4;
 
-type Context = SyncIntegrationOptions["context"];
+type Context = SyncIntegrationOptions['context'];
 
 type OutreachProspect = {
 	type: string;
@@ -37,24 +37,24 @@ const MAX_NAME_LENGTH = 50;
 
 const USER_PROSPECT_MAPPING = [
 	{
-		prospect: ["addressCity"],
-		user: ["data", "profile", "city"],
+		prospect: ['addressCity'],
+		user: ['data', 'profile', 'city'],
 	},
 	{
-		prospect: ["occupation"],
-		user: ["data", "profile", "company"],
+		prospect: ['occupation'],
+		user: ['data', 'profile', 'company'],
 	},
 	{
-		prospect: ["addressCountry"],
-		user: ["data", "profile", "country"],
+		prospect: ['addressCountry'],
+		user: ['data', 'profile', 'country'],
 	},
 	{
-		prospect: ["title"],
-		user: ["data", "profile", "type"],
+		prospect: ['title'],
+		user: ['data', 'profile', 'type'],
 	},
 	{
-		prospect: ["firstName"],
-		user: ["data", "profile", "name", "first"],
+		prospect: ['firstName'],
+		user: ['data', 'profile', 'name', 'first'],
 		fn: (value: string) => {
 			return _.truncate(value, {
 				length: MAX_NAME_LENGTH,
@@ -62,8 +62,8 @@ const USER_PROSPECT_MAPPING = [
 		},
 	},
 	{
-		prospect: ["lastName"],
-		user: ["data", "profile", "name", "last"],
+		prospect: ['lastName'],
+		user: ['data', 'profile', 'name', 'last'],
 		fn: (value: string) => {
 			return _.truncate(value, {
 				length: MAX_NAME_LENGTH,
@@ -71,8 +71,8 @@ const USER_PROSPECT_MAPPING = [
 		},
 	},
 	{
-		prospect: ["tags"],
-		user: ["tags"],
+		prospect: ['tags'],
+		user: ['tags'],
 	},
 ];
 
@@ -80,8 +80,8 @@ const USER_PROSPECT_MAPPING = [
 // if it doesn't already exist, and associate the prospect
 // with the right company resource.
 const getProspectAttributes = (contact: Card) => {
-	const githubUsername = contact.slug.startsWith("contact-gh-")
-		? contact.slug.replace(/^contact-gh-/g, "")
+	const githubUsername = contact.slug.startsWith('contact-gh-')
+		? contact.slug.replace(/^contact-gh-/g, '')
 		: null;
 
 	const attributes = {
@@ -91,11 +91,11 @@ const getProspectAttributes = (contact: Card) => {
 		emails: _.flatten([
 			contact.data.profile && contact.data.profile.email,
 		]).filter((email) => {
-			return email && !email.endsWith("@change.me");
+			return email && !email.endsWith('@change.me');
 		}),
 
 		githubUsername,
-		nickname: contact.slug.replace(/^contact-/g, ""),
+		nickname: contact.slug.replace(/^contact-/g, ''),
 		custom1: `https://jel.ly.fish/${contact.id}`,
 	};
 
@@ -113,14 +113,14 @@ const getProspectByEmail = async (
 	actor: string,
 	errors: any,
 	baseUrl: string,
-	emails: string[]
+	emails: string[],
 ): Promise<null | OutreachProspect> => {
 	if (!emails || _.isEmpty(emails)) {
 		return null;
 	}
 
 	for (const email of _.castArray(emails)) {
-		context.log.info("Searching for propect by email", {
+		context.log.info('Searching for propect by email', {
 			email,
 		});
 
@@ -131,15 +131,15 @@ const getProspectByEmail = async (
 			};
 		} = await context
 			.request(actor, {
-				method: "GET",
+				method: 'GET',
 				json: true,
 				uri: `${baseUrl}/api/v2/prospects`,
 				qs: {
-					"filter[emails]": email,
+					'filter[emails]': email,
 				},
 			})
 			.catch((error) => {
-				if (error.expected && error.name === "SyncOAuthNoUserError") {
+				if (error.expected && error.name === 'SyncOAuthNoUserError') {
 					return null;
 				}
 
@@ -154,13 +154,13 @@ const getProspectByEmail = async (
 			null,
 			searchResult.code === 200 || searchResult.code === 404,
 			errors.SyncExternalRequestError,
-			`Cannot find prospect by email ${emails}: ${searchResult.code}`
+			`Cannot find prospect by email ${emails}: ${searchResult.code}`,
 		);
 
 		const result = _.first(searchResult.body.data);
 
 		if (result) {
-			context.log.info("Found prospect by email", {
+			context.log.info('Found prospect by email', {
 				email,
 				prospect: result,
 			});
@@ -169,7 +169,7 @@ const getProspectByEmail = async (
 		}
 	}
 
-	context.log.info("Could not find prospect by emails", {
+	context.log.info('Could not find prospect by emails', {
 		emails,
 	});
 
@@ -189,7 +189,7 @@ const upsertProspect = async (
 	errors: any,
 	baseUrl: string,
 	card: Card,
-	retries = 5
+	retries = 5,
 ): Promise<SyncResult[]> => {
 	const contactEmail = card.data.profile && card.data.profile.email;
 	const prospect = await getProspectByEmail(
@@ -197,26 +197,26 @@ const upsertProspect = async (
 		actor,
 		errors,
 		baseUrl,
-		contactEmail
+		contactEmail,
 	);
 
 	const outreachUrl =
-		_.get(prospect, ["links", "self"]) ||
+		_.get(prospect, ['links', 'self']) ||
 		_.find(card.data.mirrors, (mirror) => {
 			return _.startsWith(mirror, baseUrl);
 		});
 
-	const method = outreachUrl ? "PATCH" : "POST";
+	const method = outreachUrl ? 'PATCH' : 'POST';
 	const uri = outreachUrl || `${baseUrl}/api/v2/prospects`;
 
-	context.log.info("Mirroring", {
+	context.log.info('Mirroring', {
 		url: uri,
 		remote: card,
 	});
 
 	const body: any = {
 		data: {
-			type: "prospect",
+			type: 'prospect',
 			attributes: getProspectAttributes(card),
 		},
 	};
@@ -226,7 +226,7 @@ const upsertProspect = async (
 		if (
 			origin &&
 			origin.type &&
-			origin.type.split("@")[0] === "external-event" &&
+			origin.type.split('@')[0] === 'external-event' &&
 			origin.data.source
 		) {
 			body.data.attributes.tags = body.data.attributes.tags || [];
@@ -237,7 +237,7 @@ const upsertProspect = async (
 	}
 
 	if (outreachUrl) {
-		body.data.id = _.parseInt(_.last(outreachUrl.split("/")) as string);
+		body.data.id = _.parseInt(_.last(outreachUrl.split('/')) as string);
 	}
 
 	const result = await context
@@ -248,7 +248,7 @@ const upsertProspect = async (
 			body,
 		})
 		.catch((error) => {
-			if (error.expected && error.name === "SyncOAuthNoUserError") {
+			if (error.expected && error.name === 'SyncOAuthNoUserError') {
 				return null;
 			}
 
@@ -264,11 +264,11 @@ const upsertProspect = async (
 	if (
 		result.code === 422 &&
 		result.body.errors[0] &&
-		result.body.errors[0].id === "validationError" &&
+		result.body.errors[0].id === 'validationError' &&
 		result.body.errors[0].detail ===
-			"Contacts contact is using an excluded email address."
+			'Contacts contact is using an excluded email address.'
 	) {
-		context.log.info("Omitting excluded prospect by email address", {
+		context.log.info('Omitting excluded prospect by email address', {
 			prospect: card,
 			url: outreachUrl,
 		});
@@ -285,11 +285,11 @@ const upsertProspect = async (
 	if (
 		result.code === 422 &&
 		result.body.errors[0] &&
-		result.body.errors[0].id === "validationError" &&
+		result.body.errors[0].id === 'validationError' &&
 		result.body.errors[0].detail ===
-			"Contacts email hash has already been taken."
+			'Contacts email hash has already been taken.'
 	) {
-		context.log.info("Retrying taken address", {
+		context.log.info('Retrying taken address', {
 			prospect: card,
 			url: outreachUrl,
 		});
@@ -303,7 +303,7 @@ const upsertProspect = async (
 
 	if (outreachUrl) {
 		if (result.code === 404) {
-			context.log.warn("Remote prospect not found", {
+			context.log.warn('Remote prospect not found', {
 				url: outreachUrl,
 				prospect: card,
 			});
@@ -317,9 +317,9 @@ const upsertProspect = async (
 		if (
 			result.code === 422 &&
 			result.body.errors[0] &&
-			result.body.errors[0].id === "validationDuplicateValueError" &&
+			result.body.errors[0].id === 'validationDuplicateValueError' &&
 			result.body.errors[0].detail ===
-				"A Contact with this email_hash already exists."
+				'A Contact with this email_hash already exists.'
 		) {
 			return [];
 		}
@@ -333,14 +333,14 @@ const upsertProspect = async (
 					`Could not update prospect: Got ${result.code} ${JSON.stringify(
 						result.body,
 						null,
-						2
+						2,
 					)}`,
 					`when sending ${JSON.stringify(body, null, 2)} to ${outreachUrl}`,
-				].join("\n");
-			}
+				].join('\n');
+			},
 		);
 
-		context.log.info("Updated prospect", {
+		context.log.info('Updated prospect', {
 			contacts: card,
 			url: outreachUrl,
 			data: result.body,
@@ -361,7 +361,7 @@ const upsertProspect = async (
 				}
 			}
 
-			context.log.info("Adding missing mirror url", {
+			context.log.info('Adding missing mirror url', {
 				slug: card.slug,
 				url: outreachUrl,
 			});
@@ -387,17 +387,17 @@ const upsertProspect = async (
 				`Could not create prospect: Got ${result.code} ${JSON.stringify(
 					result.body,
 					null,
-					2
+					2,
 				)}`,
 				`when sending ${JSON.stringify(body, null, 2)} to ${outreachUrl}`,
-			].join("\n");
-		}
+			].join('\n');
+		},
 	);
 
 	card.data.mirrors = card.data.mirrors || [];
 	card.data.mirrors.push(result.body.data.links.self);
 
-	context.log.info("Created prospect", {
+	context.log.info('Created prospect', {
 		contact: card,
 		url: outreachUrl,
 		data: result.body,
@@ -415,7 +415,7 @@ const upsertProspect = async (
 const getSequenceCard = (
 	url: string,
 	attributes: { name: any },
-	options: { id: any; active: any; translateDate: any; orgId: any }
+	options: { id: any; active: any; translateDate: any; orgId: any },
 ) => {
 	return {
 		name: attributes.name,
@@ -423,7 +423,7 @@ const getSequenceCard = (
 		links: {},
 		markers: [],
 		active: options.active,
-		type: "email-sequence@1.0.0",
+		type: 'email-sequence@1.0.0',
 		slug: `email-sequence-${options.orgId}-${options.id}`,
 		data: {
 			translateDate: options.translateDate.toISOString(),
@@ -440,7 +440,7 @@ class OutreachIntegration implements SyncIntegrationInstance {
 	constructor(options: SyncIntegrationOptions) {
 		this.options = options;
 		this.context = this.options.context;
-		this.baseUrl = "https://api.outreach.io";
+		this.baseUrl = 'https://api.outreach.io';
 	}
 
 	async initialize() {
@@ -452,8 +452,8 @@ class OutreachIntegration implements SyncIntegrationInstance {
 	}
 
 	async mirror(card: Card, options: any) {
-		const baseType = card.type.split("@")[0];
-		if (baseType !== "contact") {
+		const baseType = card.type.split('@')[0];
+		if (baseType !== 'contact') {
 			return [];
 		}
 
@@ -466,7 +466,7 @@ class OutreachIntegration implements SyncIntegrationInstance {
 			options.actor,
 			this.options.errors,
 			this.baseUrl,
-			card
+			card,
 		);
 	}
 
@@ -476,10 +476,10 @@ class OutreachIntegration implements SyncIntegrationInstance {
 		}
 
 		const data = event.data.payload.data;
-		const orgId = event.data.headers["outreach-org-id"];
+		const orgId = event.data.headers['outreach-org-id'];
 
 		// Lets only translate sequences for now
-		if (data.type !== "sequence") {
+		if (data.type !== 'sequence') {
 			return [];
 		}
 
@@ -500,28 +500,28 @@ class OutreachIntegration implements SyncIntegrationInstance {
 			null,
 			adminActorId,
 			this.options.errors.SyncNoActor,
-			`Not such actor: ${this.options.defaultUser}`
+			`Not such actor: ${this.options.defaultUser}`,
 		);
 
 		const url = `https://api.outreach.io/api/v2/sequences/${data.id}`;
 		const eventCard = await this.context.getElementByMirrorId(
-			"email-sequence@1.0.0",
-			url
+			'email-sequence@1.0.0',
+			url,
 		);
 
 		if (eventCard) {
 			data.attributes.name = data.attributes.name || eventCard.name;
 		}
 
-		if (eventType === "sequence.updated" && !eventCard) {
+		if (eventType === 'sequence.updated' && !eventCard) {
 			const remoteSequence = await this.context
 				.request(adminActorId, {
-					method: "GET",
+					method: 'GET',
 					json: true,
 					uri: url,
 				})
 				.catch((error) => {
-					if (error.expected && error.name === "SyncOAuthNoUserError") {
+					if (error.expected && error.name === 'SyncOAuthNoUserError') {
 						return null;
 					}
 
@@ -540,9 +540,9 @@ class OutreachIntegration implements SyncIntegrationInstance {
 					return `Could not get sequence from ${url}: ${JSON.stringify(
 						remoteSequence,
 						null,
-						2
+						2,
 					)}`;
-				}
+				},
 			);
 
 			data.attributes.name =
@@ -553,12 +553,12 @@ class OutreachIntegration implements SyncIntegrationInstance {
 		}
 
 		const isPublic =
-			data.attributes.shareType === "shared" ||
+			data.attributes.shareType === 'shared' ||
 			_.isNil(data.attributes.shareType);
 
 		const sequenceCard = getSequenceCard(url, data.attributes, {
 			id: data.id,
-			active: eventType !== "sequence.destroyed" && isPublic,
+			active: eventType !== 'sequence.destroyed' && isPublic,
 			translateDate: new Date(event.data.payload.meta.deliveredAt),
 			orgId,
 		});
@@ -579,7 +579,7 @@ class OutreachIntegration implements SyncIntegrationInstance {
 				: event.data.payload.meta.deliveredAt;
 
 		const date =
-			eventType === "sequence.created"
+			eventType === 'sequence.created'
 				? new Date(data.attributes.createdAt)
 				: new Date(updateTimestamp);
 
@@ -597,23 +597,23 @@ export const create = (options: SyncIntegrationOptions) => {
 	return new OutreachIntegration(options);
 };
 
-export const OAUTH_BASE_URL = "https://api.outreach.io";
+export const OAUTH_BASE_URL = 'https://api.outreach.io';
 export const OAUTH_SCOPES = [
-	"prospects.all",
-	"sequences.all",
-	"sequenceStates.all",
-	"sequenceSteps.all",
-	"sequenceTemplates.all",
-	"mailboxes.all",
-	"webhooks.all",
+	'prospects.all',
+	'sequences.all',
+	'sequenceStates.all',
+	'sequenceSteps.all',
+	'sequenceTemplates.all',
+	'mailboxes.all',
+	'webhooks.all',
 ];
 
 export const isEventValid = async (
 	token: any,
 	rawEvent: string,
-	headers: any
+	headers: any,
 ) => {
-	const signature = headers["outreach-webhook-signature"];
+	const signature = headers['outreach-webhook-signature'];
 	if (!signature) {
 		return false;
 	}
@@ -623,9 +623,9 @@ export const isEventValid = async (
 	}
 
 	const hash = crypto
-		.createHmac("sha256", token.signature)
+		.createHmac('sha256', token.signature)
 		.update(rawEvent)
-		.digest("hex");
+		.digest('hex');
 
 	return hash === signature;
 };
@@ -644,13 +644,13 @@ export const whoami = async () => {
 export const match = async (
 	context: SyncContext,
 	_externalUser: any,
-	options: any
+	options: any,
 ) => {
 	assert.INTERNAL(
 		context,
 		options.slug,
 		options.errors.SyncInvalidArg,
-		"Slug is a required argument"
+		'Slug is a required argument',
 	);
 
 	const user = await context.getElementBySlug(options.slug);
@@ -659,7 +659,7 @@ export const match = async (
 		context,
 		user,
 		options.errors.SyncNoMatchingUser,
-		`Could not find user matching outreach user by slug "${options.slug}"`
+		`Could not find user matching outreach user by slug "${options.slug}"`,
 	);
 
 	return user;
@@ -668,7 +668,7 @@ export const match = async (
 export const getExternalUserSyncEventData = async (
 	_context: any,
 	_externalUser: any,
-	_options: any
+	_options: any,
 ) => {
-	throw new Error("Not implemented");
+	throw new Error('Not implemented');
 };

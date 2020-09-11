@@ -4,18 +4,18 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as Bluebird from "bluebird";
-import * as errors from "./errors";
+import * as _ from 'lodash';
+import * as Bluebird from 'bluebird';
+import * as errors from './errors';
 import {
 	Card,
 	SyncContext,
 	SyncIntegrationInstance,
 	WorkerResponse,
-} from "./sync-types";
-import * as instance from "./instance";
-const jsone = require("json-e");
-const assert = require("@balena/jellyfish-assert");
+} from './sync-types';
+import * as instance from './instance';
+const jsone = require('json-e');
+const assert = require('@balena/jellyfish-assert');
 
 const runIntegration = async (
 	integration: any,
@@ -27,8 +27,8 @@ const runIntegration = async (
 		defaultUser: any;
 		provider: any;
 	},
-	fn: "mirror" | "translate",
-	card: any
+	fn: 'mirror' | 'translate',
+	card: any,
 ) => {
 	return instance.run(
 		integration,
@@ -38,7 +38,7 @@ const runIntegration = async (
 				actor: options.actor,
 			});
 
-			options.context.log.debug("Processing pipeline sequence", {
+			options.context.log.debug('Processing pipeline sequence', {
 				type: fn,
 				sequence,
 			});
@@ -53,7 +53,7 @@ const runIntegration = async (
 			defaultUser: options.defaultUser,
 			provider: options.provider,
 			context: options.context,
-		}
+		},
 	);
 };
 
@@ -82,7 +82,7 @@ const runIntegration = async (
  */
 const evaluateObject = (
 	object: Record<string, any>,
-	environment: Record<string, any>
+	environment: Record<string, any>,
 ) => {
 	if (!object) {
 		return object;
@@ -92,7 +92,7 @@ const evaluateObject = (
 		try {
 			return jsone(object, environment);
 		} catch (error) {
-			if (error.name === "InterpreterError") {
+			if (error.name === 'InterpreterError') {
 				return null;
 			}
 
@@ -102,7 +102,7 @@ const evaluateObject = (
 
 	for (const key of Object.keys(object)) {
 		// For performance reasons
-		if (typeof object[key] !== "object" || object[key] === null) {
+		if (typeof object[key] !== 'object' || object[key] === null) {
 			continue;
 		}
 
@@ -152,7 +152,7 @@ export const importCards = async (
 	options: {
 		references?: any;
 		origin?: Card;
-	} = {}
+	} = {},
 ) => {
 	const references = options.references || {};
 	const insertedCards: WorkerResponse[] = [];
@@ -164,29 +164,29 @@ export const importCards = async (
 			async (
 				segment: { card: any; actor: any; time: any },
 				subindex: any,
-				length: number
+				length: number,
 			) => {
-				const path = ["cards", index];
+				const path = ['cards', index];
 				if (length !== 1) {
 					path.push(subindex);
 				}
 
 				const object = evaluateObject(
-					_.omit(segment.card, ["links"]),
-					references
+					_.omit(segment.card, ['links']),
+					references,
 				);
 				assert.INTERNAL(context, object, errors.SyncInvalidTemplate, () => {
 					return `Could not evaluate template in: ${JSON.stringify(
 						segment.card,
 						null,
-						2
+						2,
 					)}`;
 				});
 
 				const finalObject = Object.assign(
 					{
 						active: true,
-						version: "1.0.0",
+						version: '1.0.0',
 						tags: [],
 						markers: [],
 						links: {},
@@ -194,10 +194,10 @@ export const importCards = async (
 						capabilities: [],
 						data: {},
 					},
-					object
+					object,
 				);
 
-				if (options.origin && options.origin.type === "external-event@1.0.0") {
+				if (options.origin && options.origin.type === 'external-event@1.0.0') {
 					finalObject.data.origin = `${options.origin.slug}@${options.origin.version}`;
 				}
 
@@ -208,7 +208,7 @@ export const importCards = async (
 				const result = await context.upsertElement(object.type, finalObject, {
 					timestamp: segment.time,
 					actor: segment.actor,
-					originator: _.get(options, ["origin", "id"]),
+					originator: _.get(options, ['origin', 'id']),
 				});
 
 				if (result) {
@@ -219,7 +219,7 @@ export const importCards = async (
 			},
 			{
 				concurrency: 3,
-			}
+			},
 		);
 	}
 
@@ -248,9 +248,9 @@ export const importCards = async (
 export const translateExternalEvent = async (
 	integration: any,
 	externalEvent: any,
-	options: any
+	options: any,
 ) => {
-	return runIntegration(integration, options, "translate", externalEvent);
+	return runIntegration(integration, options, 'translate', externalEvent);
 };
 
 /**
@@ -275,5 +275,5 @@ export const translateExternalEvent = async (
  * })
  */
 export const mirrorCard = async (integration: any, card: any, options: any) => {
-	return runIntegration(integration, options, "mirror", card);
+	return runIntegration(integration, options, 'mirror', card);
 };

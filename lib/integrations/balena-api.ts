@@ -4,31 +4,31 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as jose from "node-jose";
-import * as Bluebird from "bluebird";
-import * as geoip from "geoip-lite";
-import * as jwt from "jsonwebtoken";
-import * as randomstring from "randomstring";
-import * as request from "request";
-import * as assert from "@balena/jellyfish-assert";
-import * as utils from "./utils";
+import * as _ from 'lodash';
+import * as jose from 'node-jose';
+import * as Bluebird from 'bluebird';
+import * as geoip from 'geoip-lite';
+import * as jwt from 'jsonwebtoken';
+import * as randomstring from 'randomstring';
+import * as request from 'request';
+import * as assert from '@balena/jellyfish-assert';
+import * as utils from './utils';
 import {
 	Card,
 	SyncIntegrationOptions,
 	SyncIntegrationInstance,
 	SyncContext,
-} from "../sync-types";
-const environment = require("@balena/jellyfish-environment");
+} from '../sync-types';
+const environment = require('@balena/jellyfish-environment');
 
-const integration = environment.integration["balena-api"];
+const integration = environment.integration['balena-api'];
 
-const getMirrorId = (host: any, id: any, type: string, version = "v5") => {
+const getMirrorId = (host: any, id: any, type: string, version = 'v5') => {
 	return `https://${host}/${version}/${type}(${id})`;
 };
 
 const getCardSlug = (type: string, name: string) => {
-	return `${type.split("@")[0]}-${utils.slugify(name)}`;
+	return `${type.split('@')[0]}-${utils.slugify(name)}`;
 };
 
 const userCreateContainsUsername = (payload: any) => {
@@ -37,7 +37,7 @@ const userCreateContainsUsername = (payload: any) => {
 	// much in this case anyways.
 
 	// Return if not user resource
-	if (payload.resource !== "user") {
+	if (payload.resource !== 'user') {
 		return false;
 	}
 
@@ -53,7 +53,7 @@ const getPreExistingCard = async (
 	context: { getElementByMirrorId: (arg0: string, arg1: string) => any },
 	payload: any,
 	resourceType: string,
-	cardType: string
+	cardType: string,
 ) => {
 	// Get the pre-existing card by mirror id
 	let mirrorId = getMirrorId(payload.source, payload.payload.id, resourceType);
@@ -64,13 +64,13 @@ const getPreExistingCard = async (
 	// either a subscription or plan
 	// get the organization card.
 	if (
-		(resourceType === "subscription" || resourceType === "plan") &&
+		(resourceType === 'subscription' || resourceType === 'plan') &&
 		!preExistingCard
 	) {
-		mirrorId = getMirrorId(payload.source, payload.payload.id, "organization");
+		mirrorId = getMirrorId(payload.source, payload.payload.id, 'organization');
 		preExistingCard = await context.getElementByMirrorId(
-			"account@1.0.0",
-			mirrorId
+			'account@1.0.0',
+			mirrorId,
 		);
 	}
 
@@ -94,7 +94,7 @@ const mergeCardWithPayload = (
 	preExistingCard: any,
 	payload: any,
 	resourceType: string,
-	cardType: string
+	cardType: string,
 ) => {
 	// If there is no preExistingCard default to empty object
 	const card = Object.assign({}, preExistingCard) || {
@@ -104,7 +104,7 @@ const mergeCardWithPayload = (
 	};
 
 	// Configure options for updateProperty()
-	const cardDate = new Date(_.get(card, ["data", "translateDate"]));
+	const cardDate = new Date(_.get(card, ['data', 'translateDate']));
 	const payloadDate = new Date(payload.timestamp);
 
 	// Only update fields if the payload was emitted more recently then the last translate date
@@ -117,153 +117,153 @@ const mergeCardWithPayload = (
 	// Set active to true, unless handling a delete event
 	// Note we never re-activate a card when deactivated
 	if (card.active !== false) {
-		_.set(card, ["active"], payload.type !== "delete");
+		_.set(card, ['active'], payload.type !== 'delete');
 	}
 
 	// Add the mirrorId to the list of card mirrors
 	const mirrorId = getMirrorId(
 		payload.source,
 		payload.payload.id,
-		resourceType
+		resourceType,
 	);
-	const mirrors = _.get(card, ["data", "mirrors"], []).concat(mirrorId);
-	_.set(card, ["data", "mirrors"], _.uniq(mirrors));
+	const mirrors = _.get(card, ['data', 'mirrors'], []).concat(mirrorId);
+	_.set(card, ['data', 'mirrors'], _.uniq(mirrors));
 
 	// Set card type
-	_.set(card, ["type"], cardType);
+	_.set(card, ['type'], cardType);
 
 	// Set or update timestamp
 	// TODO ensure that updates that ONLY change the translate date are ignored, as nothing has been translated
 	const timestamp = new Date(payload.timestamp).toISOString();
-	updateProperty(card, ["data", "translateDate"], timestamp);
+	updateProperty(card, ['data', 'translateDate'], timestamp);
 
-	if (resourceType === "user") {
+	if (resourceType === 'user') {
 		const slug = getCardSlug(cardType, payload.payload.username);
-		updateProperty(card, ["slug"], slug);
+		updateProperty(card, ['slug'], slug);
 
-		updateProperty(card, ["name"], payload.payload.username.trim());
+		updateProperty(card, ['name'], payload.payload.username.trim());
 
 		// Setup user roles to external support role if no pre-existingCard exists
 		if (!preExistingCard) {
-			updateProperty(card, ["data", "roles"], ["user-external-support"]);
-			updateProperty(card, ["data", "hash"], "PASSWORDLESS");
+			updateProperty(card, ['data', 'roles'], ['user-external-support']);
+			updateProperty(card, ['data', 'hash'], 'PASSWORDLESS');
 		}
 
-		updateProperty(card, ["data", "email"], payload.payload.email);
+		updateProperty(card, ['data', 'email'], payload.payload.email);
 
 		updateProperty(
 			card,
-			["data", "profile", "company"],
-			payload.payload.company
+			['data', 'profile', 'company'],
+			payload.payload.company,
 		);
 
 		updateProperty(
 			card,
-			["data", "profile", "type"],
-			payload.payload.account_type
+			['data', 'profile', 'type'],
+			payload.payload.account_type,
 		);
 
 		updateProperty(
 			card,
-			["data", "profile", "name", "first"],
-			payload.payload.first_name
+			['data', 'profile', 'name', 'first'],
+			payload.payload.first_name,
 		);
 
 		updateProperty(
 			card,
-			["data", "profile", "name", "last"],
-			payload.payload.last_name
+			['data', 'profile', 'name', 'last'],
+			payload.payload.last_name,
 		);
 
 		if (payload.payload.ip) {
 			const location = geoip.lookup(payload.payload.ip);
 			if (location) {
-				updateProperty(card, ["data", "profile", "city"], location.city);
-				updateProperty(card, ["data", "profile", "country"], location.country);
+				updateProperty(card, ['data', 'profile', 'city'], location.city);
+				updateProperty(card, ['data', 'profile', 'country'], location.country);
 			}
 		}
 	}
 
-	if (resourceType === "organization") {
+	if (resourceType === 'organization') {
 		const name = payload.payload.company || payload.payload.company_name;
 		const slug = getCardSlug(cardType, name);
 
-		if (!_.has(card, ["slug"])) {
-			updateProperty(card, ["slug"], slug);
+		if (!_.has(card, ['slug'])) {
+			updateProperty(card, ['slug'], slug);
 		}
 
-		updateProperty(card, ["name"], name);
+		updateProperty(card, ['name'], name);
 
 		updateProperty(
 			card,
-			["data", "internal_company_name"],
-			payload.payload.internal_company_name
+			['data', 'internal_company_name'],
+			payload.payload.internal_company_name,
 		);
 
 		updateProperty(
 			card,
-			["data", "internal_note"],
-			payload.payload.internal_note
+			['data', 'internal_note'],
+			payload.payload.internal_note,
 		);
 
-		updateProperty(card, ["data", "industry"], payload.payload.industry);
+		updateProperty(card, ['data', 'industry'], payload.payload.industry);
 
-		updateProperty(card, ["data", "website"], payload.payload.website);
+		updateProperty(card, ['data', 'website'], payload.payload.website);
 
-		updateProperty(card, ["data", "username"], payload.payload.handle);
+		updateProperty(card, ['data', 'username'], payload.payload.handle);
 	}
 
-	if (resourceType === "subscription") {
+	if (resourceType === 'subscription') {
 		const subscription = payload.payload;
-		updateProperty(card, ["name"], subscription.company);
+		updateProperty(card, ['name'], subscription.company);
 
 		updateProperty(
 			card,
-			["data", "discountPercentage"],
-			subscription.discount_percentage
+			['data', 'discountPercentage'],
+			subscription.discount_percentage,
 		);
 
 		updateProperty(
 			card,
-			["data", "startsOnDate"],
-			subscription.starts_on__date
+			['data', 'startsOnDate'],
+			subscription.starts_on__date,
 		);
 
-		updateProperty(card, ["data", "endsOnDate"], subscription.ends_on__date);
+		updateProperty(card, ['data', 'endsOnDate'], subscription.ends_on__date);
 
 		updateProperty(
 			card,
-			["data", "subscriptionNote"],
-			subscription.internal_note
+			['data', 'subscriptionNote'],
+			subscription.internal_note,
 		);
 
-		updateProperty(card, ["data", "billingCycle"], subscription.billing_cycle);
+		updateProperty(card, ['data', 'billingCycle'], subscription.billing_cycle);
 
 		updateProperty(
 			card,
-			["data", "isAgreedUponOnDate"],
-			subscription.is_agreed_upon_on__date
+			['data', 'isAgreedUponOnDate'],
+			subscription.is_agreed_upon_on__date,
 		);
 	}
 
-	if (resourceType === "plan" || _.has(payload, ["payload", "plans"])) {
+	if (resourceType === 'plan' || _.has(payload, ['payload', 'plans'])) {
 		// Todo: figure out how to handle multiple plans on 1 card.
-		const plans = _.get(payload, ["payload", "plans"]);
+		const plans = _.get(payload, ['payload', 'plans']);
 		const plan = plans ? plans[0] : payload.payload;
 
-		updateProperty(card, ["data", "billingCode"], plan.billing_code);
+		updateProperty(card, ['data', 'billingCode'], plan.billing_code);
 
-		updateProperty(card, ["data", "canSelfServe"], plan.can_self_serve);
+		updateProperty(card, ['data', 'canSelfServe'], plan.can_self_serve);
 
-		updateProperty(card, ["data", "monthlyPrice"], plan.monthly_price);
+		updateProperty(card, ['data', 'monthlyPrice'], plan.monthly_price);
 
-		updateProperty(card, ["data", "annualPrice"], plan.annual_price);
+		updateProperty(card, ['data', 'annualPrice'], plan.annual_price);
 
-		updateProperty(card, ["data", "generation"], plan.generation);
+		updateProperty(card, ['data', 'generation'], plan.generation);
 
-		updateProperty(card, ["data", "plan"], plan.title);
+		updateProperty(card, ['data', 'plan'], plan.title);
 
-		updateProperty(card, ["data", "isLegacy"], plan.is_legacy);
+		updateProperty(card, ['data', 'isLegacy'], plan.is_legacy);
 	}
 
 	return card;
@@ -273,7 +273,7 @@ const mergeCardWithPayload = (
 const updateProperty = (
 	object: any,
 	path: _.Many<string | number | symbol>,
-	value: string | string[]
+	value: string | string[],
 ) => {
 	// If the value is undefined, and the payload is more recent than the card
 
@@ -290,26 +290,26 @@ const updateProperty = (
 };
 
 const getCardAndResourceType = (payloadResource: string) => {
-	if (payloadResource === "user") {
+	if (payloadResource === 'user') {
 		// All users automatically get a contact generated by triggered-action-user-contact.json
 		return {
-			cardType: "user@1.0.0",
-			resourceType: "user",
+			cardType: 'user@1.0.0',
+			resourceType: 'user',
 		};
-	} else if (payloadResource === "organization") {
+	} else if (payloadResource === 'organization') {
 		return {
-			cardType: "account@1.0.0",
-			resourceType: "organization",
+			cardType: 'account@1.0.0',
+			resourceType: 'organization',
 		};
-	} else if (payloadResource === "subscription") {
+	} else if (payloadResource === 'subscription') {
 		return {
-			cardType: "account@1.0.0",
-			resourceType: "subscription",
+			cardType: 'account@1.0.0',
+			resourceType: 'subscription',
 		};
-	} else if (payloadResource === "plan") {
+	} else if (payloadResource === 'plan') {
 		return {
-			cardType: "account@1.0.0",
-			resourceType: "plan",
+			cardType: 'account@1.0.0',
+			resourceType: 'plan',
 		};
 	}
 	// Trying to translate unknown resource
@@ -322,15 +322,15 @@ const decryptPayload = async (
 		staging: { publicKey: any };
 		production: { publicKey: any };
 	},
-	payload: string
+	payload: string,
 ) => {
 	if (!token.privateKey) {
 		return null;
 	}
 
 	const key = await jose.JWK.asKey(
-		Buffer.from(token.privateKey, "base64"),
-		"pem"
+		Buffer.from(token.privateKey, 'base64'),
+		'pem',
 	);
 
 	const decrypter = jose.JWE.createDecrypt(key);
@@ -339,18 +339,18 @@ const decryptPayload = async (
 		return null;
 	}
 
-	const signedToken = plainText.plaintext.toString("utf8");
+	const signedToken = plainText.plaintext.toString('utf8');
 	const source = (jwt.decode(signedToken) as any).data.source;
 
 	const publicKey =
-		source === "api.balena-staging.com"
+		source === 'api.balena-staging.com'
 			? token.staging && token.staging.publicKey
 			: token.production && token.production.publicKey;
 	if (!publicKey) {
 		return null;
 	}
 
-	const verificationKey = Buffer.from(publicKey, "base64");
+	const verificationKey = Buffer.from(publicKey, 'base64');
 
 	return new Bluebird((resolve) => {
 		jwt.verify(signedToken, verificationKey, (error, result: any) => {
@@ -365,7 +365,7 @@ const decryptPayload = async (
 
 class BalenaAPIIntegration implements SyncIntegrationInstance {
 	options: SyncIntegrationOptions;
-	context: SyncIntegrationOptions["context"];
+	context: SyncIntegrationOptions['context'];
 
 	constructor(options: SyncIntegrationOptions) {
 		this.options = options;
@@ -398,17 +398,17 @@ class BalenaAPIIntegration implements SyncIntegrationInstance {
 	// 7. Build up translate sequence
 	async translate(event: Card) {
 		// 1. Decrypt the event payload
-		this.context.log.info("Balena-API Translate: Decrypt event payload");
+		this.context.log.info('Balena-API Translate: Decrypt event payload');
 
 		const payload: any = await decryptPayload(
 			this.options.token as any,
-			event.data.payload
+			event.data.payload,
 		);
 
 		// 2. Ignore empty or useless payloads
 
 		if (!payload) {
-			this.context.log.info("Balena-API Translate: Ignoring empty or useless", {
+			this.context.log.info('Balena-API Translate: Ignoring empty or useless', {
 				event: event.slug,
 			});
 
@@ -416,15 +416,15 @@ class BalenaAPIIntegration implements SyncIntegrationInstance {
 			return [];
 		}
 
-		this.context.log.info("Balena-API Translate: print payload", payload);
+		this.context.log.info('Balena-API Translate: print payload', payload);
 
 		// Ignore create events with no useful information
 		// TODO: Ensure that balenaAPI sends meaningful webhook data when a resource is created
-		if (payload.type === "create") {
+		if (payload.type === 'create') {
 			// If payload doesn't contain the username we can ignore this update event
 			if (userCreateContainsUsername(payload) === false) {
 				this.context.log.info(
-					"Balena-API Translate: create event doesn't contain username, ignoring translate event"
+					"Balena-API Translate: create event doesn't contain username, ignoring translate event",
 				);
 				return [];
 			}
@@ -436,37 +436,37 @@ class BalenaAPIIntegration implements SyncIntegrationInstance {
 		if (cardType === undefined || resourceType === undefined) {
 			this.context.log.info(
 				`Balena-API Translate: not translating unknown resource ${payload.resource}`,
-				payload
+				payload,
 			);
 			return [];
 		}
 
 		this.context.log.info(
-			`Balena-API Translate: translating Balena ${payload.resource} => Jellyfish ${cardType}`
+			`Balena-API Translate: translating Balena ${payload.resource} => Jellyfish ${cardType}`,
 		);
 
 		// 4. Get pre-existing card
-		this.context.log.info("Balena-API Translate: Get pre-existing card");
+		this.context.log.info('Balena-API Translate: Get pre-existing card');
 
 		const preExistingCard = await getPreExistingCard(
 			this.context,
 			payload,
 			resourceType,
-			cardType
+			cardType,
 		);
 
 		// 5. Merge card with payload
-		this.context.log.info("Balena-API Translate: Merge card with payload");
+		this.context.log.info('Balena-API Translate: Merge card with payload');
 
 		const newCard = mergeCardWithPayload(
 			preExistingCard,
 			payload,
 			resourceType,
-			cardType
+			cardType,
 		);
 
 		// 6. Set actor of translate event
-		this.context.log.info("Balena-API Translate: Set actor of translate event");
+		this.context.log.info('Balena-API Translate: Set actor of translate event');
 
 		// The Balena API doesn't emit actors in events, so most
 		// of them will be done by the admin user.
@@ -475,18 +475,18 @@ class BalenaAPIIntegration implements SyncIntegrationInstance {
 		});
 
 		// 7. build up translate sequence
-		this.context.log.info("Balena-API Translate: build up translate sequence");
+		this.context.log.info('Balena-API Translate: build up translate sequence');
 
 		const sequence = [];
 		sequence.push(
-			makeCard(newCard, actor, _.get(newCard, ["data", "translateDate"]))
+			makeCard(newCard, actor, _.get(newCard, ['data', 'translateDate'])),
 		);
 
 		this.context.log.info(
-			"Balena-API Translate: Translating Balena API updates",
+			'Balena-API Translate: Translating Balena API updates',
 			{
 				sequence,
-			}
+			},
 		);
 
 		return sequence;
@@ -500,7 +500,7 @@ export const create = (options: SyncIntegrationOptions) => {
 export const isEventValid = async (
 	token: any,
 	rawEvent: any,
-	_headers: any
+	_headers: any,
 ) => {
 	if (!token) {
 		return false;
@@ -514,14 +514,14 @@ export const OAUTH_BASE_URL = integration.oauthBaseUrl;
 export const OAUTH_SCOPES = [];
 
 export const whoami = async (
-	context: import("@balena/jellyfish-assert/build/types").AssertContext,
+	context: import('@balena/jellyfish-assert/build/types').AssertContext,
 	credentials: { token_type: any; access_token: any },
 	options: {
 		errors: {
-			SyncExternalRequestError: import("@balena/jellyfish-assert/build/types").AssertErrorConstructor;
+			SyncExternalRequestError: import('@balena/jellyfish-assert/build/types').AssertErrorConstructor;
 		};
 	},
-	retries = 10
+	retries = 10,
 ) => {
 	const { code: statusCode, body: externalUser } = await new Bluebird(
 		(resolve, reject) => {
@@ -542,9 +542,9 @@ export const whoami = async (
 						code: response.statusCode,
 						body,
 					});
-				}
+				},
 			);
-		}
+		},
 	);
 
 	// Take rate limiting into account
@@ -557,7 +557,7 @@ export const whoami = async (
 		context,
 		externalUser && statusCode === 200,
 		options.errors.SyncExternalRequestError,
-		`Failed to fetch user information from balena-api. Response status code: ${statusCode}`
+		`Failed to fetch user information from balena-api. Response status code: ${statusCode}`,
 	);
 
 	return externalUser;
@@ -566,13 +566,13 @@ export const whoami = async (
 export const match = (
 	context: SyncContext,
 	externalUser: any,
-	options: any
+	options: any,
 ) => {
 	assert.INTERNAL(
 		context,
 		externalUser,
 		options.errors.SyncInvalidArg,
-		"External user is a required parameter"
+		'External user is a required parameter',
 	);
 
 	const slug = `user-${utils.slugify(externalUser!.username!)}@latest`;
@@ -582,27 +582,27 @@ export const match = (
 export const getExternalUserSyncEventData = async (
 	context: SyncContext,
 	externalUser: any,
-	options: any
+	options: any,
 ) => {
 	assert.INTERNAL(
 		context,
 		externalUser,
 		options.errors.SyncInvalidArg,
-		"External user is a required parameter"
+		'External user is a required parameter',
 	);
 
 	const event: any = {
-		source: "balena-api",
+		source: 'balena-api',
 		headers: {
-			accept: "*/*",
-			connection: "close",
-			"content-type": "application/jose",
+			accept: '*/*',
+			connection: 'close',
+			'content-type': 'application/jose',
 		},
 		payload: {
 			timestamp: new Date().toISOString(),
-			resource: "user",
-			source: "api.balena-cloud.com",
-			type: "create",
+			resource: 'user',
+			source: 'api.balena-cloud.com',
+			type: 'create',
 			payload: externalUser,
 		},
 	};
@@ -611,25 +611,25 @@ export const getExternalUserSyncEventData = async (
 		{
 			data: event.payload,
 		},
-		Buffer.from(integration.privateKey, "base64"),
+		Buffer.from(integration.privateKey, 'base64'),
 		{
-			algorithm: "ES256",
+			algorithm: 'ES256',
 			expiresIn: 10 * 60 * 1000,
-			audience: "jellyfish",
-			issuer: "api.balena-cloud.com",
+			audience: 'jellyfish',
+			issuer: 'api.balena-cloud.com',
 			jwtid: randomstring.generate(20),
 			subject: `${event.payload.id}`,
-		}
+		},
 	);
 
-	const keyValue = Buffer.from(integration.production.publicKey, "base64");
-	const encryptionKey = await jose.JWK.asKey(keyValue, "pem");
+	const keyValue = Buffer.from(integration.production.publicKey, 'base64');
+	const encryptionKey = await jose.JWK.asKey(keyValue, 'pem');
 
 	const cipher = jose.JWE.createEncrypt(
 		{
-			format: "compact",
+			format: 'compact',
 		},
-		encryptionKey
+		encryptionKey,
 	);
 	cipher.update(signedToken);
 

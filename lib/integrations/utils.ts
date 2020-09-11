@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import { Card } from "../sync-types";
+import * as _ from 'lodash';
+import { Card } from '../sync-types';
 
 /**
  * @summary Convert to slug-compatible string
@@ -19,8 +19,8 @@ export const slugify = (string: string): string => {
 	return string
 		.trim()
 		.toLowerCase()
-		.replace(/[^a-z0-9-]/g, "-")
-		.replace(/-{1,}/g, "-");
+		.replace(/[^a-z0-9-]/g, '-')
+		.replace(/-{1,}/g, '-');
 };
 
 /**
@@ -46,7 +46,7 @@ export const getDateFromEpoch = (epoch: number): Date => {
  */
 export const patchObject = (
 	object: object,
-	delta: object
+	delta: object,
 ): Record<string, any> => {
 	return _.mergeWith(
 		_.cloneDeep(object),
@@ -59,7 +59,7 @@ export const patchObject = (
 
 			// _.mergeWith expected undefined
 			return undefined;
-		}
+		},
 	);
 };
 
@@ -67,17 +67,17 @@ export const attachCards = (
 	date: any,
 	fromCard: { slug: any; id: any; type: any },
 	toCard: { slug: any; id: any; type: any },
-	options: { actor: any }
+	options: { actor: any },
 ) => {
 	return {
 		time: date,
 		actor: options.actor,
 		card: {
 			slug: `link-${fromCard.slug}-is-attached-to-${toCard.slug}`,
-			type: "link@1.0.0",
-			name: "is attached to",
+			type: 'link@1.0.0',
+			name: 'is attached to',
 			data: {
-				inverseName: "has attached element",
+				inverseName: 'has attached element',
 				from: {
 					id: fromCard.id,
 					type: fromCard.type,
@@ -95,7 +95,7 @@ export const postEvent = (
 	sequence: string | any[],
 	eventCard: Partial<Card>,
 	targetCard: Partial<Card>,
-	options: { actor: any }
+	options: { actor: any },
 ) => {
 	if (!eventCard) {
 		return [];
@@ -124,7 +124,7 @@ export const postEvent = (
 			},
 			{
 				actor: options.actor,
-			}
+			},
 		),
 	];
 };

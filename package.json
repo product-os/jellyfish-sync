@@ -13,7 +13,7 @@
   },
   "deplint": {
     "files": [
-      "lib/**/*.{js}"
+      "lib/**/*.{ts}"
     ],
     "modules": [
       "lib"

@@ -4,21 +4,21 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as LRU from "lru-cache";
-import * as crypto from "crypto";
-import * as Bluebird from "bluebird";
-import * as utils from "./utils";
+import * as _ from 'lodash';
+import * as LRU from 'lru-cache';
+import * as crypto from 'crypto';
+import * as Bluebird from 'bluebird';
+import * as utils from './utils';
 import {
 	Card,
 	SyncIntegrationInstance,
 	SyncIntegrationOptions,
 	SyncResult,
-} from "../sync-types";
-import { PostItem, TopicResponse } from "./discourse-types";
-import * as assert from "@balena/jellyfish-assert";
+} from '../sync-types';
+import { PostItem, TopicResponse } from './discourse-types';
+import * as assert from '@balena/jellyfish-assert';
 
-type Context = SyncIntegrationOptions["context"];
+type Context = SyncIntegrationOptions['context'];
 
 /*
  * Discourse category cache, for rate limiting purposes.
@@ -44,11 +44,11 @@ const httpDiscourse = async (
 		body?: any;
 		headers?: any;
 	},
-	retries = 15
+	retries = 15,
 ): Promise<any> => {
 	const username = options.username || integrationOptions.token.username;
 
-	context.log.info("Discourse API request", {
+	context.log.info('Discourse API request', {
 		// For easy grouping purposes
 		slug: `${username}-${method}-${url}`,
 
@@ -61,8 +61,8 @@ const httpDiscourse = async (
 	const qs = options.query || {};
 
 	const headers = Object.assign({}, options.headers || {}, {
-		"Api-Key": integrationOptions.token.api,
-		"Api-Username": username,
+		'Api-Key': integrationOptions.token.api,
+		'Api-Username': username,
 	});
 
 	const result = await context.request(options.actor, {
@@ -85,11 +85,11 @@ const httpDiscourse = async (
 				return `Rate limit hit ${
 					result.code
 				} ${method} ${url}: ${JSON.stringify(result.body, null, 2)}`;
-			}
+			},
 		);
 
 		const seconds = result.body.extras.wait_seconds || 5;
-		context.log.warn("Discourse rate limit retry", {
+		context.log.warn('Discourse rate limit retry', {
 			retries,
 			seconds,
 		});
@@ -101,7 +101,7 @@ const httpDiscourse = async (
 			method,
 			url,
 			options,
-			retries - 1
+			retries - 1,
 		);
 	}
 
@@ -116,10 +116,10 @@ const httpDiscourse = async (
 				return `Discourse unavailable ${
 					result.code
 				} ${method} ${url}: ${JSON.stringify(result.body, null, 2)}`;
-			}
+			},
 		);
 
-		context.log.warn("Discourse unavailable retry", {
+		context.log.warn('Discourse unavailable retry', {
 			retries,
 		});
 
@@ -130,7 +130,7 @@ const httpDiscourse = async (
 			method,
 			url,
 			options,
-			retries - 1
+			retries - 1,
 		);
 	}
 
@@ -146,10 +146,10 @@ const httpDiscourse = async (
 				return `Discourse permission error ${
 					result.code
 				} ${method} ${url}: ${JSON.stringify(result.body, null, 2)}`;
-			}
+			},
 		);
 
-		context.log.warn("Discourse permission error retry", {
+		context.log.warn('Discourse permission error retry', {
 			retries,
 		});
 
@@ -160,7 +160,7 @@ const httpDiscourse = async (
 			method,
 			url,
 			options,
-			retries - 1
+			retries - 1,
 		);
 	}
 
@@ -172,7 +172,7 @@ const getCategoryNameById = async (
 	options: SyncIntegrationOptions,
 	baseUrl: any,
 	actor: any,
-	id: string | number
+	id: string | number,
 ) => {
 	if (CATEGORIES[id]) {
 		return CATEGORIES[id];
@@ -181,12 +181,12 @@ const getCategoryNameById = async (
 	const result = await httpDiscourse(
 		context,
 		options,
-		"GET",
-		"/categories.json",
+		'GET',
+		'/categories.json',
 		{
 			baseUrl,
 			actor,
-		}
+		},
 	);
 
 	assert.INTERNAL(
@@ -195,7 +195,7 @@ const getCategoryNameById = async (
 		options.errors.SyncExternalRequestError,
 		() => {
 			return `Couldn't get categories: ${JSON.stringify(result, null, 2)}`;
-		}
+		},
 	);
 
 	for (const category of result.body.category_list.categories) {
@@ -210,9 +210,9 @@ const getDiscourseResource = async (
 	actor: any,
 	options: any,
 	baseUrl: any,
-	path: string
+	path: string,
 ) => {
-	const result = await httpDiscourse(context, options, "GET", path, {
+	const result = await httpDiscourse(context, options, 'GET', path, {
 		baseUrl,
 		actor,
 		query: options.query,
@@ -230,9 +230,9 @@ const getDiscourseResource = async (
 			return `Couldn't get resource ${path}: ${JSON.stringify(
 				result,
 				null,
-				2
+				2,
 			)}`;
-		}
+		},
 	);
 
 	return result.body;
@@ -245,7 +245,7 @@ const getDiscourseEmailByUsername = async (
 	actor: string,
 	options: any,
 	baseUrl: string,
-	username: string
+	username: string,
 ) => {
 	const cachedEmail = DISCOURSE_USER_EMAIL_CACHE.get(username);
 	if (cachedEmail) {
@@ -257,7 +257,7 @@ const getDiscourseEmailByUsername = async (
 		actor,
 		options,
 		baseUrl,
-		`/u/${username}/emails.json`
+		`/u/${username}/emails.json`,
 	);
 	if (!response || !response.email) {
 		return null;
@@ -284,7 +284,7 @@ const getDiscourseUserById = async (
 	actor: string,
 	options: object,
 	baseUrl: string,
-	id: number
+	id: number,
 ): Promise<any | null> => {
 	const cachedUser = DISCOURSE_USER_CACHE.get(id);
 	if (cachedUser) {
@@ -296,7 +296,7 @@ const getDiscourseUserById = async (
 		actor,
 		options,
 		baseUrl,
-		`/admin/users/${id}.json`
+		`/admin/users/${id}.json`,
 	);
 	if (!user) {
 		return null;
@@ -309,7 +309,7 @@ const getDiscourseUserById = async (
 			actor,
 			options,
 			baseUrl,
-			user.username
+			user.username,
 		));
 
 	DISCOURSE_USER_CACHE.set(id, user);
@@ -334,7 +334,7 @@ const getDiscourseUserByUsername = async (
 	actor: string,
 	options: object,
 	baseUrl: string,
-	username: string
+	username: string,
 ): Promise<any | null> => {
 	const cachedUser = DISCOURSE_USER_CACHE.get(username);
 	if (cachedUser) {
@@ -346,7 +346,7 @@ const getDiscourseUserByUsername = async (
 		actor,
 		options,
 		baseUrl,
-		`/users/${username}.json`
+		`/users/${username}.json`,
 	);
 	if (!data) {
 		return null;
@@ -359,7 +359,7 @@ const getDiscourseUserByUsername = async (
 			actor,
 			options,
 			baseUrl,
-			username
+			username,
 		));
 
 	DISCOURSE_USER_CACHE.set(data.user.id, data.user);
@@ -384,7 +384,7 @@ const getDiscourseTopicById = async (
 	actor: string,
 	options: object,
 	baseUrl: string,
-	id: number
+	id: number,
 ): Promise<TopicResponse> => {
 	return getDiscourseResource(
 		context,
@@ -401,7 +401,7 @@ const getDiscourseTopicById = async (
 			},
 		}),
 		baseUrl,
-		`/t/${id}.json`
+		`/t/${id}.json`,
 	);
 };
 
@@ -414,7 +414,7 @@ const getDiscourseTopicById = async (
  * @returns {String} Discourse base URL
  */
 const getBaseUrl = (event: Card): string => {
-	return event.data.headers["x-discourse-instance"];
+	return event.data.headers['x-discourse-instance'];
 };
 
 /**
@@ -428,7 +428,7 @@ const getBaseUrl = (event: Card): string => {
 const isEvent = (object: Card): boolean => {
 	return (
 		object.type &&
-		object.type.split("@")[0] === "external-event" &&
+		object.type.split('@')[0] === 'external-event' &&
 		object.data &&
 		object.data.headers &&
 		object.data.payload
@@ -444,7 +444,7 @@ const isEvent = (object: Card): boolean => {
  * @returns {Boolean} whether the event is a topic event
  */
 const isTopicEvent = (event: Card): boolean => {
-	return event.data.headers["x-discourse-event-type"] === "topic";
+	return event.data.headers['x-discourse-event-type'] === 'topic';
 };
 
 /**
@@ -456,7 +456,7 @@ const isTopicEvent = (event: Card): boolean => {
  * @returns {Boolean} whether the event is a post event
  */
 const isPostEvent = (event: Card): boolean => {
-	return event.data.headers["x-discourse-event-type"] === "post";
+	return event.data.headers['x-discourse-event-type'] === 'post';
 };
 
 /**
@@ -538,7 +538,7 @@ const getMirrorId = (baseUrl: string, event: any): string => {
 const getThreadCard = (
 	mirrorId: any,
 	data: { title: any; deleted_at: any; id: any; tags: any },
-	options: { active?: boolean; category?: string } = {}
+	options: { active?: boolean; category?: string } = {},
 ): Partial<Card> => {
 	return {
 		name: data.title,
@@ -546,17 +546,17 @@ const getThreadCard = (
 		links: {},
 		markers: [],
 		active: _.isBoolean(options.active) ? options.active : !data.deleted_at,
-		type: "support-thread@1.0.0",
+		type: 'support-thread@1.0.0',
 		slug: `support-thread-discourse-${data.id}`,
 		data: {
-			environment: "production",
+			environment: 'production',
 			tags: data.tags,
-			inbox: options.category || "S/Forums",
+			inbox: options.category || 'S/Forums',
 			mirrors: [mirrorId],
 			mentionsUser: [],
 			alertsUser: [],
-			description: "",
-			status: "open",
+			description: '',
+			status: 'open',
 		},
 	};
 };
@@ -569,7 +569,7 @@ const normalizeMessage = (string: string, baseUrl: string) => {
 	 */
 	return string.replace(
 		/https:\/\/discourse-cdn-(\w+)\.com\/business\d/gi,
-		baseUrl
+		baseUrl,
 	);
 };
 
@@ -595,17 +595,17 @@ const getEventCard = (
 		active: boolean;
 		target: any;
 		baseUrl: string;
-	}
+	},
 ): Partial<Card> => {
-	const type = data.post_type === 4 ? "whisper@1.0.0" : "message@1.0.0";
+	const type = data.post_type === 4 ? 'whisper@1.0.0' : 'message@1.0.0';
 
 	return {
 		slug: [
-			type.replace(/[@.]/g, "-"),
-			"discourse",
+			type.replace(/[@.]/g, '-'),
+			'discourse',
 			data.topic_id,
 			data.post_number,
-		].join("-"),
+		].join('-'),
 		type,
 		tags: [],
 		links: {},
@@ -628,10 +628,10 @@ const getEventCard = (
 };
 
 const parseFullName = (fullName: string) => {
-	const nameWords = (fullName || "").split(" ");
+	const nameWords = (fullName || '').split(' ');
 	return {
-		first: _.first(nameWords) || "",
-		last: _.tail(nameWords).join(" "),
+		first: _.first(nameWords) || '',
+		last: _.tail(nameWords).join(' '),
 	};
 };
 
@@ -652,20 +652,20 @@ const getActor = async (
 	actor: string,
 	options: any,
 	baseUrl: string,
-	payload: any
+	payload: any,
 ): Promise<any> => {
 	const userId =
-		_.get(payload, ["post", "user_id"]) ||
-		_.get(payload, ["topic", "created_by", "id"]) ||
-		_.get(payload, ["details", "created_by", "id"]) ||
+		_.get(payload, ['post', 'user_id']) ||
+		_.get(payload, ['topic', 'created_by', 'id']) ||
+		_.get(payload, ['details', 'created_by', 'id']) ||
 		// This means that the user was completely deleted from the system
 		// without any trail, so we can't know who the real author of this
 		// post was, and Discourse claims that it belongs to the user that
 		// deleted it, which is usually the "system" user.
-		(!_.get(payload, ["post", "username"]) &&
-			_.get(payload, ["post", "deleted_by", "id"]));
+		(!_.get(payload, ['post', 'username']) &&
+			_.get(payload, ['post', 'deleted_by', 'id']));
 
-	const username = _.get(payload, ["post", "username"]);
+	const username = _.get(payload, ['post', 'username']);
 
 	assert.INTERNAL(null, userId || username, options.errors.SyncNoActor, () => {
 		return `No user id in payload: ${JSON.stringify(payload, null, 2)}`;
@@ -678,10 +678,10 @@ const getActor = async (
 				actor,
 				options,
 				baseUrl,
-				username
+				username,
 		  );
 
-	context.log.info("Getting Discourse actor", {
+	context.log.info('Getting Discourse actor', {
 		id: userId,
 		data: remoteUser,
 	});
@@ -703,17 +703,17 @@ const getActor = async (
 				actor,
 				options,
 				baseUrl,
-				payload.post.username
+				payload.post.username,
 			),
 			active: false,
-			type: "user@1.0.0",
+			type: 'user@1.0.0',
 		};
 	} else if (!remoteUser && userDetails) {
 		return {
 			slug: userDetails.username,
 			name: parseFullName(userDetails.name),
 			active: false,
-			type: "user@1.0.0",
+			type: 'user@1.0.0',
 		};
 	}
 
@@ -721,7 +721,7 @@ const getActor = async (
 		null,
 		remoteUser,
 		options.errors.SyncNoActor,
-		`No such user: ${userId}`
+		`No such user: ${userId}`,
 	);
 
 	return {
@@ -730,7 +730,7 @@ const getActor = async (
 		email: remoteUser.email,
 		title: remoteUser.title,
 		active: true,
-		type: "user@1.0.0",
+		type: 'user@1.0.0',
 	};
 };
 
@@ -738,7 +738,7 @@ const getRemoteTopicData = async (
 	context: Context,
 	actor: string,
 	options: any,
-	event: Card
+	event: Card,
 ) => {
 	const topicId = isTopicEvent(event)
 		? event.data.payload.topic.id
@@ -748,23 +748,23 @@ const getRemoteTopicData = async (
 		actor,
 		options,
 		getBaseUrl(event),
-		topicId
+		topicId,
 	);
 	assert.INTERNAL(
 		null,
 		data as any,
 		options.errors.SyncNoExternalResource,
-		`The topic ${topicId} does not exist`
+		`The topic ${topicId} does not exist`,
 	);
 
 	return data;
 };
 
 const getLocalElement = async (
-	context: SyncIntegrationOptions["context"],
+	context: SyncIntegrationOptions['context'],
 	sequence: SyncResult[],
 	type: string,
-	mirrorId: string
+	mirrorId: string,
 ) => {
 	const fromIndex = _.findLastIndex(sequence, (entry) => {
 		return (entry.card as any).data.mirrors.includes(mirrorId);
@@ -785,7 +785,7 @@ const processTopicData = async (
 	sequence: SyncResult[],
 	mirrorId: string,
 	topic: any,
-	options: any
+	options: any,
 ) => {
 	const topicCard = getThreadCard(mirrorId, topic, {
 		active: options.active,
@@ -794,15 +794,15 @@ const processTopicData = async (
 			options.options,
 			options.baseUrl,
 			options.actor,
-			topic.category_id
+			topic.category_id,
 		),
 	});
 
 	const threadCard: Partial<Card> | null = await getLocalElement(
 		options.context,
 		sequence,
-		"support-thread@1.0.0",
-		mirrorId
+		'support-thread@1.0.0',
+		mirrorId,
 	);
 
 	const topicUpsertDate = threadCard
@@ -820,7 +820,7 @@ const processTopicData = async (
 		   */
 		  new Date(
 				new Date(topic.last_posted_at || topic.deleted_at).getTime() +
-					options.eventId
+					options.eventId,
 		  )
 		: new Date(topic.created_at);
 
@@ -856,7 +856,7 @@ const isInternalEvent = (event: Card) => {
 		// Don't sync private conversations or internal system
 		// topics such as welcome messages, or spam notifications.
 		if (
-			event.data.payload.topic.archetype !== "regular" ||
+			event.data.payload.topic.archetype !== 'regular' ||
 			event.data.payload.topic.pm_with_non_human_user
 		) {
 			return true;
@@ -875,23 +875,23 @@ const getTopicFromPostUrl = async (
 	context: Context,
 	actor: string,
 	options: any,
-	url: string
+	url: string,
 ) => {
 	const topicResponse = await httpDiscourse(
 		context,
 		options,
-		"GET",
+		'GET',
 		`${url}.json`,
 		{
 			actor,
-		}
+		},
 	);
 
 	assert.INTERNAL(
 		null,
 		topicResponse.code !== 404,
 		options.errors.SyncNoExternalResource,
-		`Could not find topic from ${url}`
+		`Could not find topic from ${url}`,
 	);
 	assert.INTERNAL(
 		null,
@@ -901,9 +901,9 @@ const getTopicFromPostUrl = async (
 			return `Could not get topic from ${url}: ${JSON.stringify(
 				topicResponse,
 				null,
-				2
+				2,
 			)}`;
-		}
+		},
 	);
 
 	return topicResponse.body;
@@ -914,10 +914,10 @@ const getPostFromPostUrl = async (
 	actor: string,
 	options: any,
 	url: string,
-	times = 10
+	times = 10,
 ): Promise<PostItem | null> => {
 	const topic = await getTopicFromPostUrl(context, actor, options, url);
-	const postId = _.parseInt(_.last(url.split("/")) || "");
+	const postId = _.parseInt(_.last(url.split('/')) || '');
 	const postData = _.find(topic.post_stream.posts, {
 		post_number: postId,
 	});
@@ -950,7 +950,7 @@ const getPostData = async (
 	options: any,
 	url: string,
 	postId: number,
-	topic: TopicResponse
+	topic: TopicResponse,
 ) => {
 	const postData = _.find(topic.post_stream.posts, {
 		post_number: postId,
@@ -968,13 +968,13 @@ const getPostData = async (
 
 class DiscourseIntegration implements SyncIntegrationInstance {
 	options: SyncIntegrationOptions;
-	context: SyncIntegrationOptions["context"];
+	context: SyncIntegrationOptions['context'];
 	baseUrl: string;
 
 	constructor(options: SyncIntegrationOptions) {
 		this.options = options;
 		this.context = this.options.context;
-		this.baseUrl = "https://forums.balena.io";
+		this.baseUrl = 'https://forums.balena.io';
 	}
 
 	async initialize() {
@@ -1000,29 +1000,29 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 		}
 
 		const username = this.context.getRemoteUsername(
-			actor.slug.replace(/^user-/g, "")
+			actor.slug.replace(/^user-/g, ''),
 		);
 
 		const discourseUrl = _.find(card.data.mirrors, (mirror) => {
 			return _.startsWith(mirror, this.baseUrl);
 		});
 
-		this.context.log.info("Mirroring", {
+		this.context.log.info('Mirroring', {
 			url: discourseUrl,
 			remote: card,
 		});
 
-		const baseType = card.type.split("@")[0];
+		const baseType = card.type.split('@')[0];
 
-		if (baseType === "support-thread" && discourseUrl) {
+		if (baseType === 'support-thread' && discourseUrl) {
 			const remoteTopic = await httpDiscourse(
 				this.context,
 				this.options,
-				"GET",
+				'GET',
 				`${discourseUrl}.json`,
 				{
 					actor: options.actor,
-				}
+				},
 			);
 
 			assert.INTERNAL(
@@ -1033,8 +1033,8 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					return [
 						`Could not fetch Discourse topic: ${discourseUrl},`,
 						JSON.stringify(remoteTopic, null, 2),
-					].join(" ");
-				}
+					].join(' ');
+				},
 			);
 
 			if (
@@ -1052,23 +1052,23 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 
 				const query: Record<string, any> = {};
 				if (_.isEmpty(card.data.tags)) {
-					query["tags[]"] = "[]";
+					query['tags[]'] = '[]';
 				} else {
-					query["tags[]"] = card.data.tags;
+					query['tags[]'] = card.data.tags;
 				}
 
-				const topicId = _.last(discourseUrl.split("/"));
+				const topicId = _.last(discourseUrl.split('/'));
 				const result = await httpDiscourse(
 					this.context,
 					this.options,
-					"PUT",
+					'PUT',
 					`${this.baseUrl}/t/-/${topicId}.json`,
 					{
 						username,
 						actor: options.actor,
 						body,
 						query,
-					}
+					},
 				);
 
 				assert.INTERNAL(
@@ -1080,8 +1080,8 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 							`Could not update topic ${discourseUrl} as ${username}`,
 							`with ${JSON.stringify(body, null, 2)}:`,
 							JSON.stringify(result, null, 2),
-						].join(" ");
-					}
+						].join(' ');
+					},
 				);
 			}
 
@@ -1089,15 +1089,15 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 		}
 
 		// We don't allow creating Discourse topics from Jellyfish yet
-		if (baseType === "support-thread" && !discourseUrl) {
+		if (baseType === 'support-thread' && !discourseUrl) {
 			return [];
 		}
 
-		if (baseType === "message" || baseType === "whisper") {
+		if (baseType === 'message' || baseType === 'whisper') {
 			const thread = await this.context.getElementById(card.data.target);
 			if (
 				!thread ||
-				thread.type.split("@")[0] !== "support-thread" ||
+				thread.type.split('@')[0] !== 'support-thread' ||
 				!thread.active
 			) {
 				return [];
@@ -1115,7 +1115,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				options.actor,
 				this.options,
 				this.baseUrl,
-				username
+				username,
 			);
 
 			// This likely means that a Jellyfish user doesn't have
@@ -1124,7 +1124,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				null,
 				remoteUser,
 				this.options.errors.SyncNoActor,
-				`The user ${username} does not exist in Discourse`
+				`The user ${username} does not exist in Discourse`,
 			);
 
 			/*
@@ -1134,7 +1134,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			 * See https://meta.discourse.org/t/116601
 			 */
 			const isAllowed =
-				baseType !== "whisper" ||
+				baseType !== 'whisper' ||
 				remoteUser.admin ||
 				remoteUser.moderator ||
 				remoteUser.staff;
@@ -1156,30 +1156,30 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					: [
 							`(${username}) ${card.data.payload.message}`,
 							`\n\n***\n\n> ${explanation}`,
-					  ].join(" ");
+					  ].join(' ');
 
 			if (discourseUrl) {
 				const topicResponse = await getTopicFromPostUrl(
 					this.context,
 					options.actor,
 					this.options,
-					discourseUrl
+					discourseUrl,
 				);
 
-				const postId = _.parseInt(_.last(discourseUrl.split("/")) || "");
+				const postId = _.parseInt(_.last(discourseUrl.split('/')) || '');
 				const postData = await getPostData(
 					this.context,
 					options.actor,
 					this.options,
 					discourseUrl,
 					postId,
-					topicResponse
+					topicResponse,
 				);
 				assert.INTERNAL(
 					null,
 					postData as any,
 					this.options.errors.SyncNoExternalResource,
-					`Could not find post ${discourseUrl}`
+					`Could not find post ${discourseUrl}`,
 				);
 
 				if (!postData || messageBody === postData.raw) {
@@ -1189,7 +1189,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				const editResponse = await httpDiscourse(
 					this.context,
 					this.options,
-					"PUT",
+					'PUT',
 					`/posts/${postData.id}.json`,
 					{
 						baseUrl: this.baseUrl,
@@ -1198,12 +1198,12 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 						body: {
 							raw: messageBody,
 						},
-					}
+					},
 				);
 
 				if (editResponse.code === 403) {
 					const error = new this.options.errors.SyncPermissionsError(
-						"You don't have permissions to update this post on Discourse"
+						"You don't have permissions to update this post on Discourse",
 					);
 					error.expected = true;
 					throw error;
@@ -1218,8 +1218,8 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 							`Could not update comment ${topicResponse.id}`,
 							`with content: ${messageBody}:`,
 							JSON.stringify(editResponse, null, 2),
-						].join(" ");
-					}
+						].join(' ');
+					},
 				);
 
 				return [];
@@ -1228,11 +1228,11 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			const topicResponse = await httpDiscourse(
 				this.context,
 				this.options,
-				"GET",
+				'GET',
 				threadDiscourseUrl,
 				{
 					actor: options.actor,
-				}
+				},
 			);
 
 			assert.INTERNAL(
@@ -1243,8 +1243,8 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					return [
 						`Could not get topic ${threadDiscourseUrl}:`,
 						JSON.stringify(topicResponse, null, 2),
-					].join(" ");
-				}
+					].join(' ');
+				},
 			);
 
 			// We don't mirror posts to deleted topics, but we still let
@@ -1256,21 +1256,21 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			const response = await httpDiscourse(
 				this.context,
 				this.options,
-				"POST",
+				'POST',
 				`${this.baseUrl}/posts.json`,
 				{
 					username: messageUsername,
 					actor: options.actor,
 					body: {
 						raw: messageBody,
-						topic_id: _.parseInt(_.last(threadDiscourseUrl.split("/")) || ""),
+						topic_id: _.parseInt(_.last(threadDiscourseUrl.split('/')) || ''),
 						created_at: card.created_at,
 
 						// This has to be a stringified boolean,
 						// otherwise it does not work.
-						whisper: baseType === "whisper" ? "true" : "false",
+						whisper: baseType === 'whisper' ? 'true' : 'false',
 					},
-				}
+				},
 			);
 
 			// A user error
@@ -1280,7 +1280,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				this.options.errors.SyncInvalidRequest,
 				() => {
 					return `Couldn't create post: ${JSON.stringify(response, null, 2)}`;
-				}
+				},
 			);
 
 			assert.INTERNAL(
@@ -1289,7 +1289,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				this.options.errors.SyncExternalRequestError,
 				() => {
 					return `Could not create post: ${JSON.stringify(response, null, 2)}`;
-				}
+				},
 			);
 
 			card.data.mirrors = card.data.mirrors || [];
@@ -1309,7 +1309,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 
 	async translate(
 		event: Card,
-		options: { actor: string }
+		options: { actor: string },
 	): Promise<SyncResult[]> {
 		if (
 			!this.options.token ||
@@ -1328,15 +1328,15 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 
 		// The "post_stream" property is huge and adds a lot of noise
 		// to the logs. We can safely remove it here as we never use it.
-		Reflect.deleteProperty(event.data.payload, "post_stream");
+		Reflect.deleteProperty(event.data.payload, 'post_stream');
 
-		const eventId = _.parseInt(event.data.headers["x-discourse-event-id"]);
+		const eventId = _.parseInt(event.data.headers['x-discourse-event-id']);
 		const eventActor = await getActor(
 			this.context,
 			options.actor,
 			this.options,
 			baseUrl,
-			event.data.payload
+			event.data.payload,
 		);
 		const eventActorId = await this.context.getActorId({
 			active: eventActor.active,
@@ -1351,7 +1351,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			this.context,
 			options.actor,
 			this.options,
-			event
+			event,
 		);
 		const topicActor = isTopicEvent(event)
 			? eventActor
@@ -1360,7 +1360,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					options.actor,
 					this.options,
 					baseUrl,
-					remoteTopicData
+					remoteTopicData,
 			  );
 		const topicActorId = await this.context.getActorId({
 			active: topicActor.active,
@@ -1387,10 +1387,10 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					 * claiming in the web hook details that the topic
 					 * is active.
 					 */
-					active: event.data.headers["x-discourse-event"] !== "topic_destroyed",
+					active: event.data.headers['x-discourse-event'] !== 'topic_destroyed',
 
 					eventId,
-				}
+				},
 			);
 		}
 
@@ -1408,7 +1408,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				options: this.options,
 				context: this.context,
 				eventId,
-			}
+			},
 		);
 
 		const posts: Array<
@@ -1426,7 +1426,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 						baseUrl,
 						{
 							post,
-						}
+						},
 					);
 
 					const item = Object.assign({}, post, {
@@ -1454,24 +1454,24 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			// If webhook post is not known by the API then we assume
 			// its a post we previously deleted
 			const isDestroyedEvent =
-				event.data.headers["x-discourse-event"] === "post_destroyed";
+				event.data.headers['x-discourse-event'] === 'post_destroyed';
 
 			const postResponse = await httpDiscourse(
 				this.context,
 				this.options,
-				"GET",
+				'GET',
 				`/posts/${event.data.payload.post.id}.json`,
 				{
 					baseUrl: this.baseUrl,
 					actor: options.actor,
-				}
+				},
 			);
 
 			assert.INTERNAL(
 				null,
 				postResponse.code !== 404,
 				this.options.errors.SyncNoExternalResource,
-				`The post ${event.data.payload.post.id} does not exist`
+				`The post ${event.data.payload.post.id} does not exist`,
 			);
 			assert.INTERNAL(
 				null,
@@ -1481,8 +1481,8 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					return [
 						`Could not get post ${event.data.payload.post.id}:`,
 						JSON.stringify(postResponse, null, 2),
-					].join(" ");
-				}
+					].join(' ');
+				},
 			);
 
 			// Webhook events do not contain the raw post data, so we extract it from
@@ -1503,7 +1503,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 				 * a post as deleted.
 				 */
 				event.data.payload.post.destroyed = Boolean(
-					postResponse.body.deleted_at
+					postResponse.body.deleted_at,
 				);
 			}
 
@@ -1539,18 +1539,18 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 
 			const eventCard = await this.context.getElementByMirrorId(
 				postCard.type!,
-				postMirrorId
+				postMirrorId,
 			);
 
 			if (!eventCard) {
 				if (!post.current) {
-					this.context.log.info("Back sync", postCard);
+					this.context.log.info('Back sync', postCard);
 				}
 
 				sequence.push(
 					...utils.postEvent(sequence, postCard, newThreadCard as any, {
 						actor: post.actorId,
-					})
+					}),
 				);
 
 				continue;
@@ -1561,7 +1561,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 			patchedCard.data.payload.message = postCard.data!.payload.message;
 
 			if (!_.isEqual(eventCard, patchedCard)) {
-				this.context.log.info("Back sync", patchedCard);
+				this.context.log.info('Back sync', patchedCard);
 				sequence.push({
 					time: new Date(post.updated_at),
 					actor: patchedCard.data.actor,
@@ -1581,9 +1581,9 @@ export const create = (options: SyncIntegrationOptions) => {
 export const isEventValid = async (
 	token: any,
 	rawEvent: string,
-	headers: any
+	headers: any,
 ) => {
-	const signature = headers["x-discourse-event-signature"];
+	const signature = headers['x-discourse-event-signature'];
 	if (!signature) {
 		return true;
 	}
@@ -1593,9 +1593,9 @@ export const isEventValid = async (
 	}
 
 	const hash = crypto
-		.createHmac("sha256", token.signature)
+		.createHmac('sha256', token.signature)
 		.update(rawEvent)
-		.digest("hex");
+		.digest('hex');
 
 	return `sha256=${hash}` === signature;
 };

@@ -4,19 +4,19 @@
  * Proprietary and confidential.
  */
 
-import * as assert from "@balena/jellyfish-assert";
-import * as _ from "lodash";
-import * as Bluebird from "bluebird";
-import * as utils from "../utils";
-import * as marked from "marked";
-import { Front } from "front-sdk";
-import * as Intercom from "intercom-client";
-import * as request from "request-promise";
+import * as assert from '@balena/jellyfish-assert';
+import * as _ from 'lodash';
+import * as Bluebird from 'bluebird';
+import * as utils from '../utils';
+import * as marked from 'marked';
+import { Front } from 'front-sdk';
+import * as Intercom from 'intercom-client';
+import * as request from 'request-promise';
 import {
 	Card,
 	SyncIntegrationOptions,
 	SyncIntegrationInstance,
-} from "../../sync-types";
+} from '../../sync-types';
 import {
 	getAllThreadMessages,
 	getConversationLastMessage,
@@ -31,7 +31,7 @@ import {
 	getThreadType,
 	handleRateLimit,
 	getMessageActor,
-} from "./helpers";
+} from './helpers';
 
 /**
  * @summary All the thread types we support
@@ -39,14 +39,14 @@ import {
  * @private
  */
 const ALL_THREAD_TYPES = [
-	"sales-thread",
-	"support-thread",
-	"sales-thread@1.0.0",
-	"support-thread@1.0.0",
+	'sales-thread',
+	'support-thread',
+	'sales-thread@1.0.0',
+	'support-thread@1.0.0',
 ];
 
 class FrontIntegration implements SyncIntegrationInstance {
-	context: SyncIntegrationOptions["context"];
+	context: SyncIntegrationOptions['context'];
 	options: SyncIntegrationOptions;
 
 	front: Front;
@@ -81,14 +81,14 @@ class FrontIntegration implements SyncIntegrationInstance {
 		// starts, so if we process the events before the actual conversation,
 		// then we will correctly detect and sync an empty conversation, which
 		// makes little practical sense.
-		if (event.data.payload.conversation.status === "invisible") {
-			this.context.log.info("Ignoring invisible conversation");
+		if (event.data.payload.conversation.status === 'invisible') {
+			this.context.log.info('Ignoring invisible conversation');
 			return [];
 		}
 
 		const inbox = await getEventInbox(this.context, this.front, event);
 		if (!inbox) {
-			this.context.log.info("No event inbox found", {
+			this.context.log.info('No event inbox found', {
 				event: event.id,
 			});
 
@@ -97,7 +97,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 
 		const threadType = getThreadType(inbox);
 		if (!threadType) {
-			this.context.log.info("No thread type for inbox", {
+			this.context.log.info('No thread type for inbox', {
 				inbox,
 			});
 
@@ -108,7 +108,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 			null,
 			ALL_THREAD_TYPES.includes(threadType),
 			this.options.errors.SyncInvalidType,
-			`Invalid thread type: ${threadType} for inbox ${inbox}`
+			`Invalid thread type: ${threadType} for inbox ${inbox}`,
 		);
 
 		const cards = [];
@@ -125,27 +125,27 @@ class FrontIntegration implements SyncIntegrationInstance {
 			this.options.errors.SyncNoActor,
 			() => {
 				return `No thread actor id for ${JSON.stringify(event)}`;
-			}
+			},
 		);
 
-		const threadCard: Omit<Partial<Card>, "id"> & {
+		const threadCard: Omit<Partial<Card>, 'id'> & {
 			id?: string | { $eval: string };
 			slug: string;
 		} = await getThread(this.context, this.front, event, inbox, threadType);
 		if (!threadCard.id) {
-			this.context.log.info("Creating thread", {
+			this.context.log.info('Creating thread', {
 				slug: threadCard.slug,
 			});
 
 			cards.push({
 				time: utils.getDateFromEpoch(
-					event.data.payload.conversation.created_at
+					event.data.payload.conversation.created_at,
 				),
 				actor: threadActor,
 				card: _.cloneDeep(threadCard),
 			});
 			threadCard.id = {
-				$eval: "cards[0].id",
+				$eval: 'cards[0].id',
 			};
 		}
 
@@ -153,10 +153,10 @@ class FrontIntegration implements SyncIntegrationInstance {
 		const remoteMessages = await getAllThreadMessages(
 			this.front,
 			this.context,
-			_.last(threadCard.data!.mirrors[0].split("/")) as string
+			_.last(threadCard.data!.mirrors[0].split('/')) as string,
 		);
 
-		this.context.log.info("Inserting remote messages", {
+		this.context.log.info('Inserting remote messages', {
 			count: remoteMessages.length,
 		});
 
@@ -169,12 +169,12 @@ class FrontIntegration implements SyncIntegrationInstance {
 				remoteMessage,
 				threadCard.id,
 				utils.getDateFromEpoch(event.data.payload.emitted_at),
-				remoteMessages
+				remoteMessages,
 			);
 			cards.push(
 				...utils.postEvent(cards, comment as any, threadCard as any, {
 					actor: comment ? comment!.data!.actor : null,
-				})
+				}),
 			);
 		}
 
@@ -187,10 +187,10 @@ class FrontIntegration implements SyncIntegrationInstance {
 			cards,
 			event,
 			threadCard as Card,
-			remoteMessages
+			remoteMessages,
 		);
 		if (eventMessage.length > 0) {
-			this.context.log.info("Inserting event message");
+			this.context.log.info('Inserting event message');
 		}
 		cards.push(...eventMessage);
 
@@ -201,10 +201,10 @@ class FrontIntegration implements SyncIntegrationInstance {
 			cards,
 			event,
 			threadCard,
-			remoteMessages
+			remoteMessages,
 		);
 		if (lastMessage.length > 0) {
-			this.context.log.info("Inserting last message");
+			this.context.log.info('Inserting last message');
 		}
 		cards.push(...lastMessage);
 
@@ -216,12 +216,12 @@ class FrontIntegration implements SyncIntegrationInstance {
 			updatedThreadCard.data.translateDate &&
 			date < new Date(updatedThreadCard.data.translateDate)
 		) {
-			this.context.log.info("Translate date is a future date");
+			this.context.log.info('Translate date is a future date');
 			return cards;
 		}
 
 		if (_.isEqual(updatedThreadCard, threadCard)) {
-			this.context.log.info("Thread card remains the same", {
+			this.context.log.info('Thread card remains the same', {
 				slug: threadCard.slug,
 			});
 
@@ -260,7 +260,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 		// We make a good enough approximation if we didn't know about the head
 		// card, as Front won't tell us precisely when the event happened.
 		const creationDate = utils.getDateFromEpoch(
-			event.data.payload.conversation.created_at + 1
+			event.data.payload.conversation.created_at + 1,
 		);
 
 		return cards.concat([
@@ -278,19 +278,19 @@ class FrontIntegration implements SyncIntegrationInstance {
 		}
 
 		const frontUrl = _.find(card.data.mirrors, (mirror) => {
-			return _.startsWith(mirror, "https://api2.frontapp.com");
+			return _.startsWith(mirror, 'https://api2.frontapp.com');
 		});
 
-		this.context.log.info("Mirroring", {
+		this.context.log.info('Mirroring', {
 			url: frontUrl,
 			remote: card,
 		});
 
 		if (ALL_THREAD_TYPES.includes(card.type) && frontUrl) {
-			const id = _.last<string>(frontUrl.split("/"));
+			const id = _.last<string>(frontUrl.split('/'));
 			const conversation = await handleRateLimit(this.context, () => {
-				this.context.log.info("Front API request", {
-					type: "conversation.get",
+				this.context.log.info('Front API request', {
+					type: 'conversation.get',
 					id,
 				});
 
@@ -299,32 +299,32 @@ class FrontIntegration implements SyncIntegrationInstance {
 				});
 			});
 
-			let status = "open";
-			if (conversation.status === "deleted") {
-				status = "archived";
+			let status = 'open';
+			if (conversation.status === 'deleted') {
+				status = 'archived';
 			}
 
-			if (conversation.status === "archived") {
-				status = "closed";
+			if (conversation.status === 'archived') {
+				status = 'closed';
 			}
 
 			if (
-				conversation.subject.replace(/^Re:\s/, "") !== card.name ||
+				conversation.subject.replace(/^Re:\s/, '') !== card.name ||
 				status !== card.data.status ||
 				!_.isEqual(
 					_.sortBy(card.tags),
-					_.sortBy(_.map(conversation.tags, "name"))
+					_.sortBy(_.map(conversation.tags, 'name')),
 				)
 			) {
 				let newStatus = conversation.status;
-				if (card.data.status === "closed" || card.data.status === "archived") {
-					newStatus = "archived";
+				if (card.data.status === 'closed' || card.data.status === 'archived') {
+					newStatus = 'archived';
 				}
-				if (card.data.status === "open") {
-					newStatus = "open";
+				if (card.data.status === 'open') {
+					newStatus = 'open';
 				}
 
-				this.context.log.info("Updating front thread", {
+				this.context.log.info('Updating front thread', {
 					conversation: id,
 					status: newStatus,
 					tags: card.tags,
@@ -337,18 +337,18 @@ class FrontIntegration implements SyncIntegrationInstance {
 
 				// Oddly enough Front doesn't like `status=unassigned`,
 				// or `status=assigned` and expects this instead.
-				if (newStatus === "unassigned") {
+				if (newStatus === 'unassigned') {
 					updateOptions.assignee_id = null;
-				} else if (newStatus === "assigned") {
+				} else if (newStatus === 'assigned') {
 					updateOptions.assignee_id = conversation.assignee.id;
 				} else {
 					updateOptions.status = newStatus;
 				}
 
-				this.context.log.info("Updating front conversation", updateOptions);
+				this.context.log.info('Updating front conversation', updateOptions);
 				await handleRateLimit(this.context, () => {
-					this.context.log.info("Front API request", {
-						type: "conversation.update",
+					this.context.log.info('Front API request', {
+						type: 'conversation.update',
 						id,
 					});
 
@@ -372,8 +372,8 @@ class FrontIntegration implements SyncIntegrationInstance {
 			return [];
 		}
 
-		const baseType = card.type.split("@")[0];
-		if (baseType === "message" || baseType === "whisper") {
+		const baseType = card.type.split('@')[0];
+		if (baseType === 'message' || baseType === 'whisper') {
 			const thread = await this.context.getElementById(card.data.target);
 			if (!thread || !ALL_THREAD_TYPES.includes(thread.type)) {
 				return [];
@@ -385,15 +385,15 @@ class FrontIntegration implements SyncIntegrationInstance {
 			}
 
 			const threadFrontUrl = _.find(thread.data.mirrors, (mirror) => {
-				return _.startsWith(mirror, "https://api2.frontapp.com");
+				return _.startsWith(mirror, 'https://api2.frontapp.com');
 			});
 			if (!threadFrontUrl) {
 				return [];
 			}
 
 			const response = await handleRateLimit(this.context, () => {
-				this.context.log.info("Front API request", {
-					type: "teammate.list",
+				this.context.log.info('Front API request', {
+					type: 'teammate.list',
 				});
 
 				return this.front.teammate.list();
@@ -407,31 +407,31 @@ class FrontIntegration implements SyncIntegrationInstance {
 			const author = _.find(response._results, {
 				// Front automatically transforms hyphens to
 				// underscores in the UI
-				username: actor.slug.replace(/^user-/g, "").replace(/-/g, "_"),
+				username: actor.slug.replace(/^user-/g, '').replace(/-/g, '_'),
 			});
 
 			assert.USER(
 				null,
 				author,
 				this.options.errors.SyncExternalRequestError,
-				`No Front author that corresponds to ${actor.slug}`
+				`No Front author that corresponds to ${actor.slug}`,
 			);
 
 			card.data.mirrors = card.data.mirrors || [];
 
-			if (baseType === "whisper") {
-				const conversation = _.last<string>(threadFrontUrl.split("/"));
-				const message = card.data.payload.message || "[Empty content]";
+			if (baseType === 'whisper') {
+				const conversation = _.last<string>(threadFrontUrl.split('/'));
+				const message = card.data.payload.message || '[Empty content]';
 
-				this.context.log.info("Creating front whisper", {
+				this.context.log.info('Creating front whisper', {
 					conversation,
 					author: author.id,
 					body: message,
 				});
 
 				const createResponse = await handleRateLimit(this.context, () => {
-					this.context.log.info("Front API request", {
-						type: "comment.create",
+					this.context.log.info('Front API request', {
+						type: 'comment.create',
 						id: conversation,
 					});
 
@@ -445,8 +445,8 @@ class FrontIntegration implements SyncIntegrationInstance {
 				card.data.mirrors.push(createResponse._links.self);
 			}
 
-			if (baseType === "message") {
-				const conversation = _.last<string>(threadFrontUrl.split("/"));
+			if (baseType === 'message') {
+				const conversation = _.last<string>(threadFrontUrl.split('/'));
 				const message = card.data.payload.message;
 				const html = marked(message, {
 					// Enable github flavored markdown
@@ -456,7 +456,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 					sanitize: true,
 				});
 
-				this.context.log.info("Creating front message", {
+				this.context.log.info('Creating front message', {
 					conversation,
 					author: author.id,
 					text: message,
@@ -468,11 +468,11 @@ class FrontIntegration implements SyncIntegrationInstance {
 					this.options.errors,
 					this.front,
 					conversation!,
-					thread.data.inbox
+					thread.data.inbox,
 				);
 				const createResponse = await handleRateLimit(this.context, () => {
-					this.context.log.info("Front API request", {
-						type: "message.reply",
+					this.context.log.info('Front API request', {
+						type: 'message.reply',
 						id: conversation,
 					});
 
@@ -512,7 +512,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 	}
 
 	async getLocalUser(event: Card) {
-		if (event.data.payload.source._meta.type === "teammate") {
+		if (event.data.payload.source._meta.type === 'teammate') {
 			// An action done by a rule
 			if (!event.data.payload.source.data) {
 				return this.context.getActorId({
@@ -520,7 +520,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 				});
 			}
 
-			this.context.log.info("Getting actor id from payload source", {
+			this.context.log.info('Getting actor id from payload source', {
 				source: event.data.payload.source.data,
 			});
 
@@ -537,9 +537,9 @@ class FrontIntegration implements SyncIntegrationInstance {
 		// This seems to be true when there is an event caused
 		// by a rule, and not by anyone in particular.
 		if (
-			event.data.payload.source._meta.type === "api" ||
-			event.data.payload.source._meta.type === "gmail" ||
-			event.data.payload.source._meta.type === "reminder"
+			event.data.payload.source._meta.type === 'api' ||
+			event.data.payload.source._meta.type === 'gmail' ||
+			event.data.payload.source._meta.type === 'reminder'
 		) {
 			if (
 				!event.data.payload.target ||
@@ -558,7 +558,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 			this.context,
 			this.front,
 			this.intercom,
-			event.data.payload.target.data
+			event.data.payload.target.data,
 		);
 	}
 
@@ -575,34 +575,34 @@ class FrontIntegration implements SyncIntegrationInstance {
 					event.data.payload.conversation.recipient._links.related.contact;
 
 				if (contactUrl) {
-					const id = _.last(_.split(contactUrl, "/"));
+					const id = _.last(_.split(contactUrl, '/'));
 					const contact = await getFrontContact(this.context, this.front, id!);
 
 					if (contact) {
 						const intercomData = _.find(contact.handles, {
-							source: "intercom",
+							source: 'intercom',
 						});
 
 						if (intercomData && this.intercom) {
 							const intercomUser = await getIntercomUser(
 								this.context,
 								this.intercom,
-								intercomData.handle
+								intercomData.handle,
 							);
 							if (intercomUser) {
-								this.context.log.info("Found Intercom user", intercomUser);
+								this.context.log.info('Found Intercom user', intercomUser);
 								const customAttributes = intercomUser.custom_attributes || {};
 
 								return this.context.getActorId({
 									handle: intercomUser.user_id,
 									email: intercomUser.email,
-									title: customAttributes["Account Type"],
+									title: customAttributes['Account Type'],
 									company: customAttributes.Company,
 									country: (intercomUser.location_data as any).country_name,
 									city: (intercomUser.location_data as any).city_name,
 									name: {
-										first: customAttributes["First Name"],
-										last: customAttributes["Last Name"],
+										first: customAttributes['First Name'],
+										last: customAttributes['Last Name'],
 									},
 								});
 							}
@@ -615,7 +615,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 						}
 
 						const email = _.find(contact.handles, {
-							source: "email",
+							source: 'email',
 						});
 
 						if (email && utils.isEmail(email.handle)) {
@@ -632,7 +632,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 
 				if (
 					event.data.payload.conversation.recipient.handle &&
-					event.data.payload.conversation.last_message.type !== "intercom"
+					event.data.payload.conversation.last_message.type !== 'intercom'
 				) {
 					return this.context.getActorId({
 						email: event.data.payload.conversation.recipient.handle,
@@ -642,30 +642,30 @@ class FrontIntegration implements SyncIntegrationInstance {
 
 			if (
 				this.intercom &&
-				event.data.payload.conversation.recipient.role === "from" &&
+				event.data.payload.conversation.recipient.role === 'from' &&
 				event.data.payload.conversation.recipient.handle &&
 				!event.data.payload.conversation.recipient._links.related.contact &&
-				!event.data.payload.conversation.recipient.handle.includes("@")
+				!event.data.payload.conversation.recipient.handle.includes('@')
 			) {
 				const intercomUser = await getIntercomUser(
 					this.context,
 					this.intercom,
-					event.data.payload.conversation.recipient.handle
+					event.data.payload.conversation.recipient.handle,
 				);
 
 				if (intercomUser) {
-					this.context.log.info("Found Intercom user", intercomUser);
+					this.context.log.info('Found Intercom user', intercomUser);
 					const customAttributes = intercomUser.custom_attributes || {};
 					return this.context.getActorId({
 						handle: intercomUser.user_id,
 						email: intercomUser.email,
-						title: customAttributes["Account Type"],
+						title: customAttributes['Account Type'],
 						company: customAttributes.Company,
 						country: (intercomUser.location_data as any).country_name,
 						city: (intercomUser.location_data as any).city_name,
 						name: {
-							first: customAttributes["First Name"],
-							last: customAttributes["Last Name"],
+							first: customAttributes['First Name'],
+							last: customAttributes['Last Name'],
 						},
 					});
 				}
@@ -675,17 +675,17 @@ class FrontIntegration implements SyncIntegrationInstance {
 		if (
 			event.data.payload.target &&
 			event.data.payload.target._meta &&
-			event.data.payload.target._meta.type === "message" &&
+			event.data.payload.target._meta.type === 'message' &&
 			event.data.payload.target.data &&
 			!event.data.payload.target.data.is_inbound
 		) {
 			const target = _.find(event.data.payload.target.data.recipients, {
-				role: "to",
+				role: 'to',
 			});
 
 			if (target) {
 				const id = _.last(
-					_.split(target._links.related.contact, "/")
+					_.split(target._links.related.contact, '/'),
 				) as string;
 				const contact = await getFrontContact(this.context, this.front, id);
 
@@ -728,18 +728,18 @@ class FrontIntegration implements SyncIntegrationInstance {
 
 		try {
 			const response = await request(requestOpts);
-			return Buffer.from(response, "utf8");
+			return Buffer.from(response, 'utf8');
 		} catch (error) {
 			assert.USER(
 				null,
 				error.statusCode !== 500,
 				this.options.errors.SyncExternalRequestError,
-				`Front crashed with ${error.statusCode} when fetching attachment ${file}`
+				`Front crashed with ${error.statusCode} when fetching attachment ${file}`,
 			);
 
 			// Because the response is a buffer, the error is sent as a buffer as well
 			if (_.isBuffer(error.error)) {
-				const errorMessage = Buffer.from(error.error, "utf8").toString();
+				const errorMessage = Buffer.from(error.error, 'utf8').toString();
 				let parsedError: Record<string, any> = {};
 				try {
 					parsedError = JSON.parse(errorMessage);
@@ -756,7 +756,7 @@ class FrontIntegration implements SyncIntegrationInstance {
 					throw new Error(newErrorMessage);
 				} else {
 					throw new Error(
-						`Received unknown error response from from Front API: ${errorMessage}`
+						`Received unknown error response from from Front API: ${errorMessage}`,
 					);
 				}
 			}

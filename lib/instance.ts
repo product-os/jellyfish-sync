@@ -4,17 +4,17 @@
  * Proprietary and confidential.
  */
 
-import * as assert from "@balena/jellyfish-assert";
-import * as Bluebird from "bluebird";
-import * as _ from "lodash";
-import * as request from "request";
-import * as errors from "./errors";
-import * as oauth from "./oauth";
-import { Card, SyncContext, SyncIntegration } from "./sync-types";
+import * as assert from '@balena/jellyfish-assert';
+import * as Bluebird from 'bluebird';
+import * as _ from 'lodash';
+import * as request from 'request';
+import * as errors from './errors';
+import * as oauth from './oauth';
+import { Card, SyncContext, SyncIntegration } from './sync-types';
 
 const httpRequest = async (
 	options: { uri: string },
-	retries = 30
+	retries = 30,
 ): Promise<{ code: number; body: any }> => {
 	const result = await new Bluebird<{ code: number; body: any }>(
 		(resolve, reject) => {
@@ -29,9 +29,9 @@ const httpRequest = async (
 						code: response.statusCode,
 						body,
 					});
-				}
+				},
 			);
-		}
+		},
 	);
 
 	// Automatically retry on server failures
@@ -40,7 +40,7 @@ const httpRequest = async (
 			null,
 			retries > 0,
 			errors.SyncExternalRequestError,
-			`External service responded with ${result.code} to ${options.uri}`
+			`External service responded with ${result.code} to ${options.uri}`,
 		);
 
 		await Bluebird.delay(2000);
@@ -55,7 +55,7 @@ const httpRequest = async (
 			null,
 			retries > 0,
 			errors.SyncRateLimit,
-			`External service rate limit with ${result.code} to ${options.uri}`
+			`External service rate limit with ${result.code} to ${options.uri}`,
 		);
 
 		await Bluebird.delay(5000);
@@ -68,7 +68,7 @@ const httpRequest = async (
 const setProperty = (
 	card: any,
 	object: any,
-	path: _.Many<string | number | symbol>
+	path: _.Many<string | number | symbol>,
 ) => {
 	if (_.has(object, path)) {
 		_.set(card, path, _.get(object, path) || _.get(card, path));
@@ -77,64 +77,64 @@ const setProperty = (
 
 const getOrCreate = async (
 	context: SyncContext,
-	object: Partial<Card> & Pick<Card, "type" | "slug" | "version">
+	object: Partial<Card> & Pick<Card, 'type' | 'slug' | 'version'>,
 ) => {
 	// TODO: Attempt to unify user cards based on
 	// their e-mails. i.e. if two user cards have
 	// the same e-mail then they are likely the
 	// same user.
 	const card = await context.getElementBySlug(
-		`${object.slug}@${object.version}`
+		`${object.slug}@${object.version}`,
 	);
 	if (card) {
 		// Set union of all known e-mails
-		const emailPropertyPath = ["data", "email"];
+		const emailPropertyPath = ['data', 'email'];
 		if (_.has(object, emailPropertyPath)) {
 			const emails = _.sortBy(
 				_.compact(
 					_.union(
 						_.castArray(_.get(card, emailPropertyPath)),
-						_.castArray(_.get(object, emailPropertyPath))
-					)
-				)
+						_.castArray(_.get(object, emailPropertyPath)),
+					),
+				),
 			);
 			_.set(
 				card,
 				emailPropertyPath,
-				emails.length === 1 ? _.first(emails) : emails
+				emails.length === 1 ? _.first(emails) : emails,
 			);
 		}
 
-		setProperty(card, object, ["data", "profile", "company"]);
-		setProperty(card, object, ["data", "profile", "name", "first"]);
-		setProperty(card, object, ["data", "profile", "name", "last"]);
-		setProperty(card, object, ["data", "profile", "title"]);
-		setProperty(card, object, ["data", "profile", "country"]);
-		setProperty(card, object, ["data", "profile", "city"]);
+		setProperty(card, object, ['data', 'profile', 'company']);
+		setProperty(card, object, ['data', 'profile', 'name', 'first']);
+		setProperty(card, object, ['data', 'profile', 'name', 'last']);
+		setProperty(card, object, ['data', 'profile', 'title']);
+		setProperty(card, object, ['data', 'profile', 'country']);
+		setProperty(card, object, ['data', 'profile', 'city']);
 
-		context.log.info("Unifying actor cards", {
+		context.log.info('Unifying actor cards', {
 			target: card,
 			source: object,
 		});
 
-		await context.upsertElement(card.type, _.omit(card, ["type"]), {
+		await context.upsertElement(card.type, _.omit(card, ['type']), {
 			timestamp: new Date(),
 		});
 
 		return card.id;
 	}
 
-	context.log.info("Inserting non-existent actor", {
+	context.log.info('Inserting non-existent actor', {
 		slug: object.slug,
 		data: object.data,
 	});
 
 	const result = await context.upsertElement(
 		object.type,
-		_.omit(object, ["type"]),
+		_.omit(object, ['type']),
 		{
 			timestamp: new Date(),
-		}
+		},
 	);
 
 	// The result of an upsert might be null if the upsert
@@ -142,7 +142,7 @@ const getOrCreate = async (
 	// case we can fetch the user card from the database.
 	if (!result) {
 		const existentCard = await context.getElementBySlug(
-			`${object.slug}@${object.version}`
+			`${object.slug}@${object.version}`,
 		);
 		if (!existentCard) {
 			return null;
@@ -161,17 +161,17 @@ const getOAuthUser = async (
 	},
 	provider: any,
 	actor: any,
-	options: { defaultUser: any }
+	options: { defaultUser: any },
 ) => {
 	const userCard = await context.getElementById(actor);
 	assert.INTERNAL(
 		null,
 		userCard,
 		errors.SyncNoActor,
-		`No such actor: ${actor}`
+		`No such actor: ${actor}`,
 	);
 
-	const tokenPath = ["data", "oauth", provider];
+	const tokenPath = ['data', 'oauth', provider];
 	if (_.has(userCard, tokenPath)) {
 		return userCard;
 	}
@@ -180,25 +180,25 @@ const getOAuthUser = async (
 		null,
 		options.defaultUser,
 		errors.SyncOAuthNoUserError,
-		`No default integrations actor to act as ${actor} for ${provider}`
+		`No default integrations actor to act as ${actor} for ${provider}`,
 	);
 
 	const defaultUserCard = await context.getElementBySlug(
-		`user-${options.defaultUser}@latest`
+		`user-${options.defaultUser}@latest`,
 	);
 
 	assert.INTERNAL(
 		null,
 		defaultUserCard,
 		errors.SyncNoActor,
-		`No such actor: ${options.defaultUser}`
+		`No such actor: ${options.defaultUser}`,
 	);
 
 	assert.USER(
 		null,
 		_.has(defaultUserCard, tokenPath),
 		errors.SyncOAuthNoUserError,
-		`Default actor ${options.defaultUser} does not support ${provider}`
+		`Default actor ${options.defaultUser} does not support ${provider}`,
 	);
 
 	return defaultUserCard;
@@ -208,7 +208,7 @@ export const run = async (
 	integration: SyncIntegration,
 	token: { appId: any; appSecret: any },
 	fn: (arg0: any) => any,
-	options: any
+	options: any,
 ) => {
 	const getUsername = options.context.getLocalUsername || _.identity;
 
@@ -228,7 +228,7 @@ export const run = async (
 					null,
 					actor,
 					errors.SyncNoActor,
-					"Missing request actor"
+					'Missing request actor',
 				);
 
 				if (!integration.OAUTH_BASE_URL || !token.appId || !token.appSecret) {
@@ -239,7 +239,7 @@ export const run = async (
 					null,
 					options.origin,
 					errors.SyncOAuthError,
-					"Missing OAuth origin URL"
+					'Missing OAuth origin URL',
 				);
 
 				const userCard = await getOAuthUser(
@@ -248,16 +248,16 @@ export const run = async (
 					actor,
 					{
 						defaultUser: options.defaultUser,
-					}
+					},
 				);
 
-				const tokenPath = ["data", "oauth", options.provider];
+				const tokenPath = ['data', 'oauth', options.provider];
 				const tokenData = _.get(userCard, tokenPath);
 				if (tokenData) {
 					_.set(
 						requestOptions,
-						["headers", "Authorization"],
-						`Bearer ${tokenData.access_token}`
+						['headers', 'Authorization'],
+						`Bearer ${tokenData.access_token}`,
 					);
 				}
 
@@ -265,7 +265,7 @@ export const run = async (
 
 				// Lets try refreshing the token and retry if so
 				if (result.code === 401 && tokenData) {
-					options.context.log.info("Refreshing OAuth token", {
+					options.context.log.info('Refreshing OAuth token', {
 						provider: options.provider,
 						user: userCard.slug,
 						origin: options.origin,
@@ -287,21 +287,21 @@ export const run = async (
 							appId: token.appId,
 							appSecret: token.appSecret,
 							redirectUri: options.origin,
-						}
+						},
 					);
 					_.set(userCard, tokenPath, newToken);
 					await options.context.upsertElement(
 						userCard.type,
-						_.omit(userCard, ["type"]),
+						_.omit(userCard, ['type']),
 						{
 							timestamp: new Date(),
-						}
+						},
 					);
 
 					_.set(
 						requestOptions,
-						["headers", "Authorization"],
-						`Bearer ${newToken.access_token}`
+						['headers', 'Authorization'],
+						`Bearer ${newToken.access_token}`,
 					);
 
 					return httpRequest(requestOptions);
@@ -319,13 +319,13 @@ export const run = async (
 				name?: any;
 				title?: any;
 			}) => {
-				options.context.log.info("Creating sync actor", information);
+				options.context.log.info('Creating sync actor', information);
 
 				const username = information.handle || information.email;
 				const translatedUsername = await getUsername(username.toLowerCase());
 				const slug = translatedUsername
 					.toLowerCase()
-					.replace(/[^a-z0-9-]/g, "-");
+					.replace(/[^a-z0-9-]/g, '-');
 
 				// There is a known Front/Intercom issue where some messages
 				// would arrive (or be duplicated) as coming from the "intercom"
@@ -333,7 +333,7 @@ export const run = async (
 				// the webhooks or the API).
 				// We declared this as a "can't fix", but this log line will be
 				// useful to get a pulse of the problem.
-				if (slug === "intercom") {
+				if (slug === 'intercom') {
 					options.context.log.warn('Using "intercom" actor', information);
 				}
 
@@ -355,19 +355,19 @@ export const run = async (
 					profile.city = information.city;
 				}
 
-				const firstName = _.get(information, ["name", "first"]);
-				const lastName = _.get(information, ["name", "last"]);
+				const firstName = _.get(information, ['name', 'first']);
+				const lastName = _.get(information, ['name', 'last']);
 				if (firstName) {
-					_.set(profile, ["name", "first"], firstName);
+					_.set(profile, ['name', 'first'], firstName);
 				}
 				if (lastName) {
-					_.set(profile, ["name", "lastName"], lastName);
+					_.set(profile, ['name', 'lastName'], lastName);
 				}
 
 				const data: Record<string, any> = {
 					// A hash that can never occur in the real-world
 					// See https://github.com/product-os/jellyfish/issues/2011
-					hash: "PASSWORDLESS",
+					hash: 'PASSWORDLESS',
 
 					roles: [],
 					profile,
@@ -380,8 +380,8 @@ export const run = async (
 				return getOrCreate(options.context, {
 					slug: `user-${slug}`,
 					active: _.isBoolean(information.active) ? information.active : true,
-					type: "user@1.0.0",
-					version: "1.0.0",
+					type: 'user@1.0.0',
+					version: '1.0.0',
 					data,
 				});
 			},

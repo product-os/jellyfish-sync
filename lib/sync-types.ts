@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import * as errors from "./errors";
+import * as errors from './errors';
 
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -68,12 +68,12 @@ export interface SyncIntegrationOptions {
 	defaultUser: any;
 	context: Pick<
 		SyncContext,
-		| "log"
-		| "getRemoteUsername"
-		| "getLocalUsername"
-		| "getElementBySlug"
-		| "getElementById"
-		| "getElementByMirrorId"
+		| 'log'
+		| 'getRemoteUsername'
+		| 'getLocalUsername'
+		| 'getElementBySlug'
+		| 'getElementById'
+		| 'getElementByMirrorId'
 	> & {
 		request: (actor: any, requestOptions: any) => Promise<any>;
 		getActorId: (information: {
@@ -96,31 +96,31 @@ export interface SyncIntegration {
 	getExternalUserSyncEventData?: (
 		context: SyncContext,
 		externalUser: any,
-		options: { errors: any }
+		options: { errors: any },
 	) => Promise<any>;
 
 	whoami?: (
 		context: SyncContext,
 		credentials: any,
-		options: { errors: any }
+		options: { errors: any },
 	) => Promise<any>;
 
 	match?: (
 		context: SyncContext,
 		externalUser: any,
-		options: any
+		options: any,
 	) => Promise<Card | null>;
 
 	isEventValid: (
 		token: any,
 		rawEvent: any,
-		headers: Record<string, any>
+		headers: Record<string, any>,
 	) => Promise<boolean>;
 
 	create(options: SyncIntegrationOptions): SyncIntegrationInstance;
 }
 
-export type WorkerResponse = Pick<Card, "id" | "slug" | "version" | "type">;
+export type WorkerResponse = Pick<Card, 'id' | 'slug' | 'version' | 'type'>;
 
 // Defined here https://github.com/product-os/jellyfish-action-library/blob/master/lib/handlers/sync-context.js
 // TODO: detangle the context generation into something less tightly coupled
@@ -136,7 +136,7 @@ export interface SyncContext {
 	upsertElement(
 		type: string,
 		object: Partial<Card>,
-		options: UpsertElementOptions
+		options: UpsertElementOptions,
 	): Promise<WorkerResponse>;
 	getElementBySlug(slug: string): Promise<Card | null>;
 	getElementById(id: string): Promise<Card | null>;

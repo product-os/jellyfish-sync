@@ -4,35 +4,35 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as crypto from "crypto";
-import { throttling } from "@octokit/plugin-throttling";
-import { retry } from "@octokit/plugin-retry";
-import { Octokit as OctokitRest } from "@octokit/rest";
-import * as authApp from "@octokit/auth-app";
-import * as Bluebird from "bluebird";
-import * as utils from "./utils";
+import * as _ from 'lodash';
+import * as crypto from 'crypto';
+import { throttling } from '@octokit/plugin-throttling';
+import { retry } from '@octokit/plugin-retry';
+import { Octokit as OctokitRest } from '@octokit/rest';
+import * as authApp from '@octokit/auth-app';
+import * as Bluebird from 'bluebird';
+import * as utils from './utils';
 import {
 	Card,
 	SyncIntegrationInstance,
 	SyncIntegrationOptions,
 	SyncResult,
-} from "../sync-types";
+} from '../sync-types';
 
-const uuid = require("@balena/jellyfish-uuid");
-const assert = require("@balena/jellyfish-assert");
-const packageJSON = require("../../package.json");
+const uuid = require('@balena/jellyfish-uuid');
+const assert = require('@balena/jellyfish-assert');
+const packageJSON = require('../../package.json');
 
 const Octokit = OctokitRest.plugin(retry, throttling);
 
-const GITHUB_API_REQUEST_LOG_TITLE = "GitHub API Request";
+const GITHUB_API_REQUEST_LOG_TITLE = 'GitHub API Request';
 const GITHUB_API_RETRY_COUNT = 5;
 
 const githubRequest = async (
 	fn: any,
 	arg: any,
 	options: any,
-	retries = 5
+	retries = 5,
 ): Promise<any> => {
 	const result = await fn(arg);
 
@@ -45,12 +45,12 @@ const githubRequest = async (
 				return `GitHub unavailable ${result.status}: ${JSON.stringify(
 					result.data,
 					null,
-					2
+					2,
 				)}`;
-			}
+			},
 		);
 
-		options.context.log.warn("GitHub unavailable retry", {
+		options.context.log.warn('GitHub unavailable retry', {
 			retries,
 		});
 
@@ -79,12 +79,12 @@ const revertEventChanges = (event: Card, object: any) => {
 		previousEvent.data.payload[object][key] = value.from;
 	});
 
-	Reflect.deleteProperty(previousEvent.data.payload, "changes");
+	Reflect.deleteProperty(previousEvent.data.payload, 'changes');
 	return previousEvent;
 };
 
 const updateCardFromSequence = (
-	sequence: { time: Date; card: any; actor: string }[],
+	sequence: Array<{ time: Date; card: any; actor: string }>,
 	index: number,
 	changes: {
 		data?:
@@ -93,7 +93,7 @@ const updateCardFromSequence = (
 			| { status: string };
 		active?: boolean;
 		tags?: string[] | undefined;
-	}
+	},
 ) => {
 	const card = _.cloneDeep(sequence[index].card);
 	_.merge(card, changes);
@@ -120,14 +120,14 @@ const gatherPRInfo = (payload: { pull_request: any }) => {
 };
 
 const normaliseRootID = (id: string) => {
-	return id.replace(/[=]/g, "").toLowerCase();
+	return id.replace(/[=]/g, '').toLowerCase();
 };
 
 const eventToCardType = (event: Card) => {
 	return event.data.payload.pull_request ||
 		(event.data.payload.issue && event.data.payload.issue.pull_request)
-		? "pull-request@1.0.0"
-		: "issue@1.0.0";
+		? 'pull-request@1.0.0'
+		: 'issue@1.0.0';
 };
 
 const makeCard = (card: any, actor: string, time?: string | number) => {
@@ -144,7 +144,7 @@ const makeCard = (card: any, actor: string, time?: string | number) => {
 };
 
 const getCommentFromEvent = async (
-	_context: SyncIntegrationOptions["context"],
+	_context: SyncIntegrationOptions['context'],
 	event: Card,
 	options: {
 		actor: any;
@@ -153,7 +153,7 @@ const getCommentFromEvent = async (
 		targetCard: any;
 		offset: any;
 		active: any;
-	}
+	},
 ) => {
 	const date = new Date(event.data.payload.comment.updated_at);
 
@@ -178,25 +178,25 @@ const getCommentFromEvent = async (
 		makeCard(
 			{
 				slug,
-				type: "message@1.0.0",
+				type: 'message@1.0.0',
 				active: options.active,
 				data,
 			},
 			options.actor,
-			options.time
+			options.time,
 		),
 		makeCard(
 			{
 				slug: `link-${slug}-is-attached-to-${options.targetCard.slug}`,
-				type: "link@1.0.0",
-				name: "is attached to",
+				type: 'link@1.0.0',
+				name: 'is attached to',
 				data: {
-					inverseName: "has attached element",
+					inverseName: 'has attached element',
 					from: {
 						id: {
 							$eval: `cards[${options.offset}].id`,
 						},
-						type: "message@1.0.0",
+						type: 'message@1.0.0',
 					},
 					to: {
 						id: options.target,
@@ -205,14 +205,14 @@ const getCommentFromEvent = async (
 				},
 			},
 			options.actor,
-			options.time
+			options.time,
 		),
 	];
 };
 
 class GitHubIntegration implements SyncIntegrationInstance {
 	options: SyncIntegrationOptions;
-	context: SyncIntegrationOptions["context"];
+	context: SyncIntegrationOptions['context'];
 
 	constructor(options: SyncIntegrationOptions) {
 		this.options = options;
@@ -228,8 +228,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	}
 
 	async getOctokit(
-		context: SyncIntegrationOptions["context"],
-		installationId?: string
+		context: SyncIntegrationOptions['context'],
+		installationId?: string,
 	) {
 		const octokitOptions: Record<string, any> = {
 			request: {
@@ -239,13 +239,13 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			throttle: {
 				onRateLimit: (
 					_retryAfter: any,
-					retryOptions: { request: { retryCount: number } }
+					retryOptions: { request: { retryCount: number } },
 				) => {
 					return retryOptions.request.retryCount <= GITHUB_API_RETRY_COUNT;
 				},
 				onAbuseLimit: (
 					_retryAfter: any,
-					retryOptions: { request: { retryCount: number } }
+					retryOptions: { request: { retryCount: number } },
 				) => {
 					return retryOptions.request.retryCount <= GITHUB_API_RETRY_COUNT;
 				},
@@ -253,26 +253,26 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		};
 
 		if (installationId && this.options.token.key && this.options.token.appId) {
-			context.log.info("Using GitHub App based authentication");
+			context.log.info('Using GitHub App based authentication');
 			octokitOptions.authStrategy = authApp.createAppAuth;
 			octokitOptions.auth = {
 				id: _.parseInt(this.options.token.appId),
-				privateKey: Buffer.from(this.options.token.key, "base64").toString(),
+				privateKey: Buffer.from(this.options.token.key, 'base64').toString(),
 			};
 
 			const github = new Octokit(octokitOptions);
 			const { token } = (await github.auth({
-				type: "installation",
+				type: 'installation',
 				installationId,
 			})) as any;
 
-			Reflect.deleteProperty(octokitOptions, "authStrategy");
+			Reflect.deleteProperty(octokitOptions, 'authStrategy');
 			octokitOptions.auth = token;
 			return new Octokit(octokitOptions);
 		}
 
 		if (this.options.token.api) {
-			context.log.info("Using token based authentication");
+			context.log.info('Using token based authentication');
 			octokitOptions.auth = this.options.token.api;
 			return new Octokit(octokitOptions);
 		}
@@ -282,48 +282,48 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 	async mirror(card: Card, options: { actor: string }) {
 		if (!this.options.token.api) {
-			this.context.log.warn("No token set for github integration");
+			this.context.log.warn('No token set for github integration');
 			return [];
 		}
 
 		if (!this.options.token.key) {
-			this.context.log.warn("No private key set for github integration");
+			this.context.log.warn('No private key set for github integration');
 			return [];
 		}
 
 		const github = await this.getOctokit(this.context);
 		if (!github) {
-			this.context.log.warn("Could not authenticate with GitHub");
+			this.context.log.warn('Could not authenticate with GitHub');
 			return [];
 		}
 
 		const githubUrl = _.find(card.data.mirrors, (mirror) => {
-			return _.startsWith(mirror, "https://github.com");
+			return _.startsWith(mirror, 'https://github.com');
 		});
 
-		this.context.log.info("Mirroring", {
+		this.context.log.info('Mirroring', {
 			url: githubUrl,
 			remote: card,
 		});
 
 		const actorCard = await this.context.getElementById(options.actor);
-		const username = _.get(actorCard, ["slug"], "unknown").replace(
+		const username = _.get(actorCard, ['slug'], 'unknown').replace(
 			/^user-/,
-			""
+			'',
 		);
 		const prefix = `[${username}]`;
-		const baseType = card.type.split("@")[0];
+		const baseType = card.type.split('@')[0];
 
 		if (
-			(baseType === "issue" || baseType === "pull-request") &&
+			(baseType === 'issue' || baseType === 'pull-request') &&
 			card.data.repository
 		) {
-			const [owner, repository] = card.data.repository.split("/");
+			const [owner, repository] = card.data.repository.split('/');
 
 			if (!githubUrl) {
 				this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-					category: "issues",
-					action: "create",
+					category: 'issues',
+					action: 'create',
 				});
 
 				const result = await githubRequest(
@@ -335,7 +335,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 						body: `${prefix} ${card.data.description}`,
 						labels: card.tags,
 					},
-					this.options
+					this.options,
 				);
 
 				card.data.mirrors = card.data.mirrors || [];
@@ -345,29 +345,29 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			}
 
 			this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-				category: baseType === "pull-request" ? "pulls" : "issues",
-				action: "get",
+				category: baseType === 'pull-request' ? 'pulls' : 'issues',
+				action: 'get',
 			});
 
-			const urlFragments = githubUrl.split("/");
+			const urlFragments = githubUrl.split('/');
 			const entityNumber = _.parseInt(_.last<string>(urlFragments)!);
 
 			assert.INTERNAL(
 				null,
 				_.isNumber(entityNumber) && !_.isNaN(entityNumber),
 				this.options.errors.SyncInvalidEvent,
-				`No entity number in GitHub URL: ${githubUrl}`
+				`No entity number in GitHub URL: ${githubUrl}`,
 			);
 
 			const getOptions = {
 				owner: urlFragments[3],
 				repo: urlFragments[4],
-				[baseType === "pull-request"
-					? "pull_number"
-					: "issue_number"]: entityNumber,
+				[baseType === 'pull-request'
+					? 'pull_number'
+					: 'issue_number']: entityNumber,
 			};
 			const result =
-				baseType === "pull-request"
+				baseType === 'pull-request'
 					? await githubRequest(github.pulls.get, getOptions, this.options)
 					: await githubRequest(github.issues.get, getOptions, this.options);
 
@@ -375,35 +375,35 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				result.data.state !== card.data.status ||
 				result.data.body !== `${prefix} ${card.data.description}` ||
 				result.data.title !== card.name ||
-				!_.isEqual(_.map(result.data.labels, "name"), card.tags)
+				!_.isEqual(_.map(result.data.labels, 'name'), card.tags)
 			) {
 				const updateOptions = {
 					owner: getOptions.owner,
 					repo: getOptions.repo,
-					issue_number: _.parseInt(_.last(githubUrl.split("/")) as string),
+					issue_number: _.parseInt(_.last(githubUrl.split('/')) as string),
 					title: card.name,
 					body: card.data.description,
 					state: card.data.status,
 					labels: card.tags,
 				};
 
-				if (baseType === "issue") {
+				if (baseType === 'issue') {
 					this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-						category: "issues",
-						action: "update",
+						category: 'issues',
+						action: 'update',
 					});
 
 					await githubRequest(
 						github.issues.update,
 						updateOptions,
-						this.options
+						this.options,
 					);
 				}
 
-				if (baseType === "pull-request") {
+				if (baseType === 'pull-request') {
 					this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-						category: "pulls",
-						action: "update",
+						category: 'pulls',
+						action: 'update',
 					});
 
 					await githubRequest(github.pulls.update, updateOptions, this.options);
@@ -413,12 +413,12 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			return [];
 		}
 
-		if (baseType === "message") {
+		if (baseType === 'message') {
 			const issue = await this.context.getElementById(card.data.target);
-			const issueBaseType = issue ? issue.type.split("@")[0] : "";
+			const issueBaseType = issue ? issue.type.split('@')[0] : '';
 			if (
 				!issue ||
-				(issueBaseType !== "issue" && issueBaseType !== "pull-request")
+				(issueBaseType !== 'issue' && issueBaseType !== 'pull-request')
 			) {
 				return [];
 			}
@@ -428,23 +428,23 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			}
 
 			const issueGithubUrl = _.find(issue.data.mirrors, (mirror) => {
-				return _.startsWith(mirror, "https://github.com");
+				return _.startsWith(mirror, 'https://github.com');
 			});
 
 			const repoDetails = issueGithubUrl
 				? {
-						owner: issueGithubUrl.split("/")[3],
-						repository: issueGithubUrl.split("/")[4],
+						owner: issueGithubUrl.split('/')[3],
+						repository: issueGithubUrl.split('/')[4],
 				  }
 				: {
-						owner: _.first(issue.data.repository.split("/")),
-						repository: _.last(issue.data.repository.split("/")),
+						owner: _.first(issue.data.repository.split('/')),
+						repository: _.last(issue.data.repository.split('/')),
 				  };
 
 			if (!githubUrl) {
 				this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-					category: "issues",
-					action: "createComment",
+					category: 'issues',
+					action: 'createComment',
 				});
 
 				const result = await githubRequest(
@@ -454,12 +454,12 @@ class GitHubIntegration implements SyncIntegrationInstance {
 						repo: repoDetails.repository,
 						issue_number: _.parseInt(
 							_.last(
-								(issueGithubUrl || issue.data.repository).split("/")
-							) as string
+								(issueGithubUrl || issue.data.repository).split('/'),
+							) as string,
 						),
 						body: `${prefix} ${card.data.payload.message}`,
 					},
-					this.options
+					this.options,
 				);
 
 				card.data.mirrors = card.data.mirrors || [];
@@ -469,8 +469,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			}
 
 			this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-				category: "issues",
-				action: "getComment",
+				category: 'issues',
+				action: 'getComment',
 			});
 
 			try {
@@ -479,15 +479,15 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					{
 						owner: repoDetails.owner,
 						repo: repoDetails.repository,
-						comment_id: _.parseInt(_.last(githubUrl.split("-")) as string),
+						comment_id: _.parseInt(_.last(githubUrl.split('-')) as string),
 					},
-					this.options
+					this.options,
 				);
 
 				if (result.data.body !== `${prefix} ${card.data.payload.message}`) {
 					this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-						category: "issues",
-						action: "updateComment",
+						category: 'issues',
+						action: 'updateComment',
 					});
 
 					await githubRequest(
@@ -498,17 +498,17 @@ class GitHubIntegration implements SyncIntegrationInstance {
 							comment_id: result.data.id,
 							body: card.data.payload.message,
 						},
-						this.options
+						this.options,
 					);
 				}
 			} catch (error) {
-				if (error.name === "HttpError" && error.status === 404) {
+				if (error.name === 'HttpError' && error.status === 404) {
 					return [
 						makeCard(
 							Object.assign({}, card, {
 								active: false,
 							}),
-							options.actor
+							options.actor,
 						),
 					];
 				}
@@ -530,12 +530,12 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			git_url: any;
 			created_at: string | number | undefined;
 		},
-		options: { actor: any; index: any }
+		options: { actor: any; index: any },
 	) {
 		const mirrorID = repo.html_url;
 		const existingCard = await this.getCardByMirrorId(
 			mirrorID,
-			"repository@1.0.0"
+			'repository@1.0.0',
 		);
 
 		if (existingCard) {
@@ -544,7 +544,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					slug: existingCard.slug,
 					target: {
 						id: existingCard.id,
-						type: "repository@1.0.0",
+						type: 'repository@1.0.0',
 					},
 				},
 				card: null,
@@ -556,7 +556,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		const repoCard = {
 			name: `${owner}/${name}`,
 			slug: repoSlug,
-			type: "repository@1.0.0",
+			type: 'repository@1.0.0',
 			tags: [],
 			data: {
 				owner,
@@ -573,7 +573,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					id: {
 						$eval: `cards[${options.index}].id`,
 					},
-					type: "repository@1.0.0",
+					type: 'repository@1.0.0',
 				},
 			},
 			card: makeCard(repoCard, options.actor, repo.created_at),
@@ -583,11 +583,11 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	async getPRFromEvent(
 		github: any,
 		event: Card,
-		options: { status: any; id: string | undefined }
+		options: { status: any; id: string | undefined },
 	) {
 		const root = getEventRoot(event);
 		const prData = await this.generatePRDataFromEvent(github, event);
-		const type = "pull-request@1.0.0";
+		const type = 'pull-request@1.0.0';
 
 		const pullRequest =
 			event.data.payload.pull_request || event.data.payload.issue.pull_request;
@@ -605,13 +605,13 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					mirrors: [getEventMirrorId(event)],
 					mentionsUser: [],
 					alertsUser: [],
-					description: root.body || "",
+					description: root.body || '',
 					status: options.status,
 					archived: false,
 					closed_at: pullRequest.closed_at || null,
 					merged_at: pullRequest.merged_at || null,
 				},
-				prData
+				prData,
 			),
 		};
 
@@ -628,8 +628,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			result = gatherPRInfo(event.data.payload);
 		} else {
 			this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-				category: "pullRequests",
-				action: "get",
+				category: 'pullRequests',
+				action: 'get',
 			});
 
 			const pr = await githubRequest(
@@ -639,7 +639,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					repo: event.data.payload.repository.name,
 					pull_number: event.data.payload.issue.number,
 				},
-				this.options
+				this.options,
 			);
 			result = gatherPRInfo({
 				pull_request: pr.data,
@@ -654,7 +654,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			github,
 			event,
 			actor,
-			"pull-request@1.0.0"
+			'pull-request@1.0.0',
 		);
 
 		if (_.isEmpty(result)) {
@@ -691,49 +691,49 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		return result.concat([
 			makeCard(
 				{
-					name: "has head at",
+					name: 'has head at',
 					slug: `link-${result[0].card.slug}-head-at-${head.repoInfo.slug}`.replace(
 						/[@.]/g,
-						"-"
+						'-',
 					),
-					type: "link@1.0.0",
+					type: 'link@1.0.0',
 					data: {
-						inverseName: "is head of",
+						inverseName: 'is head of',
 						from: {
 							id: {
-								$eval: "cards[0].id",
+								$eval: 'cards[0].id',
 							},
 							type: {
-								$eval: "cards[0].type",
+								$eval: 'cards[0].type',
 							},
 						},
 						to: head.repoInfo.target,
 					},
 				},
-				actor
+				actor,
 			),
 			makeCard(
 				{
-					name: "has base at",
+					name: 'has base at',
 					slug: `link-${result[0].card.slug}-base-at-${base.repoInfo.slug}`.replace(
 						/[@.]/g,
-						"-"
+						'-',
 					),
-					type: "link@1.0.0",
+					type: 'link@1.0.0',
 					data: {
-						inverseName: "is base of",
+						inverseName: 'is base of',
 						from: {
 							id: {
-								$eval: "cards[0].id",
+								$eval: 'cards[0].id',
 							},
 							type: {
-								$eval: "cards[0].type",
+								$eval: 'cards[0].type',
 							},
 						},
 						to: base.repoInfo.target,
 					},
 				},
-				actor
+				actor,
 			),
 		]);
 	}
@@ -741,7 +741,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	async createPRWithConnectedIssues(
 		github: OctokitRest,
 		event: Card,
-		actor: string
+		actor: string,
 	) {
 		const mirrorID = getEventMirrorId(event);
 		const cards = await this.createPRIfNotExists(github, event, actor);
@@ -751,9 +751,9 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		const pr = cards[0].card;
 
 		const connectedIssue = _.chain(pr.data.description)
-			.split("\n")
+			.split('\n')
 			.map((line) => {
-				return _.trim(line, " \n");
+				return _.trim(line, ' \n');
 			})
 			.filter((line) => {
 				return /^[\w-]+:/.test(line);
@@ -762,29 +762,29 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				return _.split(line, /\s*:\s*/);
 			})
 			.fromPairs()
-			.get(["Connects-to"])
+			.get(['Connects-to'])
 			.value();
 
 		if (connectedIssue) {
 			const issueCard = await this.getCardByMirrorId(
 				mirrorID,
-				"pull-request@1.0.0"
+				'pull-request@1.0.0',
 			);
 			if (issueCard) {
 				cards.push(
 					makeCard(
 						{
-							name: "is attached to",
+							name: 'is attached to',
 							slug: `link-${pr.slug}-is-attached-to-${issueCard.slug}`,
-							type: "link@1.0.0",
+							type: 'link@1.0.0',
 							data: {
-								inverseName: "has attached",
+								inverseName: 'has attached',
 								from: {
 									id: {
-										$eval: "cards[0].id",
+										$eval: 'cards[0].id',
 									},
 									type: {
-										$eval: "cards[0].type",
+										$eval: 'cards[0].type',
 									},
 								},
 								to: {
@@ -793,8 +793,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 								},
 							},
 						},
-						actor
-					)
+						actor,
+					),
 				);
 			}
 		}
@@ -802,21 +802,21 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	}
 
 	async closePR(github: OctokitRest, event: Card, actor: string) {
-		return this.closePRorIssue(github, event, actor, "pull-request@1.0.0");
+		return this.closePRorIssue(github, event, actor, 'pull-request@1.0.0');
 	}
 
 	async labelEventPR(
 		github: OctokitRest,
 		event: Card,
 		actor: string,
-		action: any
+		action: any,
 	) {
 		return this.labelPRorIssue(
 			github,
 			event,
 			actor,
 			action,
-			"pull-request@1.0.0"
+			'pull-request@1.0.0',
 		);
 	}
 
@@ -824,7 +824,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		const mirrorID = getEventMirrorId(event);
 		const existingPR = await this.getCardByMirrorId(
 			mirrorID,
-			"pull-request@1.0.0"
+			'pull-request@1.0.0',
 		);
 		const root = getEventRoot(event);
 
@@ -833,7 +833,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		}
 
 		const pr = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 		});
 
 		return [makeCard(pr, actor, root.updated_at)];
@@ -841,10 +841,10 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 	async getIssueFromEvent(
 		event: Card,
-		options: { status: any; id: string | undefined | { $eval: string } }
+		options: { status: any; id: string | undefined | { $eval: string } },
 	) {
 		const root = getEventRoot(event);
-		const type = "issue@1.0.0";
+		const type = 'issue@1.0.0';
 
 		const issue: Partial<Card> = {
 			name: root.title,
@@ -858,7 +858,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				mirrors: [getEventMirrorId(event)],
 				mentionsUser: [],
 				alertsUser: [],
-				description: root.body || "",
+				description: root.body || '',
 				status: options.status,
 				archived: false,
 			},
@@ -872,27 +872,27 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	}
 
 	async createIssueIfNotExists(github: OctokitRest, event: any, actor: string) {
-		return this.createPRorIssueIfNotExists(github, event, actor, "issue@1.0.0");
+		return this.createPRorIssueIfNotExists(github, event, actor, 'issue@1.0.0');
 	}
 
 	async closeIssue(github: OctokitRest, event: any, actor: string) {
-		return this.closePRorIssue(github, event, actor, "issue@1.0.0");
+		return this.closePRorIssue(github, event, actor, 'issue@1.0.0');
 	}
 
 	async updateIssue(
 		github: OctokitRest,
 		event: Card,
 		actor: string,
-		action: string
+		action: string,
 	) {
 		const issueMirrorId = getEventMirrorId(event);
-		const issue = await this.getCardByMirrorId(issueMirrorId, "issue@1.0.0");
+		const issue = await this.getCardByMirrorId(issueMirrorId, 'issue@1.0.0');
 		const root = getEventRoot(event);
 
 		if (issue) {
 			const issueCard = await this.getCardFromEvent(github, event, {
 				id: issue.id,
-				status: "open",
+				status: 'open',
 			});
 
 			return [makeCard(issueCard, actor, root.updated_at)];
@@ -900,37 +900,37 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 		const issueCard = await this.getCardFromEvent(
 			github,
-			revertEventChanges(event, "issue"),
+			revertEventChanges(event, 'issue'),
 			{
-				status: "open",
-			}
+				status: 'open',
+			},
 		);
 
 		const sequence = [makeCard(issueCard, actor, root.created_at)];
 
-		if (action === "reopened") {
+		if (action === 'reopened') {
 			const time = root.closed_at
 				? root.closed_at
 				: new Date(root.updated_at).valueOf();
 
 			const closedCard = await this.getCardFromEvent(
 				github,
-				revertEventChanges(event, "issue"),
+				revertEventChanges(event, 'issue'),
 				{
-					status: "closed",
+					status: 'closed',
 					id: {
-						$eval: "cards[0].id",
+						$eval: 'cards[0].id',
 					},
-				}
+				},
 			);
 
 			sequence.push(makeCard(closedCard, actor, time));
 		}
 
 		const openCard = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 			id: {
-				$eval: "cards[0].id",
+				$eval: 'cards[0].id',
 			},
 		});
 
@@ -941,9 +941,9 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		github: OctokitRest,
 		event: any,
 		actor: string,
-		action: any
+		action: any,
 	) {
-		return this.labelPRorIssue(github, event, actor, action, "issue@1.0.0");
+		return this.labelPRorIssue(github, event, actor, action, 'issue@1.0.0');
 	}
 
 	async createIssueComment(github: OctokitRest, event: Card, actor: string) {
@@ -970,15 +970,15 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 		// PR comments are treated as issue comments by github
 		const openCard = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 		});
 
 		const sequence = [makeCard(openCard, actor, root.created_at)];
 
-		if (root.state === "closed") {
+		if (root.state === 'closed') {
 			const closedCard = updateCardFromSequence(sequence, 0, {
 				data: {
-					status: "closed",
+					status: 'closed',
 				},
 			});
 
@@ -991,13 +991,13 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				this.context,
 				event,
 				{
-					$eval: "cards[0].id",
+					$eval: 'cards[0].id',
 				},
 				[getCommentMirrorIdFromEvent(event)],
 				{
 					actor,
-				}
-			)) as any
+				},
+			)) as any,
 		);
 
 		return upserts.concat(
@@ -1006,11 +1006,11 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				time: event.data.payload.comment.created_at,
 				offset: upserts.length,
 				target: {
-					$eval: "cards[0].id",
+					$eval: 'cards[0].id',
 				},
 				targetCard: sequence[0].card,
 				active: true,
-			})
+			}),
 		);
 	}
 
@@ -1041,7 +1041,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 		if (!issue) {
 			const openCard = await this.getCardFromEvent(github, event, {
-				status: "open",
+				status: 'open',
 			});
 
 			sequence.push(makeCard(openCard, actor, root.created_at));
@@ -1061,12 +1061,12 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			[],
 			{
 				actor,
-			}
+			},
 		);
 
 		for (const item of result) {
 			const githubUrl = _.find(item.card.data!.mirrors, (mirror) => {
-				return _.startsWith(mirror, "https://github.com");
+				return _.startsWith(mirror, 'https://github.com');
 			});
 
 			if (!githubUrl) {
@@ -1100,8 +1100,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				makeCard(
 					updateCardFromSequence(sequence as any, index, changes),
 					actor,
-					time
-				)
+					time,
+				),
 			);
 		}
 
@@ -1123,10 +1123,10 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			makeCard(
 				{
 					slug: pushSlug,
-					type: "gh-push@1.0.0",
-					name: "Push Event",
+					type: 'gh-push@1.0.0',
+					name: 'Push Event',
 					data: {
-						branch: event.data.payload.ref.replace(/^refs\/heads\//, ""),
+						branch: event.data.payload.ref.replace(/^refs\/heads\//, ''),
 						before: beforeSHA,
 						after: afterSHA,
 						author: event.data.payload.pusher.name,
@@ -1134,7 +1134,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					},
 				},
 				actor,
-				event.data.payload.repository.updated_at
+				event.data.payload.repository.updated_at,
 			),
 		];
 
@@ -1154,26 +1154,26 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		return result.concat([
 			makeCard(
 				{
-					name: "refers to",
+					name: 'refers to',
 					slug: `link-gh-push-${afterSHA}-to-${repo.repoInfo.slug.replace(
 						/_/g,
-						"-"
+						'-',
 					)}`,
-					type: "link@1.0.0",
+					type: 'link@1.0.0',
 					data: {
-						inverseName: "is referenced by",
+						inverseName: 'is referenced by',
 						from: {
 							id: {
-								$eval: "cards[0].id",
+								$eval: 'cards[0].id',
 							},
 							type: {
-								$eval: "cards[0].type",
+								$eval: 'cards[0].type',
 							},
 						},
 						to: repo.repoInfo.target,
 					},
 				},
-				actor
+				actor,
 			),
 		]);
 	}
@@ -1184,23 +1184,23 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		const root = getEventRoot(event);
 
 		if (issue) {
-			if (issue.data.status === "closed") {
+			if (issue.data.status === 'closed') {
 				return [];
 			}
 
-			issue.data.status = "closed";
+			issue.data.status = 'closed';
 
 			return [makeCard(issue, actor, root.closed_at)];
 		}
 
 		const prOpened = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 		});
 
 		const prClosed = await this.getCardFromEvent(github, event, {
-			status: "closed",
+			status: 'closed',
 			id: {
-				$eval: "cards[0].id",
+				$eval: 'cards[0].id',
 			},
 		});
 		return [makeCard(prOpened, actor, root.created_at)]
@@ -1210,13 +1210,13 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					this.context,
 					event,
 					{
-						$eval: "cards[0].id",
+						$eval: 'cards[0].id',
 					},
 					[],
 					{
 						actor,
-					}
-				)) as any
+					},
+				)) as any,
 			)
 			.concat([makeCard(prClosed, actor, root.closed_at)]);
 	}
@@ -1225,7 +1225,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		github: any,
 		event: Card,
 		actor: string,
-		type: string
+		type: string,
 	) {
 		const mirrorID = getEventMirrorId(event);
 		const existingCard = await this.getCardByMirrorId(mirrorID, type);
@@ -1236,7 +1236,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		}
 
 		const card = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 		});
 
 		return [makeCard(card, actor, root.created_at)];
@@ -1247,7 +1247,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		event: Card,
 		actor: string,
 		action: string,
-		type: string
+		type: string,
 	) {
 		const issueMirrorId = getEventMirrorId(event);
 		const issue = await this.getCardByMirrorId(issueMirrorId, type);
@@ -1268,12 +1268,12 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 		const sequence = [];
 		const card = await this.getCardFromEvent(github, event, {
-			status: "open",
+			status: 'open',
 		});
 
 		const originalTags = _.clone(card.tags);
 
-		if (action === "labeled") {
+		if (action === 'labeled') {
 			if (root.created_at === root.updated_at) {
 				return [makeCard(card, actor, root.created_at)];
 			}
@@ -1282,15 +1282,15 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 			sequence.push(makeCard(card, actor, root.created_at));
 
-			if (root.state === "closed") {
+			if (root.state === 'closed') {
 				const closedCard = makeCard(
 					updateCardFromSequence(sequence, 0, {
 						data: {
-							status: "closed",
+							status: 'closed',
 						},
 					}),
 					actor,
-					root.closed_at
+					root.closed_at,
 				);
 
 				sequence.push(closedCard);
@@ -1301,7 +1301,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				sequence.length - 1,
 				{
 					tags: originalTags,
-				}
+				},
 			);
 
 			return sequence.concat([makeCard(updatedCard, actor, root.updated_at)]);
@@ -1316,8 +1316,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 						tags: card.tags!.concat(event.data.payload.label.name),
 					}),
 					actor,
-					new Date(root.updated_at).valueOf()
-				)
+					new Date(root.updated_at).valueOf(),
+				),
 			);
 		}
 
@@ -1327,29 +1327,29 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					tags: originalTags,
 				}),
 				actor,
-				root.updated_at
+				root.updated_at,
 			),
 		]);
 	}
 
 	async translate(event: Card) {
 		if (!this.options.token.api) {
-			this.context.log.warn("No token set for github integration");
+			this.context.log.warn('No token set for github integration');
 			return [];
 		}
 
 		const github = await this.getOctokit(
 			this.context,
-			event.data.payload.installation && event.data.payload.installation.id
+			event.data.payload.installation && event.data.payload.installation.id,
 		);
 		if (!github) {
-			this.context.log.warn("Could not authenticate with GitHub");
+			this.context.log.warn('Could not authenticate with GitHub');
 			return [];
 		}
 
 		const type =
-			event.data.headers["X-GitHub-Event"] ||
-			event.data.headers["x-github-event"];
+			event.data.headers['X-GitHub-Event'] ||
+			event.data.headers['x-github-event'];
 		const action = event.data.payload.action;
 		const actor = (await this.getLocalUser(github, event)) as string;
 		assert.INTERNAL(null, actor, this.options.errors.SyncNoActor, () => {
@@ -1357,54 +1357,54 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		});
 
 		switch (type) {
-			case "pull_request":
+			case 'pull_request':
 				switch (action) {
-					case "review_requested":
+					case 'review_requested':
 						return this.createPRIfNotExists(github, event, actor);
-					case "opened":
-					case "assigned":
+					case 'opened':
+					case 'assigned':
 						return this.createPRWithConnectedIssues(github, event, actor);
-					case "closed":
+					case 'closed':
 						return this.closePR(github, event, actor);
-					case "labeled":
-					case "unlabeled":
+					case 'labeled':
+					case 'unlabeled':
 						return this.labelEventPR(github, event, actor, action);
-					case "synchronize":
+					case 'synchronize':
 						return this.updatePR(github, event, actor);
 					default:
 						return [];
 				}
-			case "issues":
+			case 'issues':
 				switch (action) {
-					case "opened":
-					case "assigned":
+					case 'opened':
+					case 'assigned':
 						return this.createIssueIfNotExists(github, event, actor);
-					case "closed":
+					case 'closed':
 						return this.closeIssue(github, event, actor);
-					case "reopened":
-					case "edited":
+					case 'reopened':
+					case 'edited':
 						return this.updateIssue(github, event, actor, action);
-					case "labeled":
-					case "unlabeled":
+					case 'labeled':
+					case 'unlabeled':
 						return this.labelEventIssue(github, event, actor, action);
 					default:
 						return [];
 				}
 
-			case "pull_request_review":
+			case 'pull_request_review':
 				switch (action) {
-					case "submitted":
+					case 'submitted':
 						return this.createPRIfNotExists(github, event, actor);
 					default:
 						return [];
 				}
 
-			case "issue_comment":
-				event.data.payload.comment.deleted = action === "deleted";
+			case 'issue_comment':
+				event.data.payload.comment.deleted = action === 'deleted';
 				switch (action) {
-					case "created":
+					case 'created':
 						return this.createIssueComment(github, event, actor);
-					case "deleted":
+					case 'deleted':
 						// Refactor a delete event to look like an edit on a
 						// "deleted" property
 						event.data.payload.comment.changes = {
@@ -1414,13 +1414,13 @@ class GitHubIntegration implements SyncIntegrationInstance {
 						};
 
 					// Falls through
-					case "edited":
+					case 'edited':
 						return this.editIssueComment(github, event, actor);
 					default:
 						return [];
 				}
 
-			case "push":
+			case 'push':
 				return this.createPush(event, actor);
 
 			default:
@@ -1433,7 +1433,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 	}
 
 	async getCommentByMirrorId(id: string) {
-		return this.context.getElementByMirrorId("message@1.0.0", id);
+		return this.context.getElementByMirrorId('message@1.0.0', id);
 	}
 
 	async getCardFromEvent(
@@ -1442,19 +1442,19 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		options: {
 			status: any;
 			id?: string | { $eval: string };
-		}
+		},
 	) {
 		switch (eventToCardType(event)) {
-			case "issue@1.0.0":
+			case 'issue@1.0.0':
 				return this.getIssueFromEvent(event, options as any);
-			case "pull-request@1.0.0":
+			case 'pull-request@1.0.0':
 				return this.getPRFromEvent(github, event, options as any);
 			default:
-				throw new Error("Unknown type");
+				throw new Error('Unknown type');
 		}
 	}
 	getRepoFromEvent(_event: any, _options: any) {
-		throw new Error("Method not implemented.");
+		throw new Error('Method not implemented.');
 	}
 
 	async queryComments(
@@ -1462,11 +1462,11 @@ class GitHubIntegration implements SyncIntegrationInstance {
 		owner: any,
 		repository: any,
 		issue: any,
-		page = 1
+		page = 1,
 	) {
 		this.context.log.debug(GITHUB_API_REQUEST_LOG_TITLE, {
-			category: "issues",
-			action: "listComments",
+			category: 'issues',
+			action: 'listComments',
 		});
 
 		const response = await githubRequest(
@@ -1478,7 +1478,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				per_page: 100,
 				page,
 			},
-			this.options
+			this.options,
 		);
 
 		return response.data;
@@ -1486,18 +1486,18 @@ class GitHubIntegration implements SyncIntegrationInstance {
 
 	async getCommentsFromIssue(
 		github: any,
-		_context: SyncIntegrationOptions["context"],
+		_context: SyncIntegrationOptions['context'],
 		event: Card,
 		target: string | { $eval: string },
 		mirrorBlacklist: string | any[],
-		options: { actor: any }
+		options: { actor: any },
 	) {
 		const root = getEventRoot(event);
 		const response = await this.queryComments(
 			github,
 			event.data.payload.repository.owner.login,
 			event.data.payload.repository.name,
-			root.number
+			root.number,
 		);
 
 		return Bluebird.reduce<any, SyncResult[]>(
@@ -1511,8 +1511,8 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				const date = new Date(payload.updated_at);
 				const card = await this.getCommentByMirrorId(mirrorId);
 				const data = {
-					mirrors: _.get(card, ["data", "mirrors"]) || [mirrorId],
-					actor: _.get(card, ["data", "actor"]) || options.actor,
+					mirrors: _.get(card, ['data', 'mirrors']) || [mirrorId],
+					actor: _.get(card, ['data', 'actor']) || options.actor,
 					target,
 					timestamp: date.toISOString(),
 					payload: {
@@ -1527,7 +1527,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				const id = await uuid.random();
 				const comment: Partial<Card> = {
 					slug: `message-${id}`,
-					type: "message@1.0.0",
+					type: 'message@1.0.0',
 					active: !payload.deleted,
 					data,
 				};
@@ -1540,7 +1540,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 					makeCard(comment, options.actor, payload.updated_at),
 				]);
 			},
-			[]
+			[],
 		);
 	}
 
@@ -1550,7 +1550,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 			{
 				username: event.data.payload.sender.login,
 			},
-			this.options
+			this.options,
 		);
 
 		const email =
@@ -1560,7 +1560,7 @@ class GitHubIntegration implements SyncIntegrationInstance {
 				// Try to deal with emails such as
 				// - "foo (at) gmail.com"
 				// - "bar (a) hotmail.com"
-				.replace(/\s*\(at?\)\s*/g, "@");
+				.replace(/\s*\(at?\)\s*/g, '@');
 
 		return this.context.getActorId({
 			// This is pretty much a free-form field.
@@ -1580,16 +1580,16 @@ export const create = (options: SyncIntegrationOptions) => {
 export const isEventValid = async (
 	token: any,
 	rawEvent: string,
-	headers: any
+	headers: any,
 ) => {
-	const signature = headers["x-hub-signature"];
+	const signature = headers['x-hub-signature'];
 	if (!signature || !token || !token.signature) {
 		return false;
 	}
 
 	const hash = crypto
-		.createHmac("sha1", token.signature)
+		.createHmac('sha1', token.signature)
 		.update(rawEvent)
-		.digest("hex");
+		.digest('hex');
 	return signature === `sha1=${hash}`;
 };

@@ -4,23 +4,23 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as assert from "@balena/jellyfish-assert";
-import * as pipeline from "./pipeline";
+import * as _ from 'lodash';
+import * as assert from '@balena/jellyfish-assert';
+import * as pipeline from './pipeline';
 import {
 	Token,
 	Card,
 	SyncContext,
 	WorkerResponse,
 	TranslateOptions,
-} from "./sync-types";
-import * as errors from "./errors";
-import INTEGRATIONS from "./integrations";
-import * as integrationUtils from "./integrations/utils";
+} from './sync-types';
+import * as errors from './errors';
+import INTEGRATIONS from './integrations';
+import * as integrationUtils from './integrations/utils';
 
-import * as instance from "./instance";
-import * as oauth from "./oauth";
-const metrics = require("@balena/jellyfish-metrics");
+import * as instance from './instance';
+import * as oauth from './oauth';
+const metrics = require('@balena/jellyfish-metrics');
 
 /**
  * Jellyfish sync library module.
@@ -46,7 +46,7 @@ export const OAUTH_INTEGRATIONS: string[] = _.reduce<any, string[]>(
 
 		return accumulator;
 	},
-	[]
+	[],
 );
 
 /**
@@ -65,7 +65,7 @@ export const getAssociateUrl = (
 	integration: string,
 	token: Token | null,
 	slug: string,
-	options: { origin: string }
+	options: { origin: string },
 ): string | null => {
 	const Integration = INTEGRATIONS[integration];
 	if (!Integration || !token || !token.appId) {
@@ -80,7 +80,7 @@ export const getAssociateUrl = (
 			{
 				appId: token.appId,
 				redirectUri: options.origin,
-			}
+			},
 		);
 	}
 	return null;
@@ -103,7 +103,7 @@ export const authorize = async (
 	integration: string,
 	token: Token,
 	context: { OAUTH_INTEGRATIONS: { [x: string]: any } },
-	options: { code: string; origin: string }
+	options: { code: string; origin: string },
 ): Promise<string> => {
 	const Integration = context.OAUTH_INTEGRATIONS
 		? context.OAUTH_INTEGRATIONS[integration]
@@ -113,14 +113,14 @@ export const authorize = async (
 		context,
 		Integration,
 		errors.SyncNoCompatibleIntegration,
-		`There is no compatible integration for provider: ${integration}`
+		`There is no compatible integration for provider: ${integration}`,
 	);
 
 	assert.INTERNAL(
 		context,
 		!!(token && token.appId && token.appSecret),
 		errors.SyncNoIntegrationAppCredentials,
-		`No application credentials found for integration: ${integration}`
+		`No application credentials found for integration: ${integration}`,
 	);
 
 	return oauth.getAccessToken(Integration.OAUTH_BASE_URL, options.code, {
@@ -143,7 +143,7 @@ export const authorize = async (
 export const whoami = async (
 	context: SyncContext,
 	integration: string | number,
-	credentials: any
+	credentials: any,
 ): Promise<any> => {
 	const Integration = context.OAUTH_INTEGRATIONS
 		? context.OAUTH_INTEGRATIONS[integration]
@@ -153,7 +153,7 @@ export const whoami = async (
 		context,
 		!!Integration,
 		errors.SyncNoCompatibleIntegration,
-		`There is no compatible integration for provider: ${integration}`
+		`There is no compatible integration for provider: ${integration}`,
 	);
 
 	// TODO: Once the "jellyfish-assert" module is typed, move this check to the assert above
@@ -182,7 +182,7 @@ export const match = async (
 	context: SyncContext,
 	integration: string,
 	externalUser: any,
-	options: { slug: any }
+	options: { slug: any },
 ): Promise<Card | null> => {
 	const Integration = context.OAUTH_INTEGRATIONS
 		? context.OAUTH_INTEGRATIONS[integration]
@@ -192,7 +192,7 @@ export const match = async (
 		context,
 		!!Integration,
 		errors.SyncNoCompatibleIntegration,
-		`There is no compatible integration for provider: ${integration}`
+		`There is no compatible integration for provider: ${integration}`,
 	);
 
 	// TODO: Once the "jellyfish-assert" module is typed, move this check to the assert above
@@ -210,7 +210,7 @@ export const match = async (
 			context,
 			user.slug === options.slug,
 			errors.SyncNoMatchingUser,
-			`Could not find matching user for provider: ${integration}, slugs do not match ${user.slug} !== ${options.slug}`
+			`Could not find matching user for provider: ${integration}, slugs do not match ${user.slug} !== ${options.slug}`,
 		);
 	}
 
@@ -220,7 +220,7 @@ export const match = async (
 export const getExternalUserSyncEventData = async (
 	context: SyncContext,
 	integration: string,
-	externalUser: any
+	externalUser: any,
 ): Promise<any> => {
 	const Integration = context.OAUTH_INTEGRATIONS
 		? context.OAUTH_INTEGRATIONS[integration]
@@ -230,7 +230,7 @@ export const getExternalUserSyncEventData = async (
 		context,
 		!!Integration,
 		errors.SyncNoCompatibleIntegration,
-		`There is no compatible integration for provider: ${integration}`
+		`There is no compatible integration for provider: ${integration}`,
 	);
 
 	// TODO: Once the "jellyfish-assert" module is typed, move this check to the assert above
@@ -243,14 +243,14 @@ export const getExternalUserSyncEventData = async (
 		externalUser,
 		{
 			errors,
-		}
+		},
 	);
 
 	assert.INTERNAL(
 		context,
 		event,
 		errors.SyncNoMatchingUser,
-		"Could not generate external user sync event"
+		'Could not generate external user sync event',
 	);
 
 	return event;
@@ -271,7 +271,7 @@ export const associate = async (
 	integration: string,
 	userCard: Card,
 	credentials: any,
-	context: SyncContext
+	context: SyncContext,
 ): Promise<WorkerResponse> => {
 	const Integration = context.OAUTH_INTEGRATIONS
 		? context.OAUTH_INTEGRATIONS[integration]
@@ -281,14 +281,14 @@ export const associate = async (
 		context,
 		!!Integration,
 		errors.SyncNoCompatibleIntegration,
-		`There is no compatible integration: ${integration}`
+		`There is no compatible integration: ${integration}`,
 	);
 
 	/*
 	 * Set the access token in the user card.
 	 */
-	_.set(userCard, ["data", "oauth", integration], credentials);
-	return context.upsertElement(userCard.type, _.omit(userCard, ["type"]), {
+	_.set(userCard, ['data', 'oauth', integration], credentials);
+	return context.upsertElement(userCard.type, _.omit(userCard, ['type']), {
 		timestamp: new Date(),
 	});
 };
@@ -308,7 +308,7 @@ export const associate = async (
 export const isValidEvent = async (
 	integration: string,
 	token: any,
-	event: { raw: any; headers: any }
+	event: { raw: any; headers: any },
 ): Promise<boolean> => {
 	const Integration = INTEGRATIONS[integration];
 	if (!Integration || !token) {
@@ -339,10 +339,10 @@ export const mirror = async (
 	context: {
 		log: { warn: (arg0: string, arg1: { integration: any }) => void };
 	},
-	options: { actor: any; origin: any; defaultUser: any }
+	options: { actor: any; origin: any; defaultUser: any },
 ) => {
 	if (!token) {
-		context.log.warn("Ignoring mirror as there is no token", {
+		context.log.warn('Ignoring mirror as there is no token', {
 			integration,
 		});
 
@@ -351,7 +351,7 @@ export const mirror = async (
 
 	const Integration = INTEGRATIONS[integration];
 	if (!Integration) {
-		context.log.warn("Ignoring mirror as there is no compatible integration", {
+		context.log.warn('Ignoring mirror as there is no compatible integration', {
 			integration,
 		});
 
@@ -388,10 +388,10 @@ export const translate = async (
 	token: any,
 	card: Card,
 	context: SyncContext,
-	options: TranslateOptions
+	options: TranslateOptions,
 ): Promise<object[]> => {
 	if (!token) {
-		context.log.warn("Ignoring translate as there is no token", {
+		context.log.warn('Ignoring translate as there is no token', {
 			integration,
 		});
 
@@ -400,14 +400,14 @@ export const translate = async (
 
 	const Integration = INTEGRATIONS[integration];
 	if (!Integration) {
-		context.log.warn("Ignoring mirror as there is no compatible integration", {
+		context.log.warn('Ignoring mirror as there is no compatible integration', {
 			integration,
 		});
 
 		return [];
 	}
 
-	context.log.info("Translating external event", {
+	context.log.info('Translating external event', {
 		id: card.id,
 		slug: card.slug,
 		integration,
@@ -424,7 +424,7 @@ export const translate = async (
 		});
 	});
 
-	context.log.info("Translated external event", {
+	context.log.info('Translated external event', {
 		slugs: cards.map((translatedCard: { slug: any }) => {
 			return translatedCard.slug;
 		}),
@@ -451,10 +451,10 @@ export const getFile = (
 	token: any,
 	file: any,
 	context: SyncContext,
-	options: { actor: any }
+	options: { actor: any },
 ) => {
 	if (!token) {
-		context.log.warn("Not fetching file as there is no token", {
+		context.log.warn('Not fetching file as there is no token', {
 			integration,
 		});
 
@@ -463,14 +463,14 @@ export const getFile = (
 
 	const Integration = INTEGRATIONS[integration];
 	if (!Integration) {
-		context.log.warn("Ignoring mirror as there is no compatible integration", {
+		context.log.warn('Ignoring mirror as there is no compatible integration', {
 			integration,
 		});
 
 		return null;
 	}
 
-	context.log.info("Retrieving external file", {
+	context.log.info('Retrieving external file', {
 		file,
 		integration,
 	});
@@ -485,6 +485,6 @@ export const getFile = (
 			actor: options.actor,
 			provider: integration,
 			context,
-		}
+		},
 	);
 };

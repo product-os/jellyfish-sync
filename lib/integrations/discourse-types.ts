@@ -11,10 +11,10 @@
 // https://docs.discourse.org
 
 export interface Failure {
-	success: "OK"; // docs say lowercase, reality is uppercase
+	success: 'OK'; // docs say lowercase, reality is uppercase
 }
 export interface Success {
-	failed: "FAILED";
+	failed: 'FAILED';
 }
 export type Response = Failure & Success;
 
@@ -65,7 +65,7 @@ export interface PostUpdateResponse {
 	post: PostUpdateItem;
 }
 export interface PostUpdateItem {
-	actions_summary: Array<Action>;
+	actions_summary: Action[];
 	admin: boolean;
 	avatar_template: string;
 	avg_time: object;
@@ -163,7 +163,7 @@ export interface Category {
  * https://docs.discourse.org/#tag/Topics/paths/~1t~1{id}.json/get
  */
 export interface TopicResponse {
-	actions_summary: Array<Action>;
+	actions_summary: Action[];
 	archetype: string;
 	archived: boolean;
 	bookmarked: object;
@@ -199,15 +199,15 @@ export interface TopicResponse {
 	visible: boolean;
 	word_count: object;
 	post_stream: {
-		posts: Array<PostItem>;
+		posts: PostItem[];
 		// not sure what this is
-		stream: Array<object>;
+		stream: object[];
 	};
 	// not sure what this is
 	timeline_lookup: [
 		{
-			"0": Array<object>;
-		}
+			'0': object[];
+		},
 	];
 }
 export interface TopicDetails {
@@ -218,8 +218,8 @@ export interface TopicDetails {
 	created_by: Person;
 	last_poster: Person;
 	notification_level: number;
-	participants: Array<Participant>;
-	suggested_topics: Array<TopicItem>;
+	participants: Participant[];
+	suggested_topics: TopicItem[];
 }
 export interface TopicItem {
 	archetype: string;
@@ -242,7 +242,7 @@ export interface TopicItem {
 	liked: object;
 	pinned_globally: boolean;
 	pinned: boolean;
-	posters: Array<Poster>;
+	posters: Poster[];
 	posts_count: number;
 	reply_count: number;
 	slug: string;
@@ -265,7 +265,7 @@ export interface CategoryResponse {
 		draft_key: string;
 		draft_sequence: number;
 		per_page: number;
-		topics: Array<TopicItem>;
+		topics: TopicItem[];
 	};
 }
 
@@ -275,7 +275,7 @@ export interface CategoryResponse {
  * https://docs.discourse.org/#tag/Posts/paths/~1posts~1{id}.json/get
  */
 export interface PostResponse {
-	actions_summary: Array<Action>;
+	actions_summary: Action[];
 	admin: boolean;
 	avatar_template: string;
 	avg_time: object;
@@ -327,7 +327,7 @@ export interface PostResponse {
  */
 export interface PostsResponse {
 	post_stream: {
-		posts: Array<PostItem>;
+		posts: PostItem[];
 	};
 	id: number;
 }
@@ -337,7 +337,7 @@ export interface PostsResponse {
  */
 export interface PostItem {
 	accepted_answer: boolean;
-	actions_summary: Array<Action>;
+	actions_summary: Action[];
 	admin: boolean;
 	avatar_template: string;
 	can_accept_answer: boolean;
@@ -355,7 +355,7 @@ export interface PostItem {
 	hidden: boolean;
 	id: number;
 	incoming_link_count: number;
-	link_counts: Array<Link>;
+	link_counts: Link[];
 	moderator: boolean;
 	name: string;
 	post_number: number;

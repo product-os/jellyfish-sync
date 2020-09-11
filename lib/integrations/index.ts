@@ -3,7 +3,7 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited.
  * Proprietary and confidential.
  */
-import { SyncIntegration } from "../sync-types";
+import { SyncIntegration } from '../sync-types';
 /*
 import * as github from "./github";
 import * as front from "./front";

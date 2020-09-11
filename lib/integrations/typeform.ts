@@ -4,14 +4,14 @@
  * Proprietary and confidential.
  */
 
-import * as _ from "lodash";
-import * as crypto from "crypto";
-import * as Bluebird from "bluebird";
+import * as _ from 'lodash';
+import * as crypto from 'crypto';
+import * as Bluebird from 'bluebird';
 import {
 	Card,
 	SyncIntegrationInstance,
 	SyncIntegrationOptions,
-} from "../sync-types";
+} from '../sync-types';
 
 class TypeformIntegration implements SyncIntegrationInstance {
 	options: SyncIntegrationOptions;
@@ -55,22 +55,22 @@ class TypeformIntegration implements SyncIntegrationInstance {
 			(pair: any[]) => {
 				let schema = {};
 				switch (pair[1].field.type) {
-					case "email":
+					case 'email':
 						schema = {
-							type: "string",
-							format: "email",
+							type: 'string',
+							format: 'email',
 						};
 						break;
-					case "opinion_scale":
+					case 'opinion_scale':
 						schema = {
-							type: "integer",
+							type: 'integer',
 							minimum: 1,
 							maximum: 10,
 						};
 						break;
 					default:
 						schema = {
-							type: "string",
+							type: 'string',
 						};
 				}
 				const value = pair[1][pair[1].type];
@@ -81,15 +81,15 @@ class TypeformIntegration implements SyncIntegrationInstance {
 						value,
 					},
 				};
-			}
+			},
 		);
 		return [
 			{
 				time: timestamp,
 				actor: adminActorId,
 				card: {
-					name: "",
-					type: "form-response@1.0.0",
+					name: '',
+					type: 'form-response@1.0.0',
 					slug,
 					active: true,
 					tags: [],
@@ -114,16 +114,16 @@ export const create = (options: SyncIntegrationOptions) => {
 export const isEventValid = async (
 	token: any,
 	rawEvent: string,
-	headers: any
+	headers: any,
 ) => {
-	const signature = headers["typeform-signature"];
+	const signature = headers['typeform-signature'];
 	if (!signature || !token || !token.signature) {
 		return false;
 	}
 
 	const hash = crypto
-		.createHmac("sha256", token.signature)
+		.createHmac('sha256', token.signature)
 		.update(rawEvent)
-		.digest("base64");
+		.digest('base64');
 	return signature === `sha256=${hash}`;
 };
