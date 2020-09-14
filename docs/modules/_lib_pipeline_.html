@@ -1,0 +1,559 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>&quot;lib/pipeline&quot; | @balena/jellyfish-sync</title>
+	<meta name="description" content="Documentation for @balena/jellyfish-sync">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">@balena/jellyfish-sync</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="_lib_pipeline_.html">&quot;lib/pipeline&quot;</a>
+				</li>
+			</ul>
+			<h1>Module &quot;lib/pipeline&quot;</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Variables</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="_lib_pipeline_.html#assert" class="tsd-kind-icon">assert</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported"><a href="_lib_pipeline_.html#jsone" class="tsd-kind-icon">jsone</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported"><a href="_lib_pipeline_.html#evaluateobject" class="tsd-kind-icon">evaluate<wbr>Object</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_lib_pipeline_.html#importcards" class="tsd-kind-icon">import<wbr>Cards</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_lib_pipeline_.html#mirrorcard" class="tsd-kind-icon">mirror<wbr>Card</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-is-not-exported"><a href="_lib_pipeline_.html#runintegration" class="tsd-kind-icon">run<wbr>Integration</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="_lib_pipeline_.html#translateexternalevent" class="tsd-kind-icon">translate<wbr>External<wbr>Event</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Variables</h2>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+					<a name="assert" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> assert</h3>
+					<div class="tsd-signature tsd-kind-icon">assert<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&#x27;@balena/jellyfish-assert&#x27;)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L18">lib/pipeline.ts:18</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+					<a name="jsone" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> jsone</h3>
+					<div class="tsd-signature tsd-kind-icon">jsone<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&#x27;json-e&#x27;)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L17">lib/pipeline.ts:17</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+					<a name="evaluateobject" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagConst">Const</span> evaluate<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">evaluate<wbr>Object<span class="tsd-signature-symbol">(</span>object<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, environment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L83">lib/pipeline.ts:83</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Evaluate an object template</p>
+									</dd>
+									<dt>function</dt>
+									<dd></dd>
+									<dt>example</dt>
+									<dd><p>const result = evaluateObject({
+											foo: {
+											$eval: &#39;hello&#39;
+											}
+											}, {
+											hello: 1
+										})</p>
+										<p>console.log(result)</p>
+										<blockquote>
+											<p>{
+												foo: 1
+											}</p>
+										</blockquote>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>object: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>object</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>environment: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>evaluation context</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<p>evaluated object</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="importcards" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> import<wbr>Cards</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">import<wbr>Cards<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_sync_types_.synccontext.html" class="tsd-signature-type">SyncContext</a>, sequence<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>origin<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_lib_sync_types_.card.html" class="tsd-signature-type">Card</a><span class="tsd-signature-symbol">; </span>references<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_lib_sync_types_.card.html" class="tsd-signature-type">Card</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"id"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"slug"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"version"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"type"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L149">lib/pipeline.ts:149</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Import a sequence of cards</p>
+									</dd>
+									<dt>function</dt>
+									<dd></dd>
+									<dt>example</dt>
+									<dd><p>const result = await pipeline.importCards({ ... }, [
+											{
+											time: new Date(),
+											card: { ... }
+											},
+											{
+											time: new Date(),
+											card: { ... }
+											},
+											{
+											time: new Date(),
+											card: { ... }
+											}
+											], {
+											origin: &#39;e9b74e2a-3553-4188-8ab8-a67e92aedbe2&#39;
+										})</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>context: <a href="../interfaces/_lib_sync_types_.synccontext.html" class="tsd-signature-type">SyncContext</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>worker execution context</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>sequence: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>card sequence</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-symbol">{ </span>origin<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_lib_sync_types_.card.html" class="tsd-signature-type">Card</a><span class="tsd-signature-symbol">; </span>references<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> = {}</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>options</p>
+										</div>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> origin<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_lib_sync_types_.card.html" class="tsd-signature-type">Card</a></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> references<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_lib_sync_types_.card.html" class="tsd-signature-type">Card</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">"id"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"slug"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"version"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"type"</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>inserted cards</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="mirrorcard" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> mirror<wbr>Card</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">mirror<wbr>Card<span class="tsd-signature-symbol">(</span>integration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, card<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L277">lib/pipeline.ts:277</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Mirror a card back</p>
+									</dd>
+									<dt>function</dt>
+									<dd></dd>
+									<dt>example</dt>
+									<dd><p>const cards = await pipeline.mirrorCard(MyIntegration, {
+											type: &#39;card&#39;,
+											...
+											}, {
+											context: { ... },
+											actor: &#39;b76a4589-cac6-4293-b448-0440b5c66498&#39;
+										})</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>integration: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>integration class</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>card: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>local card</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>options: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>options</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>inserted cards</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+					<a name="runintegration" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> run<wbr>Integration</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">run<wbr>Integration<span class="tsd-signature-symbol">(</span>integration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>actor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_sync_types_.synccontext.html" class="tsd-signature-type">SyncContext</a><span class="tsd-signature-symbol">; </span>defaultUser<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>origin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>provider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span>, fn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">"mirror"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"translate"</span>, card<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L20">lib/pipeline.ts:20</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>integration: <span class="tsd-signature-type">any</span></h5>
+								</li>
+								<li>
+									<h5>options: <span class="tsd-signature-symbol">{ </span>actor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_sync_types_.synccontext.html" class="tsd-signature-type">SyncContext</a><span class="tsd-signature-symbol">; </span>defaultUser<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>origin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>provider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>actor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>context<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_sync_types_.synccontext.html" class="tsd-signature-type">SyncContext</a></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>default<wbr>User<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>origin<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>provider<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>token<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>fn: <span class="tsd-signature-type">"mirror"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"translate"</span></h5>
+								</li>
+								<li>
+									<h5>card: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="translateexternalevent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> translate<wbr>External<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">translate<wbr>External<wbr>Event<span class="tsd-signature-symbol">(</span>integration<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, externalEvent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/master/lib/pipeline.ts#L248">lib/pipeline.ts:248</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>summary</dt>
+									<dd><p>Translate an external event</p>
+									</dd>
+									<dt>function</dt>
+									<dd></dd>
+									<dt>example</dt>
+									<dd><p>const cards = await pipeline.translateExternalEvent(MyIntegration, {
+											type: &#39;external-event&#39;,
+											...
+											}, {
+											context: { ... }
+										})</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>integration: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>integration class</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>externalEvent: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>external event card</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>options: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>options</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>inserted cards</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_errors_.html">&quot;lib/errors&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_index_.html">&quot;lib/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_instance_.html">&quot;lib/instance&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_balena_api_.html">&quot;lib/integrations/balena-<wbr>api&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_discourse_.html">&quot;lib/integrations/discourse&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_discourse_types_.html">&quot;lib/integrations/discourse-<wbr>types&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_flowdock_.html">&quot;lib/integrations/flowdock&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_front_helpers_.html">&quot;lib/integrations/front/helpers&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_front_index_.html">&quot;lib/integrations/front/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_github_.html">&quot;lib/integrations/github&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_index_.html">&quot;lib/integrations/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_outreach_.html">&quot;lib/integrations/outreach&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_typeform_.html">&quot;lib/integrations/typeform&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_integrations_utils_.html">&quot;lib/integrations/utils&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_oauth_.html">&quot;lib/oauth&quot;</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="_lib_pipeline_.html">&quot;lib/pipeline&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_lib_sync_types_.html">&quot;lib/sync-<wbr>types&quot;</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="_node_modules_front_sdk_lib_index_.html">&quot;node_<wbr>modules/front-<wbr>sdk/lib/index&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_lib_pipeline_.html#assert" class="tsd-kind-icon">assert</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_lib_pipeline_.html#jsone" class="tsd-kind-icon">jsone</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-private tsd-is-not-exported">
+						<a href="_lib_pipeline_.html#evaluateobject" class="tsd-kind-icon">evaluate<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_lib_pipeline_.html#importcards" class="tsd-kind-icon">import<wbr>Cards</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_lib_pipeline_.html#mirrorcard" class="tsd-kind-icon">mirror<wbr>Card</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_lib_pipeline_.html#runintegration" class="tsd-kind-icon">run<wbr>Integration</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="_lib_pipeline_.html#translateexternalevent" class="tsd-kind-icon">translate<wbr>External<wbr>Event</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

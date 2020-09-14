@@ -29,7 +29,7 @@
     "lint-fix": "balena-lint --typescript --fix lib test",
     "unit": "jest",
     "test": "npm run doc && catch-uncommitted --skip-node-versionbot-changes && npm run lint && npm run unit",
-    "doc": "typedoc --gitRevision master --out docs lib/",
+    "doc": "NODE_OPTIONS=--max_old_space_size=4096 typedoc --gitRevision master --out docs lib/",
     "prepack": "npm run build"
   },
   "author": "Balena.io. <hello@balena.io>",
