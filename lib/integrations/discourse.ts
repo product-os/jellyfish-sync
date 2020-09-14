@@ -561,13 +561,13 @@ const getThreadCard = (
 	};
 };
 
-const normalizeMessage = (string: string, baseUrl: string) => {
+const normalizeMessage = (message: string, baseUrl: string) => {
 	/*
 	 * The webhook events display attachments with relative URLs
 	 * while the API adds a generic CDN base url. Lets prefer
 	 * the attachment URL that uses the instance base URL.
 	 */
-	return string.replace(
+	return message.replace(
 		/https:\/\/discourse-cdn-(\w+)\.com\/business\d/gi,
 		baseUrl,
 	);
@@ -1159,7 +1159,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					  ].join(' ');
 
 			if (discourseUrl) {
-				const topicResponse = await getTopicFromPostUrl(
+				const topic = await getTopicFromPostUrl(
 					this.context,
 					options.actor,
 					this.options,
@@ -1173,7 +1173,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					this.options,
 					discourseUrl,
 					postId,
-					topicResponse,
+					topic,
 				);
 				assert.INTERNAL(
 					null,
@@ -1215,7 +1215,7 @@ class DiscourseIntegration implements SyncIntegrationInstance {
 					this.options.errors.SyncExternalRequestError,
 					() => {
 						return [
-							`Could not update comment ${topicResponse.id}`,
+							`Could not update comment ${topic.id}`,
 							`with content: ${messageBody}:`,
 							JSON.stringify(editResponse, null, 2),
 						].join(' ');

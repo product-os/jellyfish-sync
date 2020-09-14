@@ -20,7 +20,7 @@ import * as integrationUtils from './integrations/utils';
 
 import * as instance from './instance';
 import * as oauth from './oauth';
-const metrics = require('@balena/jellyfish-metrics');
+import metrics from '@balena/jellyfish-metrics';
 
 /**
  * Jellyfish sync library module.

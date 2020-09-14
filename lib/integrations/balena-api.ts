@@ -19,7 +19,7 @@ import {
 	SyncIntegrationInstance,
 	SyncContext,
 } from '../sync-types';
-const environment = require('@balena/jellyfish-environment');
+import environment from '@balena/jellyfish-environment';
 
 const integration = environment.integration['balena-api'];
 
