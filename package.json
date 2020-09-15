@@ -29,8 +29,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.11",
-    "@balena/jellyfish-environment": "^2.2.25",
-    "@balena/jellyfish-metrics": "^0.0.92",
+    "@balena/jellyfish-environment": "^2.2.26",
+    "@balena/jellyfish-metrics": "^0.0.93",
     "@balena/jellyfish-uuid": "^1.0.12",
     "@octokit/auth-app": "^2.5.0",
     "@octokit/plugin-retry": "^3.0.3",
