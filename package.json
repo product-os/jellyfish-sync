@@ -28,10 +28,10 @@
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@balena/jellyfish-assert": "^1.0.11",
-    "@balena/jellyfish-environment": "^2.2.26",
+    "@balena/jellyfish-assert": "^1.0.12",
+    "@balena/jellyfish-environment": "^2.2.27",
     "@balena/jellyfish-metrics": "^0.0.94",
-    "@balena/jellyfish-uuid": "^1.0.12",
+    "@balena/jellyfish-uuid": "^1.0.13",
     "@octokit/auth-app": "^2.5.1",
     "@octokit/plugin-retry": "^3.0.3",
     "@octokit/plugin-throttling": "^3.3.0",
@@ -70,7 +70,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.3.0",
     "jsdoc-to-markdown": "^6.0.1",
-    "lint-staged": "^10.3.0",
+    "lint-staged": "^10.4.0",
     "nock": "^13.0.4"
   },
   "husky": {
