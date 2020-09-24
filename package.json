@@ -47,7 +47,7 @@
     "lru-cache": "^6.0.0",
     "marked": "^1.1.1",
     "native-url": "^0.3.4",
-    "node-jose": "^1.1.4",
+    "node-jose": "^2.0.0",
     "randomstring": "^1.1.5",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
