@@ -29,7 +29,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.15",
-    "@balena/jellyfish-environment": "^2.2.37",
+    "@balena/jellyfish-environment": "^2.2.38",
     "@balena/jellyfish-metrics": "^0.0.126",
     "@balena/jellyfish-uuid": "^1.0.16",
     "@octokit/auth-app": "^2.6.0",
