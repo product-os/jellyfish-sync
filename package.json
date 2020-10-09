@@ -60,7 +60,7 @@
     "depcheck": "^1.2.0",
     "deplint": "^1.1.2",
     "dotenv": "^8.2.0",
-    "eslint": "^7.10.0",
+    "eslint": "^7.11.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^30.6.4",
