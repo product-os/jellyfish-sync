@@ -45,7 +45,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "lru-cache": "^6.0.0",
-    "marked": "^1.2.0",
+    "marked": "^1.2.1",
     "native-url": "^0.3.4",
     "node-jose": "^2.0.0",
     "randomstring": "^1.1.5",
