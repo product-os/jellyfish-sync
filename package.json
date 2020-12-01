@@ -33,7 +33,7 @@
     "@balena/jellyfish-metrics": "^0.0.179",
     "@balena/jellyfish-uuid": "^1.0.32",
     "@octokit/auth-app": "^2.10.2",
-    "@octokit/plugin-retry": "^3.0.4",
+    "@octokit/plugin-retry": "^3.0.5",
     "@octokit/plugin-throttling": "^3.3.3",
     "@octokit/rest": "^18.0.9",
     "bluebird": "^3.7.2",
