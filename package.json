@@ -29,10 +29,10 @@
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@balena/jellyfish-assert": "^1.0.33",
+    "@balena/jellyfish-assert": "^1.0.34",
     "@balena/jellyfish-environment": "^2.3.4",
-    "@balena/jellyfish-metrics": "^0.0.187",
-    "@balena/jellyfish-uuid": "^1.0.35",
+    "@balena/jellyfish-metrics": "^0.0.188",
+    "@balena/jellyfish-uuid": "^1.0.36",
     "@octokit/auth-app": "^2.10.4",
     "@octokit/plugin-retry": "^3.0.6",
     "@octokit/plugin-throttling": "^3.3.4",
