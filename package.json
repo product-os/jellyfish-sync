@@ -31,8 +31,8 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.40",
     "@balena/jellyfish-environment": "^2.3.9",
-    "@balena/jellyfish-metrics": "^0.0.198",
-    "@balena/jellyfish-uuid": "^1.0.41",
+    "@balena/jellyfish-metrics": "^0.0.199",
+    "@balena/jellyfish-uuid": "^1.0.42",
     "@octokit/auth-app": "^2.10.5",
     "@octokit/plugin-retry": "^3.0.6",
     "@octokit/plugin-throttling": "^3.3.4",
