@@ -56,6 +56,7 @@
   "devDependencies": {
     "@balena/jellycheck": "^0.0.8",
     "@balena/jellyfish-action-library": "^5.2.15",
+    "@balena/jellyfish-client-sdk": "^2.7.2",
     "@balena/jellyfish-core": "^0.2.12",
     "@balena/jellyfish-queue": "0.0.261",
     "@balena/jellyfish-worker": "^2.1.41",
@@ -78,6 +79,7 @@
     "lint-staged": "^10.5.3",
     "morgan": "^1.10.0",
     "nock": "^13.0.5",
+    "pluralize": "^8.0.0",
     "typed-errors": "^1.1.0"
   },
   "lint-staged": {

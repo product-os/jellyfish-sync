@@ -7,6 +7,12 @@
 const {
 	v4: uuid
 } = require('uuid')
+const coreMixins = require('@balena/jellyfish-core/lib/cards/mixins')
+const loadDefaultCards = require('./default-cards')
+
+exports.loadDefaultCards = () => {
+	return loadDefaultCards(coreMixins)
+}
 
 exports.generateRandomID = () => {
 	return uuid()

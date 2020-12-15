@@ -137,6 +137,21 @@ export TEST_INTEGRATION_DISCOURSE_USERNAME
 TEST_INTEGRATION_DISCOURSE_NON_MODERATOR_USERNAME ?= jellyfish-test
 export TEST_INTEGRATION_DISCOURSE_NON_MODERATOR_USERNAME
 
+# Set dotenv variables for local development/testing
+ifndef CI
+    # Defaults are set in local.env
+    ifneq ("$(wildcard local.env)","")
+        include local.env
+        export $(shell sed 's/=.*//' local.env)
+    endif
+
+    # Developers can override local.env with a custom.env
+    ifneq ("$(wildcard custom.env)","")
+        include custom.env
+        export $(shell sed 's/=.*//' custom.env)
+    endif
+endif
+
 # -----------------------------------------------
 # Build Configuration
 # -----------------------------------------------
