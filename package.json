@@ -30,8 +30,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.40",
-    "@balena/jellyfish-environment": "^2.3.9",
-    "@balena/jellyfish-metrics": "^0.0.199",
+    "@balena/jellyfish-environment": "^2.3.10",
+    "@balena/jellyfish-metrics": "^0.0.200",
     "@balena/jellyfish-uuid": "^1.0.42",
     "@octokit/auth-app": "^2.10.5",
     "@octokit/plugin-retry": "^3.0.6",
@@ -55,7 +55,7 @@
     "typed-errors": "^1.1.0"
   },
   "devDependencies": {
-    "@balena/jellycheck": "^0.0.8",
+    "@balena/jellycheck": "^0.0.9",
     "ava": "^3.14.0",
     "catch-uncommitted": "^1.6.2",
     "depcheck": "^1.3.1",
