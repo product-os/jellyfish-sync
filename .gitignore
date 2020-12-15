@@ -85,3 +85,6 @@ dist/
 tmp/
 
 .DS_Store
+
+# Optional custom dotenv file
+custom.env

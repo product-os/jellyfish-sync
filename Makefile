@@ -5,6 +5,23 @@
 MAKEFILE_PATH := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 # -----------------------------------------------
+# Test Runtime Configuration
+# -----------------------------------------------
+
+TEST_INTEGRATION_GITHUB_REPO ?= product-os/jellyfish-test-github
+export TEST_INTEGRATION_GITHUB_REPO
+TEST_INTEGRATION_FRONT_INBOX_1 ?= inb_qf8q # Jellyfish Testfront
+export TEST_INTEGRATION_FRONT_INBOX_1
+TEST_INTEGRATION_FRONT_INBOX_2 ?= inb_8t8y # Jellyfish Test Inbox
+export TEST_INTEGRATION_FRONT_INBOX_2
+TEST_INTEGRATION_DISCOURSE_CATEGORY ?= 44 # sandbox
+export TEST_INTEGRATION_DISCOURSE_CATEGORY
+TEST_INTEGRATION_DISCOURSE_USERNAME ?= jellyfish
+export TEST_INTEGRATION_DISCOURSE_USERNAME
+TEST_INTEGRATION_DISCOURSE_NON_MODERATOR_USERNAME ?= jellyfish-test
+export TEST_INTEGRATION_DISCOURSE_NON_MODERATOR_USERNAME
+
+# -----------------------------------------------
 # Build Configuration
 # -----------------------------------------------
 
@@ -28,8 +45,23 @@ ifdef MATCH
 AVA_ARGS += --match $(MATCH)
 endif
 
-FILES ?= "'./lib/**/*.spec.js'"
+FILES ?= "'./{lib,test}/**/*.spec.js'"
 export FILES
+
+# Set dotenv variables for local development/testing
+ifndef CI
+    # Defaults are set in local.env
+    ifneq ("$(wildcard local.env)","")
+        include local.env
+        export $(shell sed 's/=.*//' local.env)
+    endif
+
+    # Developers can override local.env with a custom.env
+    ifneq ("$(wildcard custom.env)","")
+        include custom.env
+        export $(shell sed 's/=.*//' custom.env)
+    endif
+endif
 
 # -----------------------------------------------
 # Rules
