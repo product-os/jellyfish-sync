@@ -1,7 +1,6 @@
 # Jellyfish Sync
 
-This module contains an integration syncing engine built on top of Jellyfish,
-along with a set of integrations with third party services.
+This module contains an integration syncing engine built on top of Jellyfish.
 
 [Balena API flowchart](https://docs.google.com/drawings/d/162ZuOsj-d_U0mw6YaWgCl7SmkApN3-4UL0O5WK9PkOw/edit?usp=sharing)
 
@@ -10,10 +9,15 @@ along with a set of integrations with third party services.
 Below is an example how to use this library:
 
 ```js
-const sync = require('@balena/jellyfish-sync')
+const Sync = require('@balena/jellyfish-sync').Sync
+
+const sync = new Sync({
+	integrations: { /* key/value lookup of integrations */ }
+})
 
 sync.getExternalUserSyncEventData({}, provider, externalUser)
 ```
+
 
 # Documentation
 
