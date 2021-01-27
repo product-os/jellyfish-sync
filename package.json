@@ -31,7 +31,7 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.51",
     "@balena/jellyfish-logger": "0.0.218",
-    "@balena/jellyfish-metrics": "^0.1.37",
+    "@balena/jellyfish-metrics": "^0.1.38",
     "bluebird": "^3.7.2",
     "fast-json-patch": "^3.0.0-1",
     "json-e": "^4.3.0",
@@ -51,7 +51,7 @@
     "eslint": "^7.18.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^31.3.3",
+    "eslint-plugin-jsdoc": "^31.4.0",
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
