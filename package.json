@@ -31,12 +31,12 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.0.54",
     "@balena/jellyfish-logger": "1.0.1",
-    "@balena/jellyfish-metrics": "^0.1.55",
+    "@balena/jellyfish-metrics": "^0.1.56",
     "bluebird": "^3.7.2",
     "fast-json-patch": "^3.0.0-1",
     "json-e": "^4.3.0",
     "lodash": "^4.17.20",
-    "marked": "^1.2.8",
+    "marked": "^1.2.9",
     "randomstring": "^1.1.5",
     "request": "^2.88.2",
     "typed-errors": "^1.1.0"
