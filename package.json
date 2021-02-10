@@ -33,7 +33,6 @@
     "@balena/jellyfish-logger": "1.0.11",
     "@balena/jellyfish-metrics": "^0.1.69",
     "bluebird": "^3.7.2",
-    "fast-json-patch": "^3.0.0-1",
     "json-e": "^4.3.0",
     "lodash": "^4.17.20",
     "randomstring": "^1.1.5",
@@ -54,11 +53,14 @@
     "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "fast-json-patch": "^3.0.0-1",
     "husky": "^5.0.9",
     "jsdoc-to-markdown": "^6.0.1",
     "lint-staged": "^10.5.4",
+    "nock": "^13.0.7",
+    "sinon": "^9.2.4",
     "skhema": "^5.3.3",
-    "nock": "^13.0.7"
+    "uuid": "^8.3.2"
   },
   "lint-staged": {
     "*.js": [
