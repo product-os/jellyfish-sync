@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency lodash to ^4.17.21'
+      hash: 454227751e05cf9b7463e4142f5f18ba2617dfaa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.0.6
+  date: 2021-02-20T16:08:01.434Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^0.1.89'
       hash: da6cf15edce3bb2b25adc3bf144f10584dc0560b
       body: ''
