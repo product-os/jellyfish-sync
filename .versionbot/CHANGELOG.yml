@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency nock to ^13.0.10'
+      hash: a76c90408242bf4e541f153ba8848d50287bff6f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.0.37
+  date: 2021-03-02T21:57:51.344Z
+- commits:
     - subject: 'patch: Update non-major'
       hash: c0ace5bcc56d6f223dab0308e6a38aaf4eefd6cc
       body: ''
