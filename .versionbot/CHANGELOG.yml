@@ -1,4 +1,29 @@
 - commits:
+    - subject: Add support for JSONpatch when upserting elements
+      hash: 720691c0ea68d25677b6162ee16cbdbd4fa7a5f4
+      body: >
+        This change adds support for JSONpatch object in the
+        `SyncContext.upsertElement`
+
+        method. This means we can reduce ambiguity when updating contracts in
+
+        integrations. This will mainly affect `Integration.translate` methods,
+
+        which currently return an array of partial contracts to upsert. The
+
+        current approach will continue to work whilst we migrate integrations to
+
+        use JSONpatch instead.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 5.1.0
+  date: 2021-03-09T09:26:42.078Z
+- commits:
     - subject: 'patch: Update dependency nock to ^13.0.11'
       hash: 829677fdbfc758beb64f1a57dee91624ea904a3c
       body: ''
