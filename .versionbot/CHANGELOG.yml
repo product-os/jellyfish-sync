@@ -1,4 +1,29 @@
 - commits:
+    - subject: Call evaluateObject for JSONpatch case as well
+      hash: 27488abdbcdd22506bf84bfa4433c579ba7924e7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+    - subject: Update pipeline.importCards to support JSONpatch
+      hash: 4966443b29c634ccd134eb2f48bf8cbb384a8160
+      body: |
+        With this change, sequences can now include JSONpatch objects instead of
+        partial contracts
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 5.2.0
+  date: 2021-03-09T14:55:26.017Z
+- commits:
     - subject: Add support for JSONpatch when upserting elements
       hash: 720691c0ea68d25677b6162ee16cbdbd4fa7a5f4
       body: >
