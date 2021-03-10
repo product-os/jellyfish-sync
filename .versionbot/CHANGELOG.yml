@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update non-major'
+      hash: c28d2392fbc9a51dc647dcc33d8881b6ecbef909
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.2.1
+  date: 2021-03-10T08:53:51.347Z
+- commits:
     - subject: Call evaluateObject for JSONpatch case as well
       hash: 27488abdbcdd22506bf84bfa4433c579ba7924e7
       body: ''
