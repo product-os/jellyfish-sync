@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency eslint to ^7.23.0'
+      hash: 65d46992f4d292c8e4599b74840050bb8d672043
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.2.29
+  date: 2021-03-26T21:39:30.997Z
+- commits:
     - subject: Replace husky with simple-git-hooks
       hash: 196ac2962e62f446c9ed9645ad445ae26f23947a
       body: ''
