@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency simple-git-hooks to ^2.3.0'
+      hash: 5d335065a9fde44851b10d2413aa1e8fe269070c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.2.41
+  date: 2021-04-02T16:28:33.321Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.26'
       hash: 0c2f648f714de42f5acf6854dc71e2e08084fcba
       body: ''
