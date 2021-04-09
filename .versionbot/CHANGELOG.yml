@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency eslint to ^7.24.0'
+      hash: 17669c45058300830f386c682adc3c77844f768d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 5.2.64
+  date: 2021-04-09T22:49:01.735Z
+- commits:
     - subject: 'patch: Update dependency sinon to ^10.0.1'
       hash: d2a7f655e48e4d8758bf9ed2f473ccee02139516
       body: ''
