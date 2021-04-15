@@ -1,4 +1,17 @@
 - commits:
+    - subject: Convert module to Typescript
+      hash: 9fbde8ba5ea9a31528e540504e7a5fb0b021bedb
+      body: ''
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 6.0.0
+  date: 2021-04-15T09:12:18.273Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.89'
       hash: 43adcf925f6c0a139e6875d9893c5ce043e2908b
       body: ''
