@@ -9,17 +9,19 @@ This module contains an integration syncing engine built on top of Jellyfish.
 Below is an example how to use this library:
 
 ```js
-const Sync = require('@balena/jellyfish-sync').Sync
+const Sync = require('@balena/jellyfish-sync').Sync;
 
 const sync = new Sync({
-	integrations: { /* key/value lookup of integrations */ }
-})
+	integrations: {
+		/* key/value lookup of integrations */
+	},
+});
 
-sync.getExternalUserSyncEventData({}, provider, externalUser)
+sync.getExternalUserSyncEventData({}, provider, externalUser);
 ```
-
 
 # Documentation
 
-Jellyfish sync library module.
+[![Publish Documentation](https://github.com/product-os/jellyfish-sync/actions/workflows/publish-docs.yml/badge.svg)](https://github.com/product-os/jellyfish-sync/actions/workflows/publish-docs.yml)
 
+Visit the website for complete documentation: https://product-os.github.io/jellyfish-sync
