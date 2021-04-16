@@ -376,12 +376,12 @@ export const run = async (
 					hash: 'PASSWORDLESS',
 
 					roles: [],
-					email: undefined,
 					profile,
 				};
 
 				if (information.email) {
-					data.email = information.email;
+					// TS-TODO: Allow optional email
+					(data as any).email = information.email;
 				}
 
 				return getOrCreate(options.context, {
