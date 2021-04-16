@@ -5,13 +5,13 @@
  */
 
 import * as pipeline from './pipeline';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as assert from '@balena/jellyfish-assert';
 import * as instance from './instance';
 import * as oauth from './oauth';
 import * as errors from './errors';
 import * as syncContext from './sync-context';
-import metrics from '@balena/jellyfish-metrics';
+import * as metrics from '@balena/jellyfish-metrics';
 import * as JellyfishTypes from '@balena/jellyfish-types';
 import { IntegrationConstructor, WorkerContext } from './types';
 import { SyncActionContext } from './sync-context';
