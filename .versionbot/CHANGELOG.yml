@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update non-major'
+      hash: 06034b06b1f6274ec91b17a8e1c6c81ed4a89aeb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.17
+  date: 2021-04-16T22:07:11.494Z
+- commits:
     - subject: Fix incorrect import of metrics library
       hash: 98617e61001269d0384741eb65eaefc4271dcecf
       body: |
