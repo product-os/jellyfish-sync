@@ -1,4 +1,19 @@
 - commits:
+    - subject: Fix incorrect import of metrics library
+      hash: 98617e61001269d0384741eb65eaefc4271dcecf
+      body: |
+        Additionally fixes a small bug that results in an invalid user payload
+        if email is set to "undefined".
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 6.0.16
+  date: 2021-04-16T19:34:13.433Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.103'
       hash: 5f6b2bc2739f2965d3445b3ac26fe2e0772bf035
       body: ''
