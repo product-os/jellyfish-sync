@@ -46,7 +46,7 @@
   "dependencies": {
     "@balena/jellyfish-assert": "^1.1.7",
     "@balena/jellyfish-logger": "2.1.28",
-    "@balena/jellyfish-metrics": "^1.0.128",
+    "@balena/jellyfish-metrics": "^1.0.130",
     "bluebird": "^3.7.2",
     "json-e": "^4.4.1",
     "json-schema": "^0.3.0",
@@ -78,7 +78,7 @@
     "sinon": "^10.0.1",
     "skhema": "^5.3.3",
     "ts-jest": "^26.5.5",
-    "typedoc": "^0.20.35",
+    "typedoc": "^0.20.36",
     "typescript": "^4.2.4",
     "uuid": "^8.3.2"
   },
