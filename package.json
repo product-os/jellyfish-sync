@@ -76,7 +76,7 @@
     "rimraf": "^3.0.2",
     "simple-git-hooks": "^2.4.1",
     "sinon": "^10.0.1",
-    "skhema": "^5.3.3",
+    "skhema": "^5.3.4",
     "ts-jest": "^26.5.5",
     "typedoc": "^0.20.36",
     "typescript": "^4.2.4",
