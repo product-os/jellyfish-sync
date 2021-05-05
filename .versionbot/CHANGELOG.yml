@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency dotenv to ^8.4.0'
+      hash: 686dc41d988f02d609f7b6399525b821fa1fbfaf
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.130
+  date: 2021-05-05T05:32:02.862Z
+- commits:
     - subject: 'patch: Update non-major'
       hash: 40f49a786db2a31063b0e510b59493c3b3cecaf6
       body: ''
