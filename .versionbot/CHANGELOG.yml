@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency dotenv to v9'
+      hash: 8706fe008eefc4160cca8d9cc01a5e227860868b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.140
+  date: 2021-05-06T00:00:04.704Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.196'
       hash: d166d764e779aae8b6f500efcf465d656283f484
       body: ''
