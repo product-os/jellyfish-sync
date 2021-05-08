@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'build(deps): bump hosted-git-info from 2.8.8 to 2.8.9'
+      hash: 4c54290162df85b2587c89ef8f1a98c52b79c943
+      body: >
+        Bumps [hosted-git-info](https://github.com/npm/hosted-git-info) from
+        2.8.8 to 2.8.9.
+
+        - [Release notes](https://github.com/npm/hosted-git-info/releases)
+
+        -
+        [Changelog](https://github.com/npm/hosted-git-info/blob/v2.8.9/CHANGELOG.md)
+
+        -
+        [Commits](https://github.com/npm/hosted-git-info/compare/v2.8.8...v2.8.9)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: 'dependabot[bot] <support@github.com>'
+        signed-off-by: 'dependabot[bot] <support@github.com>'
+      author: 'dependabot[bot]'
+      nested: []
+  version: 6.0.147
+  date: 2021-05-08T07:02:32.597Z
+- commits:
     - subject: 'patch: Update non-major'
       hash: e3a0348e788ad43b85eabf12d79ee7c943a7316e
       body: ''
