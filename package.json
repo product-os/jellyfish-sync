@@ -45,13 +45,13 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.1.15",
-    "@balena/jellyfish-logger": "2.1.53",
-    "@balena/jellyfish-metrics": "^1.0.203",
+    "@balena/jellyfish-logger": "2.1.54",
+    "@balena/jellyfish-metrics": "^1.0.204",
     "bluebird": "^3.7.2",
     "json-e": "^4.4.1",
     "json-schema": "^0.3.0",
     "lodash": "^4.17.21",
-    "randomstring": "^1.1.5",
+    "randomstring": "^1.2.1",
     "request": "^2.88.2",
     "typed-error": "^3.2.1"
   },
