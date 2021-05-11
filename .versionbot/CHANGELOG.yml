@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update non-major'
+      hash: cb0df3296d27d497d566604a13057b0eb878669b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.154
+  date: 2021-05-11T08:21:52.510Z
+- commits:
     - subject: 'patch: Update dependency dotenv to ^9.0.2'
       hash: da23f3e9a1b3f2af18e3041c12a8bae463c1c591
       body: ''
