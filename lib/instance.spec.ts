@@ -224,7 +224,7 @@ describe('instance', () => {
 				defaultUser: 'bar',
 				origin: 'https://jel.ly.fish/oauth/balena-cloud',
 				provider: 'balena-cloud',
-				context: ({
+				context: {
 					log: {
 						info: _.noop,
 						warn: _.noop,
@@ -237,7 +237,7 @@ describe('instance', () => {
 						data[object.id].type = type;
 						return data[object.id];
 					},
-				} as any) as SyncActionContext,
+				} as any as SyncActionContext,
 			},
 		);
 
@@ -317,7 +317,7 @@ describe('instance', () => {
 				actor: 'foo',
 				defaultUser: 'jellysync',
 				provider: 'balena-cloud',
-				context: ({
+				context: {
 					log: {
 						info: _.noop,
 						warn: _.noop,
@@ -333,7 +333,7 @@ describe('instance', () => {
 						data[object.id].type = type;
 						return data[object.id];
 					},
-				} as any) as SyncActionContext,
+				} as any as SyncActionContext,
 			},
 		);
 
@@ -432,7 +432,7 @@ describe('instance', () => {
 				defaultUser: 'bar',
 				origin: 'https://jel.ly.fish/oauth/balena-cloud',
 				provider: 'balena-cloud',
-				context: ({
+				context: {
 					log: {
 						info: _.noop,
 						warn: _.noop,
@@ -445,7 +445,7 @@ describe('instance', () => {
 						data[object.id].type = type;
 						return data[object.id];
 					},
-				} as any) as SyncActionContext,
+				} as any as SyncActionContext,
 			},
 		);
 
@@ -525,7 +525,7 @@ describe('instance', () => {
 				origin: 'https://jel.ly.fish/oauth/balena-cloud',
 				defaultUser: 'jellysync',
 				provider: 'balena-cloud',
-				context: ({
+				context: {
 					log: {
 						info: _.noop,
 						warn: _.noop,
@@ -541,7 +541,7 @@ describe('instance', () => {
 						data[object.id].type = type;
 						return data[object.id];
 					},
-				} as any) as SyncActionContext,
+				} as any as SyncActionContext,
 			},
 		);
 
@@ -610,7 +610,7 @@ describe('instance', () => {
 				{
 					origin: 'https://jel.ly.fish/oauth/balena-cloud',
 					provider: 'balena-cloud',
-					context: ({
+					context: {
 						log: {
 							info: _.noop,
 							warn: _.noop,
@@ -626,7 +626,7 @@ describe('instance', () => {
 							data[object.id].type = type;
 							return data[object.id];
 						},
-					} as any) as SyncActionContext,
+					} as any as SyncActionContext,
 				} as any,
 			),
 		).rejects.toThrow(errors.SyncOAuthNoUserError);
@@ -661,7 +661,7 @@ describe('instance', () => {
 					origin: 'https://jel.ly.fish/oauth/balena-cloud',
 					provider: 'balena-cloud',
 					defaultUser: 'foobar',
-					context: ({
+					context: {
 						log: {
 							info: _.noop,
 							warn: _.noop,
@@ -677,7 +677,7 @@ describe('instance', () => {
 							data[object.id].type = type;
 							return data[object.id];
 						},
-					} as any) as SyncActionContext,
+					} as any as SyncActionContext,
 				},
 			),
 		).rejects.toThrow(errors.SyncNoActor);
@@ -718,7 +718,7 @@ describe('instance', () => {
 					origin: 'https://jel.ly.fish/oauth/balena-cloud',
 					provider: 'balena-cloud',
 					defaultUser: 'jellysync',
-					context: ({
+					context: {
 						log: {
 							info: _.noop,
 							warn: _.noop,
@@ -734,7 +734,7 @@ describe('instance', () => {
 							data[object.id].type = type;
 							return data[object.id];
 						},
-					} as any) as SyncActionContext,
+					} as any as SyncActionContext,
 				} as any,
 			),
 		).rejects.toThrow(errors.SyncOAuthNoUserError);
