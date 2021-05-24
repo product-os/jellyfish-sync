@@ -73,10 +73,10 @@ describe('.getAssociateUrl()', () => {
 });
 
 describe('.authorize()', () => {
-	const makeSyncActionContextStub = () => (({} as any) as SyncActionContext);
+	const makeSyncActionContextStub = () => ({} as any as SyncActionContext);
 	const syncInstanceWithIntegration = new Sync({
 		integrations: {
-			helloworld: ({} as any) as IntegrationConstructor,
+			helloworld: {} as any as IntegrationConstructor,
 		},
 	});
 
@@ -150,13 +150,13 @@ describe('.authorize()', () => {
 
 describe('.associate()', () => {
 	const makeSyncContextStub = (data: any) =>
-		(({
+		({
 			upsertElement: async (type: string, object: any, _options: any) => {
 				data[object.slug] = Object.assign({}, object, {
 					type,
 				});
 			},
-		} as any) as SyncActionContext);
+		} as any as SyncActionContext);
 
 	test('should throw given an invalid integration', async () => {
 		const data = {
@@ -213,7 +213,7 @@ describe('.associate()', () => {
 
 		const syncInstance = new Sync({
 			integrations: {
-				helloworld: ({} as any) as IntegrationConstructor,
+				helloworld: {} as any as IntegrationConstructor,
 			},
 		});
 
@@ -269,7 +269,7 @@ describe('.associate()', () => {
 
 		const syncInstance = new Sync({
 			integrations: {
-				helloworld: ({} as any) as IntegrationConstructor,
+				helloworld: {} as any as IntegrationConstructor,
 			},
 		});
 
@@ -329,7 +329,7 @@ describe('.associate()', () => {
 
 		const syncInstance = new Sync({
 			integrations: {
-				helloworld: ({} as any) as IntegrationConstructor,
+				helloworld: {} as any as IntegrationConstructor,
 			},
 		});
 

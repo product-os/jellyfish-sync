@@ -28,9 +28,9 @@ describe('pipeline.importCards()', () => {
 			},
 		];
 
-		const context = ({
+		const context = {
 			upsertElement: upsertElementSpy,
-		} as any) as SyncActionContext;
+		} as any as SyncActionContext;
 
 		const results = await pipeline.importCards(context, sequence, {});
 
@@ -76,9 +76,9 @@ describe('pipeline.importCards()', () => {
 			},
 		];
 
-		const context = ({
+		const context = {
 			upsertElement: upsertElementSpy,
-		} as any) as SyncActionContext;
+		} as any as SyncActionContext;
 
 		// TS-TODO: Sequence types are incorrect here, but I'm not sure why
 		const results = await pipeline.importCards(context, sequence as any, {});
