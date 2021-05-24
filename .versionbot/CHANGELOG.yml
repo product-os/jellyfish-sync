@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update internal-patch'
+      hash: 23445278627d3321694724a10ba458f9542eea36
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.174
+  date: 2021-05-24T01:06:53.390Z
+- commits:
     - subject: 'patch: Update dependency dotenv to v10'
       hash: 97f89e5d9b04e7255734116001c648cb829b4267
       body: ''
