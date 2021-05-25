@@ -132,14 +132,14 @@ export interface IntegrationConstructor {
 		headers: { [key: string]: string },
 		loggerContext: any,
 	) => boolean;
-	whoami: (
+	whoami?: (
 		loggerContext: any,
 		credentials: any,
 		options: {
 			errors: any;
 		},
 	) => null | Promise<any>;
-	match: (
+	match?: (
 		context: SyncActionContext,
 		externalUser: any,
 		options: {
@@ -147,7 +147,7 @@ export interface IntegrationConstructor {
 			slug: string;
 		},
 	) => Promise<JellyfishTypes.core.Contract | null>;
-	getExternalUserSyncEventData: (
+	getExternalUserSyncEventData?: (
 		loggerContext: any,
 		externalUser: any,
 		options: {
