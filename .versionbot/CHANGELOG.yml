@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update IntegrationConstructor type
+      hash: d48c36ea6521e02e035b7f74b8ca263072079ce2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.0.186
+  date: 2021-05-25T07:48:48.315Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.228'
       hash: e568961f3f076c2e2b2f6f9511966598fe2bf13f
       body: ''
