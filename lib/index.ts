@@ -5,6 +5,7 @@
  */
 
 import * as pipeline from './pipeline';
+import strict from 'assert';
 import * as _ from 'lodash';
 import * as assert from '@balena/jellyfish-assert';
 import * as instance from './instance';
@@ -146,6 +147,14 @@ export class Sync {
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
+		assert.INTERNAL(
+			context,
+			!!Integration.whoami,
+			errors.SyncNoCompatibleIntegration,
+			`Integration for ${integration} does not provide a whoami() function`,
+		);
+
+		strict.ok(Integration.whoami);
 		return Integration.whoami(context, credentials, {
 			errors,
 		});
@@ -180,6 +189,14 @@ export class Sync {
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
+		assert.INTERNAL(
+			context,
+			!!Integration.match,
+			errors.SyncNoCompatibleIntegration,
+			`Integration for ${integration} does not provide a match() function`,
+		);
+
+		strict.ok(Integration.match);
 		const user = await Integration.match(context, externalUser, {
 			errors,
 			slug: `${options.slug}@latest`,
@@ -211,6 +228,14 @@ export class Sync {
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
+		assert.INTERNAL(
+			context,
+			!!Integration.getExternalUserSyncEventData,
+			errors.SyncNoCompatibleIntegration,
+			`Integration for ${integration} does not provide a getExternalUserSyncEventData() function`,
+		);
+
+		strict.ok(Integration.getExternalUserSyncEventData);
 		const event = await Integration.getExternalUserSyncEventData(
 			context,
 			externalUser,
