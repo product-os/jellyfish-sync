@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency jest to ^27.0.3'
+      hash: 909efc1d256b4d33e86ba35b43a0ad045f52657c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.208
+  date: 2021-05-29T22:05:36.784Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.246'
       hash: 4827d89b9f146628db53d5483b2d44bff715d94c
       body: ''
