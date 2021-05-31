@@ -1,3 +1,6 @@
+# This file is auto-synced from product-os/jellyfish-config/.gitignore
+# and should only be edited there!
+
 # Created by https://www.gitignore.io/api/node
 
 ### Node ###
@@ -57,6 +60,9 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
+# dotenv environment variables file
+.env
+
 # End of https://www.gitignore.io/api/node
 
 dump.rdb
@@ -85,9 +91,10 @@ dist/
 # tmp directory
 tmp/
 
-.DS_Store
+# Optional custom dotenv file
+custom.env
 
 # Doc files should not be committed. They are generated using
-# the command 'npm run doc' and committed to the root of the 
+# the command 'npm run doc' and committed to the root of the
 # 'docs' branch.
 docs/
