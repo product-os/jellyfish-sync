@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove unnecessary catch-uncommitted
+      hash: c728d4961c174a3f9086401da46929253990ccf8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.0.214
+  date: 2021-06-02T07:27:42.537Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-logger to v3'
       hash: 9f5fcc9340c3a7c174ebc232e222bdb212fd653d
       body: |
