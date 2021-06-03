@@ -27,7 +27,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "npm run lint-fix"
+      "balena-lint --fix"
     ]
   },
   "scripts": {
