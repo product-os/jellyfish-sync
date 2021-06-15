@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update internal-patch'
+      hash: 0378fb7b4a7dafabb9808b1711c215b7b28e041a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.239
+  date: 2021-06-15T01:16:05.285Z
+- commits:
     - subject: Remove package-lock.json
       hash: 942803c20f39a6ed96be72d65b664dcb6964ae85
       body: ''
