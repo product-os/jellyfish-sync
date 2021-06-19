@@ -1,6 +1,6 @@
 {
   "name": "@balena/jellyfish-sync",
-  "version": "6.0.242",
+  "version": "6.0.243",
   "repository": {
     "type": "git",
     "url": "https://github.com/product-os/jellyfish-sync.git"
