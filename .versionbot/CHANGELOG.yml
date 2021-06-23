@@ -1,4 +1,17 @@
 - commits:
+    - subject: Bump jest to v27.0.5
+      hash: 0d7edc82dfe00f1435fe4abb4fb963f430f19fc8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.0.254
+  date: 2021-06-23T23:25:02.609Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.284'
       hash: 19e01fb252872e52fd53a3a70cff0f0eecd7f418
       body: ''
