@@ -1,4 +1,17 @@
 - commits:
+    - subject: Bump depcheck to v1.4.2
+      hash: 19a2f41373959d0cc6c9cd6225cb580382adfef3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.0.259
+  date: 2021-06-25T22:41:32.522Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-logger to v3.0.27'
       hash: 1fc23942ae299dd13f19dfd334ce1e6857e35c24
       body: ''
