@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update internal-patch'
+      hash: d6b978f6519ca9d9fd56f0fdeb0899f4e8b79a55
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.0.276
+  date: 2021-07-05T02:12:39.814Z
+- commits:
     - subject: 'patch: Update dependency nock to ^13.1.1'
       hash: ff53af08b605217066ca4dcffb3989f472b7425d
       body: ''
