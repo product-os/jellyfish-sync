@@ -140,7 +140,7 @@ const evaluateObject = (object: any, environment: any) => {
  */
 export const importCards = async (
 	context: PipelineOpts['context'],
-	sequence: SequenceItem[],
+	sequence: Array<SequenceItem | SequenceItem[]>,
 	options: any = {},
 ) => {
 	// TODO: AFAICT the references option is never provided and can probably be removed
