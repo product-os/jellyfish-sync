@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update importCards sequence parameter type
+      hash: 5a84d72c4788d20ef0cc704b46ff76fd71a049a5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.0.287
+  date: 2021-07-13T12:07:42.995Z
+- commits:
     - subject: 'patch: Update internal-patch'
       hash: 1acc9f90d20911335db17f182f1868aad33775b1
       body: ''
