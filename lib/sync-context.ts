@@ -9,7 +9,7 @@ import jsonpatch from 'fast-json-patch';
 import { getLogger } from '@balena/jellyfish-logger';
 import * as assert from '@balena/jellyfish-assert';
 import * as JellyfishTypes from '@balena/jellyfish-types';
-import { Operation } from 'fast-json-patch';
+import * as JSONPatch from 'fast-json-patch';
 import { WorkerContext } from './types';
 
 const logger = getLogger(__filename);
@@ -119,7 +119,7 @@ export const getActionContext = (
 			type: string,
 			object:
 				| Partial<JellyfishTypes.core.Contract>
-				| { id: string; type: string; patch: Operation[] },
+				| { id: string; type: string; patch: JSONPatch.Operation[] },
 			options: { actor?: string; timestamp?: Date; originator?: string },
 		): Promise<JellyfishTypes.core.Contract> => {
 			const typeCard = await workerContext.getCardBySlug(session, type);
@@ -148,7 +148,7 @@ export const getActionContext = (
 						`${targetContract.slug}@${targetContract.version}`,
 				  );
 
-			let patch = [];
+			let patch: JSONPatch.Operation[] = [];
 
 			if (object.hasOwnProperty('patch')) {
 				patch = (object as any).patch;
