@@ -1,4 +1,17 @@
 - commits:
+    - subject: Use config from jellyfish-config
+      hash: 10b385d35a9268dfc835a4d1aa30737072294f5f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Graham McCulloch <graham@balena.io>
+        signed-off-by: Graham McCulloch <graham@balena.io>
+      author: Graham McCulloch
+      nested: []
+  version: 6.0.288
+  date: 2021-07-14T07:07:33.841Z
+- commits:
     - subject: Update importCards sequence parameter type
       hash: 5a84d72c4788d20ef0cc704b46ff76fd71a049a5
       body: ''
