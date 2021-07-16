@@ -1,4 +1,21 @@
 - commits:
+    - subject: >-
+        allow sequences returned from translate to specify of originator should
+        be passed along
+      hash: ef5ac3496186d3198fff7302dbed88a0b52ed28c
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Martin Rauscher <martin@balena.io>
+        signed-off-by: Martin Rauscher <martin@balena.io>
+        Co-authored-by: Lucian Buzzo <lucian@balena.io>
+        co-authored-by: Lucian Buzzo <lucian@balena.io>
+      author: Martin Rauscher
+      nested: []
+  version: 6.1.0
+  date: 2021-07-16T12:05:52.419Z
+- commits:
     - subject: Use config from jellyfish-config
       hash: 10b385d35a9268dfc835a4d1aa30737072294f5f
       body: ''
