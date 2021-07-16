@@ -85,6 +85,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="types.SequenceItem.html#actor" class="tsd-kind-icon">actor</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="types.SequenceItem.html#card" class="tsd-kind-icon">card</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="types.SequenceItem.html#skipOriginator" class="tsd-kind-icon">skip<wbr>Originator</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="types.SequenceItem.html#time" class="tsd-kind-icon">time</a></li>
 							</ul>
 						</section>
@@ -99,7 +100,7 @@
 					<div class="tsd-signature tsd-kind-icon">actor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/90da905/lib/types.ts#L82">lib/types.ts:82</a></li>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/da9045f/lib/types.ts#L82">lib/types.ts:82</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -109,9 +110,27 @@
 					<div class="tsd-signature tsd-kind-icon">card<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Contract</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ContractData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Contract</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ContractData</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;type&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;slug&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>patch<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Operation</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/90da905/lib/types.ts#L83">lib/types.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/da9045f/lib/types.ts#L90">lib/types.ts:90</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="skipOriginator" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> skip<wbr>Originator</h3>
+					<div class="tsd-signature tsd-kind-icon">skip<wbr>Originator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/da9045f/lib/types.ts#L89">lib/types.ts:89</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If this is set, we don&#39;t set an originator when inserting this card.
+								This treats this as a new request.
+								This is being used to allow inserting contracts as part of a translate which
+							should be mirrored again.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="time" class="tsd-anchor"></a>
@@ -119,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/90da905/lib/types.ts#L81">lib/types.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/product-os/jellyfish-sync/blob/da9045f/lib/types.ts#L81">lib/types.ts:81</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -181,6 +200,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="types.SequenceItem.html#card" class="tsd-kind-icon">card</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="types.SequenceItem.html#skipOriginator" class="tsd-kind-icon">skip<wbr>Originator</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="types.SequenceItem.html#time" class="tsd-kind-icon">time</a>
