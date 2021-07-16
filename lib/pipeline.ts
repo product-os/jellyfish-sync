@@ -223,7 +223,9 @@ export const importCards = async (
 				const result = await context.upsertElement(type, finalObject, {
 					timestamp: segment.time,
 					actor: segment.actor,
-					originator: _.get(options, ['origin', 'id']),
+					originator: segment.skipOriginator
+						? null
+						: _.get(options, ['origin', 'id']),
 				});
 
 				if (result) {

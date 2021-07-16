@@ -80,6 +80,13 @@ export interface PipelineOpts {
 export interface SequenceItem {
 	time: Date;
 	actor: string;
+	/**
+	 * If this is set, we don't set an originator when inserting this card.
+	 * This treats this as a new request.
+	 * This is being used to allow inserting contracts as part of a translate which
+	 * should be mirrored again.
+	 */
+	skipOriginator?: boolean;
 	card:
 		| (Partial<JellyfishTypes.core.Contract> &
 				Pick<JellyfishTypes.core.Contract, 'slug' | 'type'>)
