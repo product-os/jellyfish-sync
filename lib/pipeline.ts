@@ -210,7 +210,8 @@ export const importCards = async (
 
 					if (
 						options.origin &&
-						options.origin.type === 'external-event@1.0.0'
+						options.origin.type === 'external-event@1.0.0' &&
+						!segment.skipOriginator
 					) {
 						finalObject.data!.origin = `${options.origin.slug}@${options.origin.version}`;
 					}
