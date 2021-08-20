@@ -208,6 +208,12 @@ export const getActionContext = (
 				patch,
 			});
 
+			// If the only thing being updated is the origin, skip the update as
+			// it is a meaningless change.
+			if (patch.length === 1 && patch[0].path === '/data/origin') {
+				return current;
+			}
+
 			return workerContext.patchCard(
 				session,
 				typeCard!,
