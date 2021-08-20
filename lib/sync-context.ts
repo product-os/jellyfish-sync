@@ -210,7 +210,12 @@ export const getActionContext = (
 
 			// If the only thing being updated is the origin, skip the update as
 			// it is a meaningless change.
-			if (patch.length === 1 && patch[0].path === '/data/origin') {
+			// TODO: refactor the "origin" to be a link to the origin instead of hard coded value
+			if (
+				patch.length === 1 &&
+				patch[0].op === 'replace' &&
+				patch[0].path === '/data/origin'
+			) {
 				return current;
 			}
 
