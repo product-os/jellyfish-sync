@@ -1,4 +1,17 @@
 - commits:
+    - subject: Check operation type when blocking data/origin updates
+      hash: 612dafea5fb6d103068c0b0f5544576cce3ed793
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 6.1.5
+  date: 2021-08-20T14:24:41.912Z
+- commits:
     - subject: Skip pointless updates to /data/origin
       hash: 969838e8d8055db4fa055cbefcb5a1810a7a123f
       body: |
