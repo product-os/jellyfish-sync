@@ -1,4 +1,20 @@
 - commits:
+    - subject: Skip pointless updates to /data/origin
+      hash: 969838e8d8055db4fa055cbefcb5a1810a7a123f
+      body: |
+        If a card is upserted by sync and the only change being made is to
+        /data/origin, skip the update as it conveys no useful information, since
+        there isn't any data change to be made.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+        signed-off-by: Lucian Buzzo <lucian.buzzo@gmail.com>
+      author: Lucian Buzzo
+      nested: []
+  version: 6.1.4
+  date: 2021-08-20T11:50:33.900Z
+- commits:
     - subject: fix incomplete optional skipping of origin
       hash: d72535222a4f50999c5d8cd2429a17f0198b0e33
       body: ''
