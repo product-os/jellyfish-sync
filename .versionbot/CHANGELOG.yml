@@ -1,4 +1,17 @@
 - commits:
+    - subject: Bump internal dev dependencies
+      hash: caa0d7f5d6faf9608712f8e3b9f5beb43f6659a4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.1.6
+  date: 2021-08-23T06:53:51.892Z
+- commits:
     - subject: Check operation type when blocking data/origin updates
       hash: 612dafea5fb6d103068c0b0f5544576cce3ed793
       body: ''
