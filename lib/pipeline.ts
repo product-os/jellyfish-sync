@@ -82,7 +82,7 @@ const evaluateObject = (object: any, environment: any) => {
 	if (object.$eval) {
 		try {
 			return jsone(object, environment);
-		} catch (error) {
+		} catch (error: any) {
 			if (error.name === 'InterpreterError') {
 				return null;
 			}
