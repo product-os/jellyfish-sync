@@ -1,4 +1,25 @@
 - commits:
+    - subject: Fix error type unknown type errors
+      hash: 05694f6e7dcfe6c9227ebb7f66e41b0c46dcc6f9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+    - subject: 'patch: Update external-non-major'
+      hash: 1bbd95715b25fdc2e58b58b6b6321f18ea9f3028
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.1.9
+  date: 2021-08-29T01:35:01.541Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^1.0.336'
       hash: 04dca1e061eec5ee183560049b8a64fbe3c72090
       body: ''
