@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update dependency @types/jest to v27'
+      hash: ad191925d3884713aa167c96bdb9ff0e764fbc93
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.1.10
+  date: 2021-08-29T02:01:58.699Z
+- commits:
     - subject: Fix error type unknown type errors
       hash: 05694f6e7dcfe6c9227ebb7f66e41b0c46dcc6f9
       body: ''
