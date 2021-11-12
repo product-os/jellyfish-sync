@@ -45,8 +45,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.1.71",
-    "@balena/jellyfish-logger": "3.0.106",
-    "@balena/jellyfish-metrics": "^1.0.370",
+    "@balena/jellyfish-logger": "3.0.107",
+    "@balena/jellyfish-metrics": "^1.0.371",
     "bluebird": "^3.7.2",
     "json-e": "^4.4.1",
     "json-schema": "^0.3.0",
