@@ -1,4 +1,17 @@
 - commits:
+    - subject: Set license
+      hash: 6df9c3cc610d9d4ea6e98aebf8e9a5cb9aea5fce
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.1.72
+  date: 2021-11-15T03:30:57.735Z
+- commits:
     - subject: 'patch: Update dependency lint-staged to v12'
       hash: 122245be04031cf70f797f1fec994cd49cd3774e
       body: ''
