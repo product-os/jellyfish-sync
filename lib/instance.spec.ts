@@ -1,9 +1,3 @@
-/*
- * Copyright (C) Balena.io - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- */
-
 /* eslint no-unused-vars: [2, { "args": "none" }] */
 
 import dotenv from 'dotenv';
@@ -400,7 +394,7 @@ describe('instance', () => {
 		/*
 		Nock.cleanAll()
 		nock.disableNetConnect()
-	
+
 		nock('https://api.balena-cloud.com')
 			.get('/users/41')
 			.reply(function (uri, request, callback) {
@@ -411,7 +405,7 @@ describe('instance', () => {
 						name: 'johndoe'
 					} ])
 				}
-	
+
 				return callback(null, [ 401, 'Invalid access token' ])
 			})
 			*/

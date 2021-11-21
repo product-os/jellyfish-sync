@@ -1,9 +1,3 @@
-/*
- * Copyright (C) Balena.io - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- */
-
 import constant from 'lodash/constant';
 import * as pipeline from './pipeline';
 import { SyncActionContext } from './sync-context';
