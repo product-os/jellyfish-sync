@@ -1,9 +1,3 @@
-/*
- * Copyright (C) Balena.io - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- */
-
 import _ from 'lodash';
 import jsonpatch from 'fast-json-patch';
 import { getLogger } from '@balena/jellyfish-logger';

@@ -1,8 +1,3 @@
-/*
- * Copyright (C) Balena.io - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- */
 import { SyncActionContext } from './sync-context';
 import * as JellyfishTypes from '@balena/jellyfish-types';
 import { Operation } from 'fast-json-patch';
