@@ -45,8 +45,8 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@balena/jellyfish-assert": "^1.1.87",
-    "@balena/jellyfish-logger": "3.0.137",
-    "@balena/jellyfish-metrics": "^1.0.401",
+    "@balena/jellyfish-logger": "3.0.139",
+    "@balena/jellyfish-metrics": "^1.0.403",
     "bluebird": "^3.7.2",
     "json-e": "^4.4.3",
     "json-schema": "^0.4.0",
@@ -57,8 +57,8 @@
   },
   "devDependencies": {
     "@balena/jellycheck": "^1.0.0",
-    "@balena/jellyfish-config": "^1.5.14",
-    "@balena/jellyfish-types": "^1.2.26",
+    "@balena/jellyfish-config": "^1.5.15",
+    "@balena/jellyfish-types": "^1.2.28",
     "@balena/lint": "^6.1.1",
     "@types/bluebird": "^3.5.36",
     "@types/jest": "^27.0.3",
