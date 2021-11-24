@@ -1,4 +1,15 @@
 - commits:
+    - subject: "\U0001F504 Synced file(s) with product-os/jellyfish-config"
+      hash: 1f9acc10bed2eb53c0259f700ff9bd231e1d6eb6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: joshbwlng
+      nested: []
+  version: 6.1.95
+  date: 2021-11-24T05:57:06.121Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-assert to ^1.1.88'
       hash: 71af0e99b4819a5af8c20841d1e7d63c3e5d7082
       body: ''
