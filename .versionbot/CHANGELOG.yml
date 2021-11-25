@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove outdated upstreams from repo.yml
+      hash: c09900ad401afc6d9ed331a01cd60536f627a7b5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.1.101
+  date: 2021-11-25T04:09:15.631Z
+- commits:
     - subject: Remove jellycheck
       hash: 14ad25d9069177542020b679eef2817129e04dd5
       body: ''
