@@ -1,4 +1,26 @@
 - commits:
+    - subject: Bump typedoc to v0.22.10
+      hash: 427b19e9e444b7a4636c46a2f58fdf40225a6ce6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+    - subject: 'patch: Update dependency typescript to ^4.5.2'
+      hash: 7540f4c05c43bd9b85ddc48ca042227341dea03e
+      body: |
+        Update typescript from 4.4.4 to 4.5.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.1.102
+  date: 2021-11-25T06:40:35.831Z
+- commits:
     - subject: Remove outdated upstreams from repo.yml
       hash: c09900ad401afc6d9ed331a01cd60536f627a7b5
       body: ''
