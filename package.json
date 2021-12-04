@@ -1,6 +1,6 @@
 {
   "name": "@balena/jellyfish-sync",
-  "version": "6.1.120",
+  "version": "6.1.121",
   "repository": {
     "type": "git",
     "url": "https://github.com/product-os/jellyfish-sync.git"
@@ -84,6 +84,6 @@
     "pre-commit": "npx lint-staged"
   },
   "versionist": {
-    "publishedAt": "2021-12-04T18:33:39.357Z"
+    "publishedAt": "2021-12-04T21:32:16.253Z"
   }
 }
