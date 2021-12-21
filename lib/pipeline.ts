@@ -16,13 +16,13 @@ const runIntegration = async (
 	integration: IntegrationConstructor,
 	options: PipelineOpts,
 	fn: 'translate' | 'mirror',
-	card: JellyfishTypes.core.Contract,
+	contract: JellyfishTypes.core.Contract,
 ): Promise<JellyfishTypes.core.Contract[]> => {
 	return instance.run(
 		integration,
 		options.token,
 		async (integrationInstance: Integration) => {
-			const sequence = await integrationInstance[fn](card, {
+			const sequence = await integrationInstance[fn](contract, {
 				actor: options.actor,
 			});
 
@@ -31,8 +31,8 @@ const runIntegration = async (
 				sequence,
 			});
 
-			return importCards(options.context, sequence, {
-				origin: card,
+			return importContracts(options.context, sequence, {
+				origin: contract,
 			});
 		},
 		{
@@ -104,62 +104,62 @@ const evaluateObject = (object: any, environment: any) => {
 };
 
 /**
- * @summary Import a sequence of cards
+ * @summary Import a sequence of contracts
  * @function
  * @public
  *
  * @param {Object} context - worker execution context
- * @param {Array} sequence - card sequence
+ * @param {Array} sequence - contract sequence
  * @param {Object} options - options
  * @param {String} options.origin - origin id
- * @returns {Object[]} inserted cards
+ * @returns {Object[]} inserted contracts
  *
  * @example
- * const result = await pipeline.importCards({ ... }, [
+ * const result = await pipeline.importContracts({ ... }, [
  *   {
  *     time: new Date(),
- *     card: { ... }
+ *     contract: { ... }
  *   },
  *   {
  *     time: new Date(),
- *     card: { ... }
+ *     contract: { ... }
  *   },
  *   {
  *     time: new Date(),
- *     card: { ... }
+ *     contract: { ... }
  *   }
  * ], {
  *   origin: 'e9b74e2a-3553-4188-8ab8-a67e92aedbe2'
  * })
  */
-export const importCards = async (
+export const importContracts = async (
 	context: PipelineOpts['context'],
 	sequence: Array<SequenceItem | SequenceItem[]>,
 	options: any = {},
 ) => {
 	// TODO: AFAICT the references option is never provided and can probably be removed
 	const references = options.references || {};
-	const insertedCards: JellyfishTypes.core.Contract[] = [];
+	const insertedContracts: JellyfishTypes.core.Contract[] = [];
 
 	for (const [index, value] of sequence.entries()) {
 		const step = _.castArray(value);
 		await Bluebird.map(
 			step,
 			async (segment, subindex, length) => {
-				const path = ['cards', index];
+				const path = ['contracts', index];
 				if (length !== 1) {
 					path.push(subindex);
 				}
 
 				let object = {};
 				let finalObject: Partial<JellyfishTypes.core.Contract> = {};
-				const type = segment.card.type;
+				const type = segment.contract.type;
 
 				// Check if this is a JSONpatch or a slug-based upsert
-				if ('patch' in segment.card) {
+				if ('patch' in segment.contract) {
 					// If the patch doesn't update the origin, add it now
 					if (
-						!_.find(segment.card.patch, {
+						!_.find(segment.contract.patch, {
 							path: '/data/origin',
 						})
 					) {
@@ -167,7 +167,7 @@ export const importCards = async (
 							options.origin &&
 							options.origin.type === 'external-event@1.0.0'
 						) {
-							segment.card.patch.push({
+							segment.contract.patch.push({
 								op: 'add',
 								path: '/data/origin',
 								value: `${options.origin.slug}@${options.origin.version}`,
@@ -175,14 +175,17 @@ export const importCards = async (
 						}
 					}
 					finalObject = evaluateObject(
-						_.omit(segment.card, ['links']),
+						_.omit(segment.contract, ['links']),
 						references,
 					);
 				} else {
-					object = evaluateObject(_.omit(segment.card, ['links']), references);
+					object = evaluateObject(
+						_.omit(segment.contract, ['links']),
+						references,
+					);
 					assert.INTERNAL(context, !!object, errors.SyncInvalidTemplate, () => {
 						return `Could not evaluate template in: ${JSON.stringify(
-							segment.card,
+							segment.contract,
 							null,
 							2,
 						)}`;
@@ -224,7 +227,7 @@ export const importCards = async (
 				});
 
 				if (result) {
-					insertedCards.push(result);
+					insertedContracts.push(result);
 				}
 
 				_.set(references, path, result);
@@ -235,7 +238,7 @@ export const importCards = async (
 		);
 	}
 
-	return insertedCards;
+	return insertedContracts;
 };
 
 /**
@@ -244,13 +247,13 @@ export const importCards = async (
  * @public
  *
  * @param {Object} integration - integration class
- * @param {Object} externalEvent - external event card
+ * @param {Object} externalEvent - external event contract
  * @param {Object} options - options
  * @param {Object} options.context - execution context
- * @returns {Object[]} inserted cards
+ * @returns {Object[]} inserted contracts
  *
  * @example
- * const cards = await pipeline.translateExternalEvent(MyIntegration, {
+ * const contracts = await pipeline.translateExternalEvent(MyIntegration, {
  *   type: 'external-event',
  *   ...
  * }, {
@@ -266,30 +269,30 @@ export const translateExternalEvent = async (
 };
 
 /**
- * @summary Mirror a card back
+ * @summary Mirror a contract back
  * @function
  * @public
  *
  * @param {Object} integration - integration class
- * @param {Object} card - local card
+ * @param {Object} contract - local contract
  * @param {Object} options - options
  * @param {Object} options.context - execution context
  * @param {String} options.actor - actor id
- * @returns {Object[]} inserted cards
+ * @returns {Object[]} inserted contracts
  *
  * @example
- * const cards = await pipeline.mirrorCard(MyIntegration, {
- *   type: 'card',
+ * const contracts = await pipeline.mirrorContract(MyIntegration, {
+ *   type: 'contract',
  *   ...
  * }, {
  *   context: { ... },
  *   actor: 'b76a4589-cac6-4293-b448-0440b5c66498'
  * })
  */
-export const mirrorCard = async (
+export const mirrorContract = async (
 	integration: IntegrationConstructor,
-	card: JellyfishTypes.core.Contract,
+	contract: JellyfishTypes.core.Contract,
 	options: PipelineOpts,
 ) => {
-	return runIntegration(integration, options, 'mirror', card);
+	return runIntegration(integration, options, 'mirror', contract);
 };

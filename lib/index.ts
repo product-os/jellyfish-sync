@@ -254,14 +254,14 @@ export class Sync {
 	 * @public
 	 *
 	 * @param {String} integration - integration name
-	 * @param {Object} userCard - user to associate external token to
+	 * @param {Object} userContract - user to associate external token to
 	 * @param {Object} credentials - external provider's api token
 	 * @param {Object} context - execution context
-	 * @returns {Object} Upserted user card
+	 * @returns {Object} Upserted user contract
 	 */
 	async associate(
 		integration: string,
-		userCard: JellyfishTypes.core.Contract,
+		userContract: JellyfishTypes.core.Contract,
 		credentials: any,
 		context: SyncActionContext,
 	) {
@@ -275,12 +275,16 @@ export class Sync {
 		);
 
 		/*
-		 * Set the access token in the user card.
+		 * Set the access token in the user contract.
 		 */
-		_.set(userCard, ['data', 'oauth', integration], credentials);
-		return context.upsertElement(userCard.type, _.omit(userCard, ['type']), {
-			timestamp: new Date(),
-		});
+		_.set(userContract, ['data', 'oauth', integration], credentials);
+		return context.upsertElement(
+			userContract.type,
+			_.omit(userContract, ['type']),
+			{
+				timestamp: new Date(),
+			},
+		);
 	}
 
 	/**
@@ -311,23 +315,23 @@ export class Sync {
 	}
 
 	/**
-	 * @summary Mirror back a card insert coming from Jellyfish
+	 * @summary Mirror back a contract insert coming from Jellyfish
 	 * @function
 	 * @public
 	 *
 	 * @param {String} integration - integration name
 	 * @param {Object} token - token details
-	 * @param {Object} card - action target card
+	 * @param {Object} contract - action target contract
 	 * @param {Object} context - execution context
 	 * @param {Object} options - options
 	 * @param {String} options.actor - actor id
 	 * @param {String} [options.origin] - OAuth origin URL
-	 * @returns {Object[]} inserted cards
+	 * @returns {Object[]} inserted contracts
 	 */
 	async mirror(
 		integration: string,
 		token: any,
-		card: JellyfishTypes.core.Contract,
+		contract: JellyfishTypes.core.Contract,
 		context: SyncActionContext,
 		options: {
 			actor: string;
@@ -355,7 +359,7 @@ export class Sync {
 			return [];
 		}
 
-		return pipeline.mirrorCard(Integration, card, {
+		return pipeline.mirrorContract(Integration, contract, {
 			actor: options.actor,
 			origin: options.origin,
 			defaultUser: options.defaultUser,
@@ -372,18 +376,18 @@ export class Sync {
 	 *
 	 * @param {String} integration - integration name
 	 * @param {Object} token - token details
-	 * @param {Object} card - action target card
+	 * @param {Object} contract - action target contract
 	 * @param {Object} context - execution context
 	 * @param {Object} options - options
 	 * @param {String} options.actor - actor id
 	 * @param {String} options.timestamp - timestamp
 	 * @param {String} [options.origin] - OAuth origin URL
-	 * @returns {Object[]} inserted cards
+	 * @returns {Object[]} inserted contracts
 	 */
 	async translate(
 		integration: string,
 		token: string,
-		card: JellyfishTypes.core.Contract,
+		contract: JellyfishTypes.core.Contract,
 		context: SyncActionContext,
 		options: {
 			actor: string;
@@ -412,13 +416,13 @@ export class Sync {
 		}
 
 		context.log.info('Translating external event', {
-			id: card.id,
-			slug: card.slug,
+			id: contract.id,
+			slug: contract.slug,
 			integration,
 		});
 
-		const cards = await metrics.measureTranslate(integration, async () => {
-			return pipeline.translateExternalEvent(Integration, card, {
+		const contracts = await metrics.measureTranslate(integration, async () => {
+			return pipeline.translateExternalEvent(Integration, contract, {
 				actor: options.actor,
 				origin: options.origin,
 				defaultUser: options.defaultUser,
@@ -429,12 +433,12 @@ export class Sync {
 		});
 
 		context.log.info('Translated external event', {
-			slugs: cards.map((translatedCard) => {
-				return translatedCard.slug;
+			slugs: contracts.map((translatedContract) => {
+				return translatedContract.slug;
 			}),
 		});
 
-		return cards;
+		return contracts;
 	}
 
 	/**
