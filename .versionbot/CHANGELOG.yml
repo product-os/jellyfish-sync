@@ -1,4 +1,13 @@
 - commits:
+    - subject: 'patch: Replaced all occurrence of card with contract'
+      hash: 1684aa31c056e9bf7f1779e47a0f96f481ddffbc
+      body: ''
+      footer: {}
+      author: Taro Murao
+      nested: []
+  version: 6.1.145
+  date: 2021-12-21T18:13:13.346Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-types to ^1.2.42'
       hash: 5df09f995eabc2a0ade89ee21acfea0224a3d1b3
       body: ''
