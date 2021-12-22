@@ -11,6 +11,8 @@ import * as JellyfishTypes from '@balena/jellyfish-types';
 import { IntegrationConstructor, WorkerContext } from './types';
 import { SyncActionContext } from './sync-context';
 
+export { IntegrationConstructor };
+
 /**
  * Jellyfish sync library module.
  *
