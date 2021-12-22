@@ -1,4 +1,17 @@
 - commits:
+    - subject: Export the IntegrationConstructor type
+      hash: c5c14a7751e4eb5f0bf731bae712036d5f628c57
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Carol Schulze <carol@balena.io>
+        signed-off-by: Carol Schulze <carol@balena.io>
+      author: Carol Schulze
+      nested: []
+  version: 6.2.0
+  date: 2021-12-22T21:31:27.250Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-types to ^1.2.42'
       hash: 5df09f995eabc2a0ade89ee21acfea0224a3d1b3
       body: ''
