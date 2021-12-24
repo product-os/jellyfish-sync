@@ -1,12 +1,12 @@
-import constant from 'lodash/constant';
-import * as pipeline from './pipeline';
-import { SyncActionContext } from './sync-context';
+import _ from 'lodash';
 import sinon from 'sinon';
+import { importCards } from './pipeline';
+import type { SyncActionContext } from './sync-context';
 
 describe('pipeline.importCards()', () => {
 	test('should work with card partials', async () => {
 		const upsertElementSpy = sinon.spy(
-			constant({
+			_.constant({
 				foo: 'bar',
 			}),
 		);
@@ -22,11 +22,11 @@ describe('pipeline.importCards()', () => {
 			},
 		];
 
-		const context = {
+		const syncActionContext = {
 			upsertElement: upsertElementSpy,
 		} as any as SyncActionContext;
 
-		const results = await pipeline.importCards(context, sequence, {});
+		const results = await importCards(syncActionContext, sequence, {});
 
 		expect(results.length).toBe(1);
 		expect(upsertElementSpy.calledOnce).toBe(true);
@@ -47,7 +47,7 @@ describe('pipeline.importCards()', () => {
 
 	test('should work with JSONpatch', async () => {
 		const upsertElementSpy = sinon.spy(
-			constant({
+			_.constant({
 				foo: 'bar',
 			}),
 		);
@@ -70,12 +70,12 @@ describe('pipeline.importCards()', () => {
 			},
 		];
 
-		const context = {
+		const syncActionContext = {
 			upsertElement: upsertElementSpy,
 		} as any as SyncActionContext;
 
 		// TS-TODO: Sequence types are incorrect here, but I'm not sure why
-		const results = await pipeline.importCards(context, sequence as any, {});
+		const results = await importCards(syncActionContext, sequence as any, {});
 
 		expect(results.length).toBe(1);
 		expect(upsertElementSpy.calledOnce).toBe(true);

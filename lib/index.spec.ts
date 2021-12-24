@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
 import { Sync } from './index';
-import * as errors from './errors';
-import { SyncActionContext } from './sync-context';
-import { IntegrationConstructor } from './types';
-
-dotenv.config();
+import {
+	SyncNoCompatibleIntegration,
+	SyncNoIntegrationAppCredentials,
+} from './errors';
+import type { SyncActionContext } from './sync-context';
+import type { IntegrationConstructor } from './types';
 
 const sync = new Sync({
 	integrations: {},
@@ -89,7 +89,7 @@ describe('.authorize()', () => {
 					origin: 'https://jel.ly.fish/oauth/helloworld',
 				},
 			),
-		).rejects.toThrow(errors.SyncNoCompatibleIntegration);
+		).rejects.toThrow(SyncNoCompatibleIntegration);
 	});
 
 	test('should throw given no token', async () => {
@@ -104,7 +104,7 @@ describe('.authorize()', () => {
 					origin: 'https://jel.ly.fish/oauth/helloworld',
 				},
 			),
-		).rejects.toThrow(errors.SyncNoIntegrationAppCredentials);
+		).rejects.toThrow(SyncNoIntegrationAppCredentials);
 	});
 
 	test('should throw given no appId', async () => {
@@ -121,7 +121,7 @@ describe('.authorize()', () => {
 					origin: 'https://jel.ly.fish/oauth/helloworld',
 				},
 			),
-		).rejects.toThrow(errors.SyncNoIntegrationAppCredentials);
+		).rejects.toThrow(SyncNoIntegrationAppCredentials);
 	});
 
 	test('should throw given no appSecret', async () => {
@@ -138,7 +138,7 @@ describe('.authorize()', () => {
 					origin: 'https://jel.ly.fish/oauth/helloworld',
 				},
 			),
-		).rejects.toThrow(errors.SyncNoIntegrationAppCredentials);
+		).rejects.toThrow(SyncNoIntegrationAppCredentials);
 	});
 });
 
@@ -182,7 +182,7 @@ describe('.associate()', () => {
 				},
 				makeSyncContextStub(data),
 			),
-		).rejects.toThrow(errors.SyncNoCompatibleIntegration);
+		).rejects.toThrow(SyncNoCompatibleIntegration);
 	});
 
 	test('should set the access token in the user card', async () => {

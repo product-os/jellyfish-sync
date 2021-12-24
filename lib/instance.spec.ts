@@ -1,17 +1,12 @@
-/* eslint no-unused-vars: [2, { "args": "none" }] */
-
-import dotenv from 'dotenv';
+import type { Contract } from '@balena/jellyfish-types/build/core';
 import Bluebird from 'bluebird';
-import querystring from 'querystring';
 import _ from 'lodash';
 import nock from 'nock';
-import * as JellyfishTypes from '@balena/jellyfish-types';
-import * as instance from './instance';
-import * as errors from './errors';
-import { Integration } from './types';
-import { SyncActionContext } from './sync-context';
-
-dotenv.config();
+import querystring from 'querystring';
+import { SyncNoActor, SyncOAuthNoUserError } from './errors';
+import { run } from './instance';
+import type { SyncActionContext } from './sync-context';
+import type { Integration } from './types';
 
 const firstNock = () => {
 	nock.disableNetConnect();
@@ -182,7 +177,7 @@ const getElementBySlugFromCollection = async (data: any, slug: string) => {
 describe('instance', () => {
 	test('should be able to refresh an expired OAuth token and retry if needed', async () => {
 		firstNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				version: '1.0.0',
@@ -202,14 +197,14 @@ describe('instance', () => {
 			},
 		};
 
-		const result = await instance.run(
+		const result = await run(
 			OAuthTokenRefreshTestIntegration,
 			{
 				appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 				appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 			},
 			(object) => {
-				return object.translate({} as JellyfishTypes.core.Contract, {
+				return object.translate({} as Contract, {
 					actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				});
 			},
@@ -268,7 +263,7 @@ describe('instance', () => {
 
 	test('should be able to refresh an expired OAuth token and retry if needed using the default user', async () => {
 		firstNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -295,14 +290,14 @@ describe('instance', () => {
 			},
 		};
 
-		const result = await instance.run(
+		const result = await run(
 			OAuthTokenRefreshTestIntegration,
 			{
 				appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 				appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 			},
 			(object) => {
-				return object.translate({} as JellyfishTypes.core.Contract, {
+				return object.translate({} as Contract, {
 					actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				});
 			},
@@ -371,7 +366,7 @@ describe('instance', () => {
 
 	test('should not refresh an OAuth token if not needed', async () => {
 		secondNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -410,14 +405,14 @@ describe('instance', () => {
 			})
 			*/
 
-		const result = await instance.run(
+		const result = await run(
 			OAuthTokenRefreshTestIntegration,
 			{
 				appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 				appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 			},
 			(object) => {
-				return object.translate({} as JellyfishTypes.core.Contract, {
+				return object.translate({} as Contract, {
 					actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				});
 			},
@@ -476,7 +471,7 @@ describe('instance', () => {
 
 	test('should not refresh an OAuth token if not needed when using the default user', async () => {
 		secondNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -503,14 +498,14 @@ describe('instance', () => {
 			},
 		};
 
-		const result = await instance.run(
+		const result = await run(
 			OAuthTokenRefreshTestIntegration,
 			{
 				appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 				appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 			},
 			(object) => {
-				return object.translate({} as JellyfishTypes.core.Contract, {
+				return object.translate({} as Contract, {
 					actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				});
 			},
@@ -579,7 +574,7 @@ describe('instance', () => {
 
 	test('should throw if actor is not associated with service and there is no default user', async () => {
 		firstNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -590,14 +585,14 @@ describe('instance', () => {
 		};
 
 		await expect(
-			instance.run(
+			run(
 				OAuthTokenRefreshTestIntegration,
 				{
 					appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 					appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 				},
 				(object) => {
-					return object.translate({} as JellyfishTypes.core.Contract, {
+					return object.translate({} as Contract, {
 						actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 					});
 				},
@@ -623,12 +618,12 @@ describe('instance', () => {
 					} as any as SyncActionContext,
 				} as any,
 			),
-		).rejects.toThrow(errors.SyncOAuthNoUserError);
+		).rejects.toThrow(SyncOAuthNoUserError);
 	});
 
 	test('should throw if actor is not associated with service and the default user is invalid', async () => {
 		firstNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -639,14 +634,14 @@ describe('instance', () => {
 		};
 
 		await expect(
-			instance.run(
+			run(
 				OAuthTokenRefreshTestIntegration,
 				{
 					appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 					appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 				},
 				(object) => {
-					return object.translate({} as JellyfishTypes.core.Contract, {
+					return object.translate({} as Contract, {
 						actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 					});
 				},
@@ -674,12 +669,12 @@ describe('instance', () => {
 					} as any as SyncActionContext,
 				},
 			),
-		).rejects.toThrow(errors.SyncNoActor);
+		).rejects.toThrow(SyncNoActor);
 	});
 
 	test('should throw if neither the actor nor the default user are associated with the service', async () => {
 		firstNock();
-		const data: { [key: string]: Partial<JellyfishTypes.core.Contract> } = {
+		const data: { [key: string]: Partial<Contract> } = {
 			'b5fc8487-cd6b-46aa-84ec-2407d5989e92': {
 				id: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 				type: 'user',
@@ -697,14 +692,14 @@ describe('instance', () => {
 		};
 
 		await expect(
-			instance.run(
+			run(
 				OAuthTokenRefreshTestIntegration,
 				{
 					appId: '1T+8uJdHUEzAHz5Z84+tg3HtipfEbzdsXbMmWAnI',
 					appSecret: '7Fj+Rf1p/fgXTLR505noNwoq7btJaY8KLyIJWE/r',
 				},
 				(object) => {
-					return object.translate({} as JellyfishTypes.core.Contract, {
+					return object.translate({} as Contract, {
 						actor: 'b5fc8487-cd6b-46aa-84ec-2407d5989e92',
 					});
 				},
@@ -731,6 +726,6 @@ describe('instance', () => {
 					} as any as SyncActionContext,
 				} as any,
 			),
-		).rejects.toThrow(errors.SyncOAuthNoUserError);
+		).rejects.toThrow(SyncOAuthNoUserError);
 	});
 });
