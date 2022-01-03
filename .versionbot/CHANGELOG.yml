@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'patch: Update dependency @balena/jellyfish-metrics to v2'
+      hash: b0ae8f4bfbb6868fbbc9c31c54b1e6b43f580cef
+      body: |
+        Update @balena/jellyfish-metrics from 1.0.446 to 2.0.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.2.9
+  date: 2022-01-03T01:27:31.713Z
+- commits:
     - subject: 'patch: Update dependency lint-staged to ^12.1.5'
       hash: 10417c264e2e2c317b05400944ce6c26a95095bb
       body: ''
