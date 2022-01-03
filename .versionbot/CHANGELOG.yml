@@ -1,4 +1,19 @@
 - commits:
+    - subject: Clean up types
+      hash: 36f8d61845f7e740e087026b6a45174c5f6e43f2
+      body: |
+        Switch to LogContext.
+        Clean up other types and how they are imported.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 7.0.0
+  date: 2022-01-03T01:26:17.427Z
+- commits:
     - subject: 'patch: Update dependency lint-staged to ^12.1.5'
       hash: 10417c264e2e2c317b05400944ce6c26a95095bb
       body: ''
