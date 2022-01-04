@@ -228,6 +228,13 @@ export const run = async (
 			getElementById: options.context.getElementById,
 			getElementByMirrorId: options.context.getElementByMirrorId,
 			request: async (actor: boolean, requestOptions: any) => {
+				options.context.log.info('Executing sync HTTP request', {
+					provider: options.provider,
+					defaultUser: options.defaultUser,
+					actor,
+					requestOptions,
+				});
+
 				assert.INTERNAL(
 					null,
 					actor,
@@ -236,6 +243,13 @@ export const run = async (
 				);
 
 				if (!integration.OAUTH_BASE_URL || !token.appId || !token.appSecret) {
+					options.context.log.info(
+						'Executing sync HTTP request without OAuth',
+						{
+							oauthBaseUrl: integration.OAUTH_BASE_URL,
+							appId: token.appId,
+						},
+					);
 					return httpRequest(requestOptions);
 				}
 
@@ -266,6 +280,9 @@ export const run = async (
 				}
 
 				const result = await httpRequest(requestOptions);
+				options.context.log.info('Sync HTTP request results', {
+					result,
+				});
 
 				// Lets try refreshing the token and retry if so
 				if (result.code === 401 && tokenData) {
