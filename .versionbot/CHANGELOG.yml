@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add sync http request logs
+      hash: 96684226186e7948a529d69326429a641c2ae80c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.2.13
+  date: 2022-01-04T06:59:02.273Z
+- commits:
     - subject: 'patch: Update dependency @balena/jellyfish-metrics to ^2.0.14'
       hash: b2727b3005265e78b8a9787a3fef6d7db4fca1f6
       body: ''
