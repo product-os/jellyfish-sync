@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add origin to sync request log
+      hash: 336bba4965a979972660f98c0b8c03ef2141e43b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.2.14
+  date: 2022-01-04T08:31:55.703Z
+- commits:
     - subject: Add sync http request logs
       hash: 96684226186e7948a529d69326429a641c2ae80c
       body: ''
