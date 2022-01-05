@@ -232,6 +232,7 @@ export const run = async (
 					provider: options.provider,
 					defaultUser: options.defaultUser,
 					actor,
+					origin: options.origin,
 					requestOptions,
 				});
 
