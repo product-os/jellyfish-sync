@@ -227,6 +227,11 @@ export const getActionContext = (
 			);
 		},
 		getElementBySlug: async (slug: string) => {
+			logger.info(context, 'Getting element by slug from sync context', {
+				slug,
+				session,
+			});
+
 			return workerContext.getCardBySlug(session, slug);
 		},
 		getElementById: async (id: string) => {

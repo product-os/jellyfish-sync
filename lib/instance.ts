@@ -1,10 +1,10 @@
+import * as assert from '@balena/jellyfish-assert';
+import * as JellyfishTypes from '@balena/jellyfish-types';
 import Bluebird from 'bluebird';
 import _ from 'lodash';
 import request from 'request';
 import * as errors from './errors';
 import * as oauth from './oauth';
-import * as assert from '@balena/jellyfish-assert';
-import * as JellyfishTypes from '@balena/jellyfish-types';
 import { SyncActionContext } from './sync-context';
 import {
 	ActorInformation,
@@ -161,12 +161,20 @@ const getOAuthUser = async (
 	context: {
 		getElementById: (arg0: any) => any;
 		getElementBySlug: (arg0: string) => any;
+		log: any;
 	},
 	provider: any,
 	actor: any,
 	options: { defaultUser: any },
 ) => {
+	context.log.info('Getting OAuth user', {
+		provider,
+		actor,
+	});
 	const userCard = await context.getElementById(actor);
+	context.log.info('Retrieved user from actor', {
+		id: userCard?.id,
+	});
 	assert.INTERNAL(
 		null,
 		userCard,
@@ -175,6 +183,10 @@ const getOAuthUser = async (
 	);
 
 	const tokenPath = ['data', 'oauth', provider];
+	context.log.info('Token path:', {
+		id: userCard?.id,
+		tokenPath,
+	});
 	if (_.has(userCard, tokenPath)) {
 		return userCard;
 	}
@@ -186,9 +198,15 @@ const getOAuthUser = async (
 		`No default integrations actor to act as ${actor} for ${provider}`,
 	);
 
+	context.log.info('Getting default user for OAuth', {
+		defaultUser: options.defaultUser,
+	});
 	const defaultUserCard = await context.getElementBySlug(
 		`user-${options.defaultUser}@latest`,
 	);
+	context.log.info('Got default user for OAuth', {
+		id: defaultUserCard?.id,
+	});
 
 	assert.INTERNAL(
 		null,
@@ -197,6 +215,11 @@ const getOAuthUser = async (
 		`No such actor: ${options.defaultUser}`,
 	);
 
+	context.log.info('Checking for user OAuth support', {
+		id: defaultUserCard?.id,
+		tokenPath,
+		provider,
+	});
 	assert.USER(
 		null,
 		_.has(defaultUserCard, tokenPath),
@@ -204,6 +227,9 @@ const getOAuthUser = async (
 		`Default actor ${options.defaultUser} does not support ${provider}`,
 	);
 
+	context.log.info('Returning found OAuth user', {
+		id: defaultUserCard?.id,
+	});
 	return defaultUserCard;
 };
 
@@ -239,6 +265,9 @@ export const run = async (
 					return httpRequest(requestOptions);
 				}
 
+				options.context.log.info('Sync: OAuth origin URL', {
+					origin: options.origin,
+				});
 				assert.INTERNAL(
 					null,
 					!!options.origin,
@@ -246,6 +275,11 @@ export const run = async (
 					'Missing OAuth origin URL',
 				);
 
+				options.context.log.info('Sync: Getting OAuth user', {
+					actor,
+					provider: options.provider,
+					defaultUser: options.defaultUser,
+				});
 				const userCard = await getOAuthUser(
 					options.context,
 					options.provider,
