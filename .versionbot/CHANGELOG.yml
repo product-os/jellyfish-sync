@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add OAuth user logs to sync requests
+      hash: 26fe23b20aaf71a07c547bba1b3d422ad5a9b6cc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.2.15
+  date: 2022-01-07T05:58:58.296Z
+- commits:
     - subject: Add origin to sync request log
       hash: 336bba4965a979972660f98c0b8c03ef2141e43b
       body: ''
