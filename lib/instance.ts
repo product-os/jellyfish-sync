@@ -269,6 +269,9 @@ export const run = async (
 						defaultUser: options.defaultUser,
 					},
 				);
+				options.context.log.info('Sync OAuth user', {
+					id: userCard.id,
+				});
 
 				const tokenPath = ['data', 'oauth', options.provider];
 				const tokenData = _.get(userCard, tokenPath);
@@ -278,6 +281,12 @@ export const run = async (
 						['headers', 'Authorization'],
 						`Bearer ${tokenData.access_token}`,
 					);
+				} else {
+					options.context.log.info('No token data for sync request', {
+						user: userCard.id,
+						tokenPath,
+						actor: options.actor,
+					});
 				}
 
 				const result = await httpRequest(requestOptions);
