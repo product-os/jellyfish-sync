@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update internal-patch'
+      hash: cfe7b6fb193257194a6d7d740458ba3422fa4e25
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.2.21
+  date: 2022-01-08T14:46:57.512Z
+- commits:
     - subject: Remove excess sync http logs
       hash: 54055e2c58cced8e4083226407be78de6f370e83
       body: ''
