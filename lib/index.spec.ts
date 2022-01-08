@@ -185,7 +185,7 @@ describe('.associate()', () => {
 		).rejects.toThrow(errors.SyncNoCompatibleIntegration);
 	});
 
-	test('should set the access token in the user card', async () => {
+	test('should set the access token in the user contract', async () => {
 		const data = {
 			'user-johndoe': {
 				active: true,

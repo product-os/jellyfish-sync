@@ -42,7 +42,7 @@ export type SyncActionContext = ReturnType<typeof getActionContext>;
  *
  * @example
  *
- * const handler = async (session, context, card, request) => {
+ * const handler = async (session, context, contract, request) => {
  * 	const syncContext = context.sync.getActionContext(request.arguments.provider,
  * 			context, request.context, context.privilegedSession)
  * 	)
@@ -56,14 +56,17 @@ export const getActionContext = (
 	session: string,
 ) => {
 	const getDefaultActor = async (): Promise<null | string> => {
-		const sessionCard = await workerContext.getCardById(session, session);
+		const sessionContract = await workerContext.getContractById(
+			session,
+			session,
+		);
 
-		if (!sessionCard) {
+		if (!sessionContract) {
 			return null;
 		}
 
 		// TODO: Replace this return type with the session contract interface
-		return sessionCard.data.actor as string;
+		return sessionContract.data.actor as string;
 	};
 
 	const contextObject = {
@@ -116,28 +119,28 @@ export const getActionContext = (
 				| { id: string; type: string; patch: JSONPatch.Operation[] },
 			options: { actor?: string; timestamp?: Date; originator?: string },
 		): Promise<JellyfishTypes.core.Contract> => {
-			const typeCard = await workerContext.getCardBySlug(session, type);
+			const typeContract = await workerContext.getContractBySlug(session, type);
 
 			assert.INTERNAL(
 				context,
-				typeCard !== null,
+				typeContract !== null,
 				workerContext.errors.WorkerNoElement,
 				`No such type: ${type}`,
 			);
 
 			const actor = options.actor || (await getDefaultActor());
 
-			// If an ID was passed in, use that ID to load the current card, this
+			// If an ID was passed in, use that ID to load the current contract, this
 			// prevents the situation where an integration may unintentionally
-			// generate a new slug for an existing card.
+			// generate a new slug for an existing contract.
 
 			// TS-TODO: tidy up this casting as its not quite correct.
 			// The main issue here is that "object" is union type and could be a partial contract, or a patch wrapper with a contract ID
 			const targetContract = object as JellyfishTypes.core.Contract;
 
 			const current: JellyfishTypes.core.Contract | null = targetContract.id
-				? await workerContext.getCardById(session, targetContract.id)
-				: await workerContext.getCardBySlug(
+				? await workerContext.getContractById(session, targetContract.id)
+				: await workerContext.getContractBySlug(
 						session,
 						`${targetContract.slug}@${targetContract.version}`,
 				  );
@@ -173,11 +176,11 @@ export const getActionContext = (
 						),
 					);
 				} else {
-					logger.info(context, 'Inserting card from sync context', object);
+					logger.info(context, 'Inserting contract from sync context', object);
 					return workerContext
-						.insertCard(
+						.insertContract(
 							session,
-							typeCard!,
+							typeContract!,
 							{
 								attachEvents: true,
 								timestamp: options.timestamp,
@@ -198,7 +201,7 @@ export const getActionContext = (
 				}
 			}
 
-			logger.info(context, 'Patching card from sync context', {
+			logger.info(context, 'Patching contract from sync context', {
 				patch,
 			});
 
@@ -213,9 +216,9 @@ export const getActionContext = (
 				return current;
 			}
 
-			return workerContext.patchCard(
+			return workerContext.patchContract(
 				session,
-				typeCard!,
+				typeContract!,
 				{
 					attachEvents: true,
 					timestamp: options.timestamp,
@@ -227,10 +230,10 @@ export const getActionContext = (
 			);
 		},
 		getElementBySlug: async (slug: string) => {
-			return workerContext.getCardBySlug(session, slug);
+			return workerContext.getContractBySlug(session, slug);
 		},
 		getElementById: async (id: string) => {
-			return workerContext.getCardById(session, id);
+			return workerContext.getContractById(session, id);
 		},
 		getElementByMirrorId: async (
 			type: string,
