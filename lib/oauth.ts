@@ -1,10 +1,10 @@
+import * as assert from '@balena/jellyfish-assert';
 import Bluebird from 'bluebird';
 import _ from 'lodash';
 import { default as makeRequest } from 'request';
 import { TypedError } from 'typed-error';
 import url from 'url';
-import * as errors from './errors';
-import * as assert from '@balena/jellyfish-assert';
+import { SyncExternalRequestError } from './errors';
 
 export class OAuthRequestError extends TypedError {}
 export class OAuthInvalidOption extends TypedError {}
@@ -62,7 +62,7 @@ export const request = async (
 		assert.USER(
 			null,
 			retries > 0,
-			errors.SyncExternalRequestError,
+			SyncExternalRequestError,
 			`External service responded with ${result.code} to OAuth request`,
 		);
 

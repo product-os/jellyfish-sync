@@ -1,10 +1,13 @@
-import dotenv from 'dotenv';
 import _ from 'lodash';
 import nock from 'nock';
 import querystring from 'querystring';
-import * as oauth from './oauth';
-
-dotenv.config();
+import {
+	getAccessToken,
+	getAuthorizeUrl,
+	OAuthInvalidOption,
+	OAuthUnsuccessfulResponse,
+	refreshAccessToken,
+} from './oauth';
 
 const authorizationNock = () => {
 	nock('https://api.balena-cloud.com')
@@ -92,7 +95,7 @@ afterAll(() => {
 describe('oauth', () => {
 	describe('.getAuthorizeUrl()', () => {
 		test('should generate a url without a state', () => {
-			const url = oauth.getAuthorizeUrl(
+			const url = getAuthorizeUrl(
 				'https://api.balena-cloud.com',
 				['foo'],
 				null,
@@ -115,15 +118,10 @@ describe('oauth', () => {
 		});
 
 		test('should generate a url with a scalar state', () => {
-			const url = oauth.getAuthorizeUrl(
-				'https://api.balena-cloud.com',
-				['foo'],
-				1,
-				{
-					appId: 'xxxxxxxxxx',
-					redirectUri: 'https://jel.ly.fish/oauth/balena',
-				},
-			);
+			const url = getAuthorizeUrl('https://api.balena-cloud.com', ['foo'], 1, {
+				appId: 'xxxxxxxxxx',
+				redirectUri: 'https://jel.ly.fish/oauth/balena',
+			});
 
 			const qs = [
 				'response_type=code',
@@ -139,7 +137,7 @@ describe('oauth', () => {
 		});
 
 		test('should generate a url with one scope', () => {
-			const url = oauth.getAuthorizeUrl(
+			const url = getAuthorizeUrl(
 				'https://api.balena-cloud.com',
 				['foo'],
 				{
@@ -165,7 +163,7 @@ describe('oauth', () => {
 		});
 
 		test('should generate a url with multiple scopes', () => {
-			const url = oauth.getAuthorizeUrl(
+			const url = getAuthorizeUrl(
 				'https://api.balena-cloud.com',
 				['foo', 'bar', 'baz'],
 				{
@@ -192,7 +190,7 @@ describe('oauth', () => {
 
 		test('should throw given no appId', () => {
 			expect(() => {
-				oauth.getAuthorizeUrl(
+				getAuthorizeUrl(
 					'https://api.balena-cloud.com',
 					['foo', 'bar', 'baz'],
 					{
@@ -202,12 +200,12 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					} as any,
 				);
-			}).toThrow(oauth.OAuthInvalidOption);
+			}).toThrow(OAuthInvalidOption);
 		});
 
 		test('should throw given no redirectUri', () => {
 			expect(() => {
-				oauth.getAuthorizeUrl(
+				getAuthorizeUrl(
 					'https://api.balena-cloud.com',
 					['foo', 'bar', 'baz'],
 					{
@@ -217,12 +215,12 @@ describe('oauth', () => {
 						appId: 'xxxxxxxxxx',
 					} as any,
 				);
-			}).toThrow(oauth.OAuthInvalidOption);
+			}).toThrow(OAuthInvalidOption);
 		});
 
 		test('should throw given no scopes', () => {
 			expect(() => {
-				oauth.getAuthorizeUrl(
+				getAuthorizeUrl(
 					'https://api.balena-cloud.com',
 					[],
 					{
@@ -233,12 +231,12 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					},
 				);
-			}).toThrow(oauth.OAuthInvalidOption);
+			}).toThrow(OAuthInvalidOption);
 		});
 
 		test('should throw given scopes is null', () => {
 			expect(() => {
-				oauth.getAuthorizeUrl(
+				getAuthorizeUrl(
 					'https://api.balena-cloud.com',
 					[],
 					{
@@ -249,7 +247,7 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					},
 				);
-			}).toThrow(oauth.OAuthInvalidOption);
+			}).toThrow(OAuthInvalidOption);
 		});
 	});
 
@@ -257,7 +255,7 @@ describe('oauth', () => {
 		test('should return the access token if successful', async () => {
 			authorizationNock();
 
-			const result = await oauth.getAccessToken(
+			const result = await getAccessToken(
 				'https://api.balena-cloud.com',
 				'123456',
 				{
@@ -280,39 +278,39 @@ describe('oauth', () => {
 			authorizationNock();
 
 			await expect(
-				oauth.getAccessToken('https://api.balena-cloud.com', 'oooooo', {
+				getAccessToken('https://api.balena-cloud.com', 'oooooo', {
 					appId: 'xxxxxxxxxxxx',
 					appSecret: 'yyyyyyyy',
 					redirectUri: 'https://jel.ly.fish/oauth/balena',
 				}),
-			).rejects.toThrow(oauth.OAuthUnsuccessfulResponse);
+			).rejects.toThrow(OAuthUnsuccessfulResponse);
 		});
 
 		test('should throw given no appId', async () => {
 			await expect(
-				oauth.getAccessToken('https://api.balena-cloud.com', '123456', {
+				getAccessToken('https://api.balena-cloud.com', '123456', {
 					appSecret: 'yyyyyyyy',
 					redirectUri: 'https://jel.ly.fish/oauth/balena',
 				} as any),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 
 		test('should throw given no appSecret', async () => {
 			await expect(
-				oauth.getAccessToken('https://api.balena-cloud.com', '123456', {
+				getAccessToken('https://api.balena-cloud.com', '123456', {
 					appId: 'xxxxxxxxxx',
 					redirectUri: 'https://jel.ly.fish/oauth/balena',
 				} as any),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 
 		test('should throw given no redirectUri', async () => {
 			await expect(
-				oauth.getAccessToken('https://api.balena-cloud.com', '123456', {
+				getAccessToken('https://api.balena-cloud.com', '123456', {
 					appId: 'xxxxxxxxxx',
 					appSecret: 'yyyyyyyy',
 				} as any),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 	});
 
@@ -320,7 +318,7 @@ describe('oauth', () => {
 		test('should return the new access token if successful', async () => {
 			refreshNock();
 
-			const result = await oauth.refreshAccessToken(
+			const result = await refreshAccessToken(
 				'https://api.balena-cloud.com',
 				{
 					refresh_token: 'IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk',
@@ -345,7 +343,7 @@ describe('oauth', () => {
 			authorizationNock();
 
 			await expect(
-				oauth.refreshAccessToken(
+				refreshAccessToken(
 					'https://api.balena-cloud.com',
 					{
 						refresh_token: '0000000000000000000',
@@ -356,12 +354,12 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					},
 				),
-			).rejects.toThrow(oauth.OAuthUnsuccessfulResponse);
+			).rejects.toThrow(OAuthUnsuccessfulResponse);
 		});
 
 		test('should fail if no appId', async () => {
 			await expect(
-				oauth.refreshAccessToken(
+				refreshAccessToken(
 					'https://api.balena-cloud.com',
 					{
 						refresh_token: '0000000000000000000',
@@ -371,12 +369,12 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					} as any,
 				),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 
 		test('should fail if no appSecret', async () => {
 			await expect(
-				oauth.refreshAccessToken(
+				refreshAccessToken(
 					'https://api.balena-cloud.com',
 					{
 						refresh_token: '0000000000000000000',
@@ -386,12 +384,12 @@ describe('oauth', () => {
 						redirectUri: 'https://jel.ly.fish/oauth/balena',
 					} as any,
 				),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 
 		test('should fail if no redirectUri', async () => {
 			await expect(
-				oauth.refreshAccessToken(
+				refreshAccessToken(
 					'https://api.balena-cloud.com',
 					{
 						refresh_token: '0000000000000000000',
@@ -401,7 +399,7 @@ describe('oauth', () => {
 						appSecret: 'yyyyyyyy',
 					} as any,
 				),
-			).rejects.toThrow(oauth.OAuthInvalidOption);
+			).rejects.toThrow(OAuthInvalidOption);
 		});
 	});
 });

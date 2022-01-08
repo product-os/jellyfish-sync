@@ -1,15 +1,14 @@
-import * as pipeline from './pipeline';
-import strict from 'assert';
-import * as _ from 'lodash';
 import * as assert from '@balena/jellyfish-assert';
-import * as instance from './instance';
-import * as oauth from './oauth';
+import { measureTranslate } from '@balena/jellyfish-metrics';
+import type { Contract } from '@balena/jellyfish-types/build/core';
+import strict from 'assert';
+import _ from 'lodash';
 import * as errors from './errors';
-import * as syncContext from './sync-context';
-import * as metrics from '@balena/jellyfish-metrics';
-import * as JellyfishTypes from '@balena/jellyfish-types';
-import { IntegrationConstructor, WorkerContext } from './types';
-import { SyncActionContext } from './sync-context';
+import { run } from './instance';
+import { getAccessToken, getAuthorizeUrl } from './oauth';
+import * as pipeline from './pipeline';
+import { getActionContext, SyncActionContext } from './sync-context';
+import type { IntegrationConstructor, WorkerContext } from './types';
 
 export { IntegrationConstructor };
 
@@ -63,7 +62,7 @@ export class Sync {
 
 		// TS-TODO: OAUTH_BASE_URL and OAUTH_SCOPES might not exist on
 		// Integration, but it's assumed that they are.
-		return oauth.getAuthorizeUrl(
+		return getAuthorizeUrl(
 			Integration.OAUTH_BASE_URL!,
 			Integration.OAUTH_SCOPES!,
 			slug,
@@ -81,7 +80,7 @@ export class Sync {
 	 *
 	 * @param {String} integration - integration name
 	 * @param {Object} token - token details
-	 * @param {Object} context - execution context
+	 * @param {Object} syncActionContext - sync action context
 	 * @param {Object} options - options
 	 * @param {String} options.code - short lived OAuth code
 	 * @param {String} options.origin - The callback URL
@@ -90,7 +89,7 @@ export class Sync {
 	async authorize(
 		integration: string,
 		token: any,
-		context: SyncActionContext,
+		syncActionContext: SyncActionContext,
 		options: {
 			code: string;
 			origin: string;
@@ -99,20 +98,20 @@ export class Sync {
 		const Integration = this.integrations[integration];
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration,
 			errors.SyncNoCompatibleIntegration,
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			token && token.appId && token.appSecret,
 			errors.SyncNoIntegrationAppCredentials,
 			`No application credentials found for integration: ${integration}`,
 		);
 
-		return oauth.getAccessToken(Integration.OAUTH_BASE_URL, options.code, {
+		return getAccessToken(Integration.OAUTH_BASE_URL, options.code, {
 			appId: token.appId,
 			appSecret: token.appSecret,
 			redirectUri: options.origin,
@@ -130,28 +129,28 @@ export class Sync {
 	 * @returns {Object} external user
 	 */
 	async whoami(
-		context: SyncActionContext,
+		syncActionContext: SyncActionContext,
 		integration: string,
 		credentials: any,
 	) {
 		const Integration = this.integrations[integration];
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration,
 			errors.SyncNoCompatibleIntegration,
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration.whoami,
 			errors.SyncNoCompatibleIntegration,
 			`Integration for ${integration} does not provide a whoami() function`,
 		);
 
 		strict.ok(Integration.whoami);
-		return Integration.whoami(context, credentials, {
+		return Integration.whoami(syncActionContext, credentials, {
 			errors,
 		});
 	}
@@ -161,7 +160,7 @@ export class Sync {
 	 * @function
 	 * @public
 	 *
-	 * @param {Object} context - execution context
+	 * @param {Object} syncActionContext - sync action context
 	 * @param {String} integration - integration name
 	 * @param {Object} externalUser - external user
 	 * @param {Object} options - options
@@ -169,7 +168,7 @@ export class Sync {
 	 * @returns {Object} external user
 	 */
 	async match(
-		context: SyncActionContext,
+		syncActionContext: SyncActionContext,
 		integration: string,
 		externalUser: any,
 		options: {
@@ -179,28 +178,28 @@ export class Sync {
 		const Integration = this.integrations[integration];
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration,
 			errors.SyncNoCompatibleIntegration,
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration.match,
 			errors.SyncNoCompatibleIntegration,
 			`Integration for ${integration} does not provide a match() function`,
 		);
 
 		strict.ok(Integration.match);
-		const user = await Integration.match(context, externalUser, {
+		const user = await Integration.match(syncActionContext, externalUser, {
 			errors,
 			slug: `${options.slug}@latest`,
 		});
 
 		if (user) {
 			assert.INTERNAL(
-				context,
+				syncActionContext,
 				user.slug === options.slug,
 				errors.SyncNoMatchingUser,
 				`Could not find matching user for provider: ${integration}, slugs do not match ${user.slug} !== ${options.slug}`,
@@ -211,21 +210,21 @@ export class Sync {
 	}
 
 	async getExternalUserSyncEventData(
-		context: any,
+		syncActionContext: SyncActionContext,
 		integration: string,
 		externalUser: any,
 	) {
 		const Integration = this.integrations[integration];
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration,
 			errors.SyncNoCompatibleIntegration,
 			`There is no compatible integration for provider: ${integration}`,
 		);
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			!!Integration.getExternalUserSyncEventData,
 			errors.SyncNoCompatibleIntegration,
 			`Integration for ${integration} does not provide a getExternalUserSyncEventData() function`,
@@ -233,7 +232,7 @@ export class Sync {
 
 		strict.ok(Integration.getExternalUserSyncEventData);
 		const event = await Integration.getExternalUserSyncEventData(
-			context,
+			syncActionContext,
 			externalUser,
 			{
 				errors,
@@ -241,7 +240,7 @@ export class Sync {
 		);
 
 		assert.INTERNAL(
-			context,
+			syncActionContext,
 			event,
 			errors.SyncNoMatchingUser,
 			'Could not generate external user sync event',
@@ -263,7 +262,7 @@ export class Sync {
 	 */
 	async associate(
 		integration: string,
-		userCard: JellyfishTypes.core.Contract,
+		userCard: Contract,
 		credentials: any,
 		context: SyncActionContext,
 	) {
@@ -329,7 +328,7 @@ export class Sync {
 	async mirror(
 		integration: string,
 		token: any,
-		card: JellyfishTypes.core.Contract,
+		card: Contract,
 		context: SyncActionContext,
 		options: {
 			actor: string;
@@ -385,7 +384,7 @@ export class Sync {
 	async translate(
 		integration: string,
 		token: string,
-		card: JellyfishTypes.core.Contract,
+		card: Contract,
 		context: SyncActionContext,
 		options: {
 			actor: string;
@@ -419,7 +418,7 @@ export class Sync {
 			integration,
 		});
 
-		const cards = await metrics.measureTranslate(integration, async () => {
+		const cards = await measureTranslate(integration, async () => {
 			return pipeline.translateExternalEvent(Integration, card, {
 				actor: options.actor,
 				origin: options.origin,
@@ -487,7 +486,7 @@ export class Sync {
 		});
 
 		// TS-TODO: Its unclear if the origin and defaultUser options are required
-		return instance.run(
+		return run(
 			Integration,
 			token,
 			async (integrationInstance) => {
@@ -510,11 +509,6 @@ export class Sync {
 		context: any,
 		session: string,
 	) {
-		return syncContext.getActionContext(
-			provider,
-			workerContext,
-			context,
-			session,
-		);
+		return getActionContext(provider, workerContext, context, session);
 	}
 }

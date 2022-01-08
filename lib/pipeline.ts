@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import * as assert from '@balena/jellyfish-assert';
+import type { Contract } from '@balena/jellyfish-types/build/core';
 import Bluebird from 'bluebird';
 import jsone from 'json-e';
-import * as errors from './errors';
-import * as instance from './instance';
-import * as assert from '@balena/jellyfish-assert';
-import * as JellyfishTypes from '@balena/jellyfish-types';
-import {
+import _ from 'lodash';
+import { SyncInvalidTemplate, SyncNoActor } from './errors';
+import { run } from './instance';
+import type {
 	Integration,
 	IntegrationConstructor,
 	PipelineOpts,
@@ -16,9 +16,9 @@ const runIntegration = async (
 	integration: IntegrationConstructor,
 	options: PipelineOpts,
 	fn: 'translate' | 'mirror',
-	card: JellyfishTypes.core.Contract,
-): Promise<JellyfishTypes.core.Contract[]> => {
-	return instance.run(
+	card: Contract,
+): Promise<Contract[]> => {
+	return run(
 		integration,
 		options.token,
 		async (integrationInstance: Integration) => {
@@ -139,7 +139,7 @@ export const importCards = async (
 ) => {
 	// TODO: AFAICT the references option is never provided and can probably be removed
 	const references = options.references || {};
-	const insertedCards: JellyfishTypes.core.Contract[] = [];
+	const insertedCards: Contract[] = [];
 
 	for (const [index, value] of sequence.entries()) {
 		const step = _.castArray(value);
@@ -152,7 +152,7 @@ export const importCards = async (
 				}
 
 				let object = {};
-				let finalObject: Partial<JellyfishTypes.core.Contract> = {};
+				let finalObject: Partial<Contract> = {};
 				const type = segment.card.type;
 
 				// Check if this is a JSONpatch or a slug-based upsert
@@ -180,7 +180,7 @@ export const importCards = async (
 					);
 				} else {
 					object = evaluateObject(_.omit(segment.card, ['links']), references);
-					assert.INTERNAL(context, !!object, errors.SyncInvalidTemplate, () => {
+					assert.INTERNAL(context, !!object, SyncInvalidTemplate, () => {
 						return `Could not evaluate template in: ${JSON.stringify(
 							segment.card,
 							null,
@@ -211,7 +211,7 @@ export const importCards = async (
 					}
 				}
 
-				assert.INTERNAL(context, !!segment.actor, errors.SyncNoActor, () => {
+				assert.INTERNAL(context, !!segment.actor, SyncNoActor, () => {
 					return `No actor in segment: ${JSON.stringify(segment)}`;
 				});
 
@@ -259,7 +259,7 @@ export const importCards = async (
  */
 export const translateExternalEvent = async (
 	integration: IntegrationConstructor,
-	externalEvent: JellyfishTypes.core.Contract,
+	externalEvent: Contract,
 	options: PipelineOpts,
 ) => {
 	return runIntegration(integration, options, 'translate', externalEvent);
@@ -288,7 +288,7 @@ export const translateExternalEvent = async (
  */
 export const mirrorCard = async (
 	integration: IntegrationConstructor,
-	card: JellyfishTypes.core.Contract,
+	card: Contract,
 	options: PipelineOpts,
 ) => {
 	return runIntegration(integration, options, 'mirror', card);

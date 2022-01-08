@@ -1,34 +1,32 @@
+import type { Contract } from '@balena/jellyfish-types/build/core';
+import { applyPatch } from 'fast-json-patch';
 import _ from 'lodash';
+import { isValid } from 'skhema';
+import { spy } from 'sinon';
+import { v4 as uuidv4 } from 'uuid';
 import { getActionContext } from './sync-context';
-import { WorkerContext } from './types';
-import skhema from 'skhema';
-import sinon from 'sinon';
-import jsonpatch from 'fast-json-patch';
-import * as uuid from 'uuid';
-import * as JellyfishTypes from '@balena/jellyfish-types';
+import type { WorkerContext } from './types';
 
 const makeWorkerContextStub = (
-	cardFixtures: Array<Partial<JellyfishTypes.core.Contract>>,
+	cardFixtures: Array<Partial<Contract>>,
 ): WorkerContext => {
-	const defaults = (contract: Partial<JellyfishTypes.core.Contract>) => {
+	const defaults = (contract: Partial<Contract>) => {
 		if (!contract.id) {
-			contract.id = uuid.v4();
+			contract.id = uuidv4();
 		}
 		if (!contract.slug) {
-			contract.slug = `${contract.type}-${uuid.v4()}`;
+			contract.slug = `${contract.type}-${uuidv4()}`;
 		}
 
 		return contract;
 	};
 
-	const store = _.cloneDeep(cardFixtures).map(
-		defaults,
-	) as JellyfishTypes.core.Contract[];
+	const store = _.cloneDeep(cardFixtures).map(defaults) as Contract[];
 
 	return {
 		query: async (_session: string, schema: any) => {
 			return _.filter(store, (card) => {
-				return skhema.isValid(schema, card);
+				return isValid(schema, card);
 			});
 		},
 		getCardBySlug: async (_session, slugWithVersion) => {
@@ -54,7 +52,7 @@ const makeWorkerContextStub = (
 			) {
 				throw new Error(`${object.slug} already exists`);
 			}
-			store.push(defaults(object) as JellyfishTypes.core.Contract);
+			store.push(defaults(object) as Contract);
 			return object;
 		},
 		patchCard: async (_session, _typeCard, _options, current, patch) => {
@@ -64,7 +62,7 @@ const makeWorkerContextStub = (
 			if (!existing) {
 				throw new Error(`Can't find contract to patch: ${current.id}`);
 			}
-			jsonpatch.applyPatch(existing, patch);
+			applyPatch(existing, patch);
 			return existing;
 		},
 		defaults: defaults as any,
@@ -78,8 +76,8 @@ describe('context.getElementByMirrorId()', () => {
 	test('should match mirrors exactly', async () => {
 		const mirrorId = 'test://1';
 		const card1 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'card',
 			data: {
 				mirrors: [mirrorId],
@@ -87,8 +85,8 @@ describe('context.getElementByMirrorId()', () => {
 		};
 
 		const card2 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'card',
 			data: {
 				mirrors: ['test://2'],
@@ -107,8 +105,8 @@ describe('context.getElementByMirrorId()', () => {
 	test('should match by type', async () => {
 		const mirrorId = 'test://1';
 		const card1 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'card',
 			data: {
 				mirrors: [mirrorId],
@@ -116,8 +114,8 @@ describe('context.getElementByMirrorId()', () => {
 		};
 
 		const card2 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'foo',
 			data: {
 				mirrors: [mirrorId],
@@ -160,8 +158,8 @@ describe('context.getElementByMirrorId()', () => {
 
 	test('should optionally use a pattern match for the mirror Id', async () => {
 		const card1 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'card',
 			data: {
 				mirrors: ['test://foo/1'],
@@ -169,8 +167,8 @@ describe('context.getElementByMirrorId()', () => {
 		};
 
 		const card2 = {
-			id: uuid.v4(),
-			slug: `card-${uuid.v4()}`,
+			id: uuidv4(),
+			slug: `card-${uuidv4()}`,
 			type: 'card',
 			data: {
 				mirrors: ['test://bar/2'],
@@ -203,8 +201,8 @@ describe('context.upsertElement()', () => {
 
 		const workerContextStub = makeWorkerContextStub([typeCard]);
 
-		const insertSpy = sinon.spy(workerContextStub, 'insertCard');
-		const patchSpy = sinon.spy(workerContextStub, 'patchCard');
+		const insertSpy = spy(workerContextStub, 'insertCard');
+		const patchSpy = spy(workerContextStub, 'patchCard');
 
 		const context = getActionContext(
 			'foobar',
@@ -261,8 +259,8 @@ describe('context.upsertElement()', () => {
 
 		const workerContextStub = makeWorkerContextStub([typeCard, card1]);
 
-		const insertSpy = sinon.spy(workerContextStub, 'insertCard');
-		const patchSpy = sinon.spy(workerContextStub, 'patchCard');
+		const insertSpy = spy(workerContextStub, 'insertCard');
+		const patchSpy = spy(workerContextStub, 'patchCard');
 
 		const context = getActionContext(
 			'foobar',
@@ -306,8 +304,8 @@ describe('context.upsertElement()', () => {
 
 		const workerContextStub = makeWorkerContextStub([typeCard, card1]);
 
-		const insertSpy = sinon.spy(workerContextStub, 'insertCard');
-		const patchSpy = sinon.spy(workerContextStub, 'patchCard');
+		const insertSpy = spy(workerContextStub, 'insertCard');
+		const patchSpy = spy(workerContextStub, 'patchCard');
 
 		const context = getActionContext(
 			'foobar',
@@ -360,8 +358,8 @@ describe('context.upsertElement()', () => {
 
 		const workerContextStub = makeWorkerContextStub([typeCard, card1]);
 
-		const insertSpy = sinon.spy(workerContextStub, 'insertCard');
-		const patchSpy = sinon.spy(workerContextStub, 'patchCard');
+		const insertSpy = spy(workerContextStub, 'insertCard');
+		const patchSpy = spy(workerContextStub, 'patchCard');
 
 		const context = getActionContext(
 			'foobar',
@@ -413,8 +411,8 @@ describe('context.upsertElement()', () => {
 
 		const workerContextStub = makeWorkerContextStub([typeCard, card1]);
 
-		const insertSpy = sinon.spy(workerContextStub, 'insertCard');
-		const patchSpy = sinon.spy(workerContextStub, 'patchCard');
+		const insertSpy = spy(workerContextStub, 'insertCard');
+		const patchSpy = spy(workerContextStub, 'patchCard');
 
 		const context = getActionContext(
 			'foobar',

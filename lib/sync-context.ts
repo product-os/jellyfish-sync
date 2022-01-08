@@ -1,10 +1,10 @@
-import _ from 'lodash';
-import jsonpatch from 'fast-json-patch';
-import { getLogger } from '@balena/jellyfish-logger';
 import * as assert from '@balena/jellyfish-assert';
-import * as JellyfishTypes from '@balena/jellyfish-types';
-import * as JSONPatch from 'fast-json-patch';
-import { WorkerContext } from './types';
+import { getLogger } from '@balena/jellyfish-logger';
+import type { Contract } from '@balena/jellyfish-types/build/core';
+import { compare } from 'fast-json-patch';
+import type { Operation } from 'fast-json-patch';
+import _ from 'lodash';
+import type { WorkerContext } from './types';
 
 const logger = getLogger(__filename);
 
@@ -52,7 +52,7 @@ export type SyncActionContext = ReturnType<typeof getActionContext>;
 export const getActionContext = (
 	provider: string,
 	workerContext: WorkerContext,
-	context: any,
+	logContext: any,
 	session: string,
 ) => {
 	const getDefaultActor = async (): Promise<null | string> => {
@@ -69,21 +69,21 @@ export const getActionContext = (
 	const contextObject = {
 		log: {
 			warn: (message: string, data: any) => {
-				logger.warn(context, message, data);
+				logger.warn(logContext, message, data);
 			},
 			error: (message: string, data: any) => {
-				logger.error(context, message, data);
+				logger.error(logContext, message, data);
 			},
 			debug: (message: string, data: any) => {
-				logger.debug(context, message, data);
+				logger.debug(logContext, message, data);
 			},
 			info: (message: string, data: any) => {
-				logger.info(context, message, data);
+				logger.info(logContext, message, data);
 			},
 
 			// "exception" will log to sentry if it's enabled
 			exception: (message: string, error: any) => {
-				logger.exception(context, message, error);
+				logger.exception(logContext, message, error);
 			},
 		},
 		getLocalUsername: (username: string): string => {
@@ -112,14 +112,14 @@ export const getActionContext = (
 		upsertElement: async (
 			type: string,
 			object:
-				| Partial<JellyfishTypes.core.Contract>
-				| { id: string; type: string; patch: JSONPatch.Operation[] },
+				| Partial<Contract>
+				| { id: string; type: string; patch: Operation[] },
 			options: { actor?: string; timestamp?: Date; originator?: string },
-		): Promise<JellyfishTypes.core.Contract> => {
+		): Promise<Contract> => {
 			const typeCard = await workerContext.getCardBySlug(session, type);
 
 			assert.INTERNAL(
-				context,
+				logContext,
 				typeCard !== null,
 				workerContext.errors.WorkerNoElement,
 				`No such type: ${type}`,
@@ -133,16 +133,16 @@ export const getActionContext = (
 
 			// TS-TODO: tidy up this casting as its not quite correct.
 			// The main issue here is that "object" is union type and could be a partial contract, or a patch wrapper with a contract ID
-			const targetContract = object as JellyfishTypes.core.Contract;
+			const targetContract = object as Contract;
 
-			const current: JellyfishTypes.core.Contract | null = targetContract.id
+			const current: Contract | null = targetContract.id
 				? await workerContext.getCardById(session, targetContract.id)
 				: await workerContext.getCardBySlug(
 						session,
 						`${targetContract.slug}@${targetContract.version}`,
 				  );
 
-			let patch: JSONPatch.Operation[] = [];
+			let patch: Operation[] = [];
 
 			if (object.hasOwnProperty('patch')) {
 				patch = (object as any).patch;
@@ -155,7 +155,7 @@ export const getActionContext = (
 				if (current) {
 					// TODO: Migrate all integrations to use the JSON patch interface on this function
 					// so we don't have to do this diff comparison thing.
-					patch = jsonpatch.compare(
+					patch = compare(
 						workerContext.defaults(current),
 						workerContext.defaults(
 							Object.assign({}, object, {
@@ -173,7 +173,7 @@ export const getActionContext = (
 						),
 					);
 				} else {
-					logger.info(context, 'Inserting card from sync context', object);
+					logger.info(logContext, 'Inserting card from sync context', object);
 					return workerContext
 						.insertCard(
 							session,
@@ -198,7 +198,7 @@ export const getActionContext = (
 				}
 			}
 
-			logger.info(context, 'Patching card from sync context', {
+			logger.info(logContext, 'Patching card from sync context', {
 				patch,
 			});
 
@@ -238,7 +238,7 @@ export const getActionContext = (
 			options: { usePattern?: boolean } = {},
 		) => {
 			assert.INTERNAL(
-				context,
+				logContext,
 				!!mirrorId,
 				Error,
 				'You must supply a mirrorId as key',
