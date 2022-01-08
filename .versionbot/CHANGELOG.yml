@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update internal-patch'
+      hash: d164c500d8e51c10dc1ec99d23e0f1d2c9ebdc2f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.2.16
+  date: 2022-01-08T01:34:21.097Z
+- commits:
     - subject: Add OAuth user logs to sync requests
       hash: 26fe23b20aaf71a07c547bba1b3d422ad5a9b6cc
       body: ''
