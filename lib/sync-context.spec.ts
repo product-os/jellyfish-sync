@@ -71,6 +71,7 @@ const makeWorkerContextStub = (
 		errors: {
 			WorkerNoElement: {} as any,
 		},
+		privilegedSession: uuid.v4(),
 	};
 };
 
