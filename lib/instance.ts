@@ -160,7 +160,7 @@ const getOrCreate = async (
 const getOAuthUser = async (
 	context: {
 		getElementById: (arg0: any) => any;
-		getElementBySlug: (arg0: string) => any;
+		getElementBySlug: (arg0: string, arg1?: boolean) => any;
 		log: any;
 	},
 	provider: any,
@@ -203,6 +203,7 @@ const getOAuthUser = async (
 	});
 	const defaultUserCard = await context.getElementBySlug(
 		`user-${options.defaultUser}@latest`,
+		true,
 	);
 	context.log.info('Got default user for OAuth', {
 		id: defaultUserCard?.id,

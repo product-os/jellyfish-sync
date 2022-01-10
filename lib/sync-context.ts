@@ -226,13 +226,17 @@ export const getActionContext = (
 				patch,
 			);
 		},
-		getElementBySlug: async (slug: string) => {
+		getElementBySlug: async (slug: string, usePrivilegedSession = false) => {
 			logger.info(context, 'Getting element by slug from sync context', {
 				slug,
 				session,
+				usePrivilegedSession,
 			});
 
-			return workerContext.getCardBySlug(session, slug);
+			return workerContext.getCardBySlug(
+				usePrivilegedSession ? workerContext.privilegedSession : session,
+				slug,
+			);
 		},
 		getElementById: async (id: string) => {
 			return workerContext.getCardById(session, id);
