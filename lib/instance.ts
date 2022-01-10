@@ -219,6 +219,7 @@ const getOAuthUser = async (
 		id: defaultUserCard?.id,
 		tokenPath,
 		provider,
+		hasToken: _.has(defaultUserCard, tokenPath),
 	});
 	assert.USER(
 		null,
