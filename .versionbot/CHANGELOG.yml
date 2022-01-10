@@ -1,4 +1,17 @@
 - commits:
+    - subject: Allow privileged session use
+      hash: a837693ff1ee4c159eee6b2fa394449aabc39a63
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.3.0
+  date: 2022-01-10T03:23:42.789Z
+- commits:
     - subject: Add hasToken to oauth log
       hash: 15217d9576fcd5737afe4d3f89fe3239c59b1894
       body: ''
