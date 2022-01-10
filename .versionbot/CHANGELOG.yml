@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update sync oauth logs
+      hash: 20007067dfea2ce2ad510b2c56357646109d426e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.2.22
+  date: 2022-01-09T10:53:03.636Z
+- commits:
     - subject: 'patch: Update internal-patch'
       hash: cfe7b6fb193257194a6d7d740458ba3422fa4e25
       body: ''
