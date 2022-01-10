@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add hasToken to oauth log
+      hash: 15217d9576fcd5737afe4d3f89fe3239c59b1894
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.2.23
+  date: 2022-01-10T03:04:08.069Z
+- commits:
     - subject: Update sync oauth logs
       hash: 20007067dfea2ce2ad510b2c56357646109d426e
       body: ''
