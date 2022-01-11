@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove excess OAuth logs
+      hash: 65df6dd7905c8525cb9a433578251c42bf5f4f6b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.3.1
+  date: 2022-01-10T05:59:53.284Z
+- commits:
     - subject: Allow privileged session use
       hash: a837693ff1ee4c159eee6b2fa394449aabc39a63
       body: ''
