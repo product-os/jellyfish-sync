@@ -161,20 +161,12 @@ const getOAuthUser = async (
 	context: {
 		getElementById: (arg0: any) => any;
 		getElementBySlug: (arg0: string, arg1?: boolean) => any;
-		log: any;
 	},
 	provider: any,
 	actor: any,
 	options: { defaultUser: any },
 ) => {
-	context.log.info('Getting OAuth user', {
-		provider,
-		actor,
-	});
 	const userCard = await context.getElementById(actor);
-	context.log.info('Retrieved user from actor', {
-		id: userCard?.id,
-	});
 	assert.INTERNAL(
 		null,
 		userCard,
@@ -183,10 +175,6 @@ const getOAuthUser = async (
 	);
 
 	const tokenPath = ['data', 'oauth', provider];
-	context.log.info('Token path:', {
-		id: userCard?.id,
-		tokenPath,
-	});
 	if (_.has(userCard, tokenPath)) {
 		return userCard;
 	}
@@ -198,16 +186,10 @@ const getOAuthUser = async (
 		`No default integrations actor to act as ${actor} for ${provider}`,
 	);
 
-	context.log.info('Getting default user for OAuth', {
-		defaultUser: options.defaultUser,
-	});
 	const defaultUserCard = await context.getElementBySlug(
 		`user-${options.defaultUser}@latest`,
 		true,
 	);
-	context.log.info('Got default user for OAuth', {
-		id: defaultUserCard?.id,
-	});
 
 	assert.INTERNAL(
 		null,
@@ -216,12 +198,6 @@ const getOAuthUser = async (
 		`No such actor: ${options.defaultUser}`,
 	);
 
-	context.log.info('Checking for user OAuth support', {
-		id: defaultUserCard?.id,
-		tokenPath,
-		provider,
-		hasToken: _.has(defaultUserCard, tokenPath),
-	});
 	assert.USER(
 		null,
 		_.has(defaultUserCard, tokenPath),
@@ -229,9 +205,6 @@ const getOAuthUser = async (
 		`Default actor ${options.defaultUser} does not support ${provider}`,
 	);
 
-	context.log.info('Returning found OAuth user', {
-		id: defaultUserCard?.id,
-	});
 	return defaultUserCard;
 };
 
