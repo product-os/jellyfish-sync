@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Update external-major'
+      hash: cc175a080023693e01f12cc61b359f4ffcaf49fa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 6.3.2
+  date: 2022-01-15T03:27:57.961Z
+- commits:
     - subject: Remove excess OAuth logs
       hash: 65df6dd7905c8525cb9a433578251c42bf5f4f6b
       body: ''
