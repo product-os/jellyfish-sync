@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix deprecation notice in README
+      hash: e1c8acfbe85821748dd3bb48c8ad3fa7b26247c9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 6.3.3
+  title: Fix deprecation notice in README
+  date: 2022-01-29T07:39:13.166Z
+- commits:
     - subject: Add deprecation notice to README
       hash: 40b92b7c2a18f954659f3f5283d410e9913675e3
       body: ""
