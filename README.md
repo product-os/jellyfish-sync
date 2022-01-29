@@ -1,3 +1,5 @@
+**Notice: This utility has been discontinued. The functionality provided by this module has been merged into [`jellyfish-plugin-default`](https://github.com/product-os/jellyfish-plugin-default).**
+
 # Jellyfish Sync
 
 This module contains an integration syncing engine built on top of Jellyfish.
