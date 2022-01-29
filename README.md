@@ -1,4 +1,4 @@
-**Notice: This utility has been discontinued. The functionality provided by this module has been merged into [`jellyfish-plugin-default`](https://github.com/product-os/jellyfish-plugin-default).**
+**Notice: This utility has been discontinued. The functionality provided by this module has been merged into [`jellyfish-worker`](https://github.com/product-os/jellyfish-worker).**
 
 # Jellyfish Sync
 
